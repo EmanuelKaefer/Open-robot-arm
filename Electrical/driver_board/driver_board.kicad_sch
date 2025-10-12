@@ -1,0 +1,19 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 185b80a7-4519-478f-bc15-453044043b7f)
+
+  (paper "A4")
+
+  (title_block
+    (title "Driver Board")
+    (date "2025-10-12")
+  )
+
+  (lib_symbols
+  )
+
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
