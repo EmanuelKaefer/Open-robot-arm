@@ -20,6 +20,8 @@ unsigned long letzterStepZeit = 0;
 long stepZaehler = 0;           // Zählt die Steps
 bool endstopBeruehrt = false;   // Merkt ob Endstop schon mal berührt wurde
 bool homingCompleted = false;   // Homing abgeschlossen
+unsigned long letzteTastenZeit = 0;
+const unsigned long entprellDelay = 50;
 
 void setup() {
   // Pins konfigurieren
@@ -43,6 +45,7 @@ void setup() {
   Serial.println("Geschwindigkeit: 200 U/min");
   Serial.println("Maximale Steps: 2064 (digitale Endposition)");
   Serial.println("Steps-Zählung: 's' im Serial Monitor");
+  Serial.println("🔄 RESET: Vorwärts + Rückwärts gleichzeitig drücken");
   Serial.println("⚠️  FREIFAHRT MODUS: Alles möglich bis zum ersten Homing");
   Serial.println("============================");
 }
@@ -59,13 +62,24 @@ void loop() {
     Serial.println("✅ Roboter-Arm bereit für Bewegung (0-2064 Steps)");
   }
   
+  // Reset-Funktion: Vorwärts + Rückwärts gleichzeitig drücken
+  if (digitalRead(vorwaertsPin) == HIGH && digitalRead(rueckwaertsPin) == HIGH) {
+    if (millis() - letzteTastenZeit > entprellDelay) {
+      resetHoming();
+      letzteTastenZeit = millis();
+      delay(entprellDelay); // Entprellung
+    }
+    return; // Nichts anderes machen während Reset
+  }
+  
   // Vorwärts-Knopf hat 5V bekommen
-  if (digitalRead(vorwaertsPin) == HIGH) {
-    if (!motorLaeuft) {
+  if (digitalRead(vorwaertsPin) == HIGH && digitalRead(rueckwaertsPin) == LOW) {
+    if (!motorLaeuft && (millis() - letzteTastenZeit) > entprellDelay) {
       // Vor Homing: Alles erlaubt
       // Nach Homing: Nur wenn nicht an max Steps
       if (homingCompleted && stepZaehler >= maxSteps) {
         Serial.println("❌ MAXIMUM ERREICHT - Keine Vorwärtsbewegung möglich!");
+        letzteTastenZeit = millis();
         return;
       }
       
@@ -77,12 +91,13 @@ void loop() {
       } else {
         Serial.println("➡️  Vorwärts gestartet");
       }
+      letzteTastenZeit = millis();
     }
   }
   
   // Rückwärts-Knopf hat 5V bekommen (immer erlaubt)
-  if (digitalRead(rueckwaertsPin) == HIGH) {
-    if (!motorLaeuft) {
+  if (digitalRead(rueckwaertsPin) == HIGH && digitalRead(vorwaertsPin) == LOW) {
+    if (!motorLaeuft && (millis() - letzteTastenZeit) > entprellDelay) {
       richtungVorwaerts = false;
       digitalWrite(dirPin, LOW);
       motorStarten();
@@ -91,11 +106,12 @@ void loop() {
       } else {
         Serial.println("⬅️  Rückwärts gestartet");
       }
+      letzteTastenZeit = millis();
     }
   }
   
   // Wenn Endstop aktiv ist und Rückwärts gedrückt wird (nur nach Homing relevant)
-  if (digitalRead(rueckwaertsPin) == HIGH && endstopAktiv && homingCompleted) {
+  if (digitalRead(rueckwaertsPin) == HIGH && endstopAktiv && homingCompleted && digitalRead(vorwaertsPin) == LOW) {
     if (motorLaeuft && !richtungVorwaerts) {
       // Zurücksetzen auf Home-Position
       stepZaehler = 0;
@@ -117,6 +133,17 @@ void loop() {
   if (motorLaeuft) {
     motorSteuern();
   }
+}
+
+void resetHoming() {
+  endstopBeruehrt = false;
+  homingCompleted = false;
+  stepZaehler = 0;
+  if (motorLaeuft) {
+    motorStoppen();
+  }
+  Serial.println("🔄 FREIFAHRT MODUS aktiviert - Alles möglich!");
+  Serial.println("Homing wurde zurückgesetzt");
 }
 
 void motorStarten() {
@@ -186,11 +213,7 @@ void serialEvent() {
       }
     }
     if (input == 'r' || input == 'R') {
-      // Manuelles Reset
-      endstopBeruehrt = false;
-      homingCompleted = false;
-      stepZaehler = 0;
-      Serial.println("🔄 FREIFAHRT MODUS aktiviert - Alles möglich!");
+      resetHoming();
     }
   }
 }
