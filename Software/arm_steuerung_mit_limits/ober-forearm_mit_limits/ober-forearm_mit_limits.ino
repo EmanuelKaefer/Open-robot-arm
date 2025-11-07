@@ -40,7 +40,8 @@ bool endstopBeruehrt_ellbogen = false;
 bool homingCompleted_ellbogen = false;
 
 // ===== GEMEINSAME VARIABLEN =====
-unsigned long letzteTastenZeit = 0;
+unsigned long letzteTastenZeit_oberarm = 0;
+unsigned long letzteTastenZeit_ellbogen = 0;
 const unsigned long entprellDelay = 50;
 
 void setup() {
@@ -63,12 +64,12 @@ void setup() {
   // ===== MOTOREN INITIALISIEREN =====
   // Oberarm initial DEAKTIVIEREN
   digitalWrite(enablePin_oberarm, HIGH);
-  digitalWrite(dirPin_oberarm, HIGH);
+  digitalWrite(dirPin_oberarm, HIGH);  // Vorwärts = HIGH
   digitalWrite(stepPin_oberarm, LOW);
   
   // Ellbogen initial DEAKTIVIEREN
   digitalWrite(enablePin_ellbogen, HIGH);
-  digitalWrite(dirPin_ellbogen, HIGH);
+  digitalWrite(dirPin_ellbogen, LOW);  // Vorwärts = LOW für Ellbogen
   digitalWrite(stepPin_ellbogen, LOW);
   
   Serial.begin(9600);
@@ -86,7 +87,7 @@ void setup() {
   Serial.println("=== ALLGEMEIN ===");
   Serial.println("Geschwindigkeit: 200 U/min");
   Serial.println("🔄 RESET: Vorwärts + Rückwärts gleichzeitig drücken");
-  Serial.println("Steps-Zählung: 's1' für Oberarm, 's2' für Ellbogen");
+  Serial.println("Steps-Zählung: 's' für beide, '1' für Oberarm, '2' für Ellbogen");
   Serial.println("============================");
 }
 
@@ -98,7 +99,9 @@ void loop() {
     vorwaertsPin_oberarm, rueckwaertsPin_oberarm, enablePin_oberarm,
     motorLaeuft_oberarm, richtungVorwaerts_oberarm, letzterStepZeit_oberarm,
     stepZaehler_oberarm, endstopBeruehrt_oberarm, homingCompleted_oberarm,
-    maxSteps_oberarm
+    maxSteps_oberarm,
+    letzteTastenZeit_oberarm,
+    false  // Normal für Oberarm
   );
   
   // ===== ELLBOGEN STEUERUNG =====
@@ -108,7 +111,9 @@ void loop() {
     vorwaertsPin_ellbogen, rueckwaertsPin_ellbogen, enablePin_ellbogen,
     motorLaeuft_ellbogen, richtungVorwaerts_ellbogen, letzterStepZeit_ellbogen,
     stepZaehler_ellbogen, endstopBeruehrt_ellbogen, homingCompleted_ellbogen,
-    maxSteps_ellbogen
+    maxSteps_ellbogen,
+    letzteTastenZeit_ellbogen,
+    true   // Umgekehrt für Ellbogen
   );
 }
 
@@ -118,7 +123,9 @@ void steuereAchse(
   int vorwaertsPin, int rueckwaertsPin, int enablePin,
   bool &motorLaeuft, bool &richtungVorwaerts, unsigned long &letzterStepZeit,
   long &stepZaehler, bool &endstopBeruehrt, bool &homingCompleted,
-  long maxSteps
+  long maxSteps,
+  unsigned long &letzteTastenZeit,
+  bool dirUmgekehrt  // true = DIR umgekehrt für Ellbogen
 ) {
   bool endstopAktiv = (digitalRead(endstopPin) == LOW);
   
@@ -154,15 +161,20 @@ void steuereAchse(
       }
       
       richtungVorwaerts = true;
-      digitalWrite(dirPin, HIGH);
+      if (dirUmgekehrt) {
+        digitalWrite(dirPin, LOW);   // Ellbogen: Vorwärts = LOW
+      } else {
+        digitalWrite(dirPin, HIGH);  // Oberarm: Vorwärts = HIGH
+      }
       motorStarten(enablePin, motorLaeuft, letzterStepZeit);
       
       Serial.print("➡️  ");
       Serial.print(achsenName);
+      Serial.print(" Vorwärts");
       if (!homingCompleted) {
-        Serial.println(" Vorwärts (FREIFAHRT MODUS)");
+        Serial.println(" (FREIFAHRT MODUS)");
       } else {
-        Serial.println(" Vorwärts");
+        Serial.println();
       }
       letzteTastenZeit = millis();
     }
@@ -172,15 +184,20 @@ void steuereAchse(
   if (digitalRead(rueckwaertsPin) == HIGH && digitalRead(vorwaertsPin) == LOW) {
     if (!motorLaeuft && (millis() - letzteTastenZeit) > entprellDelay) {
       richtungVorwaerts = false;
-      digitalWrite(dirPin, LOW);
+      if (dirUmgekehrt) {
+        digitalWrite(dirPin, HIGH);  // Ellbogen: Rückwärts = HIGH
+      } else {
+        digitalWrite(dirPin, LOW);   // Oberarm: Rückwärts = LOW
+      }
       motorStarten(enablePin, motorLaeuft, letzterStepZeit);
       
       Serial.print("⬅️  ");
       Serial.print(achsenName);
+      Serial.print(" Rückwärts");
       if (!homingCompleted) {
-        Serial.println(" Rückwärts (FREIFAHRT MODUS)");
+        Serial.println(" (FREIFAHRT MODUS)");
       } else {
-        Serial.println(" Rückwärts");
+        Serial.println();
       }
       letzteTastenZeit = millis();
     }
@@ -210,7 +227,7 @@ void steuereAchse(
   
   // Motorsteuerung
   if (motorLaeuft) {
-    motorSteuern(stepPin, letzterStepZeit, richtungVorwaerts, stepZaehler, homingCompleted, maxSteps, achsenName);
+    motorSteuern(stepPin, letzterStepZeit, richtungVorwaerts, stepZaehler, homingCompleted, maxSteps, achsenName, enablePin, motorLaeuft);
   }
 }
 
@@ -237,7 +254,7 @@ void motorStoppen(int enablePin, bool &motorLaeuft) {
   digitalWrite(enablePin, HIGH);
 }
 
-void motorSteuern(int stepPin, unsigned long &letzterStepZeit, bool richtungVorwaerts, long &stepZaehler, bool homingCompleted, long maxSteps, const char* achsenName) {
+void motorSteuern(int stepPin, unsigned long &letzterStepZeit, bool richtungVorwaerts, long &stepZaehler, bool homingCompleted, long maxSteps, const char* achsenName, int enablePin, bool &motorLaeuft) {
   unsigned long aktuelleZeit = micros();
   
   if (aktuelleZeit - letzterStepZeit >= stepIntervall) {
@@ -248,7 +265,7 @@ void motorSteuern(int stepPin, unsigned long &letzterStepZeit, bool richtungVorw
     if (richtungVorwaerts) {
       stepZaehler++;
       if (homingCompleted && stepZaehler >= maxSteps) {
-        motorStoppen((stepPin == stepPin_oberarm) ? enablePin_oberarm : enablePin_ellbogen, (stepPin == stepPin_oberarm) ? motorLaeuft_oberarm : motorLaeuft_ellbogen);
+        motorStoppen(enablePin, motorLaeuft);
         Serial.print("🛑 ");
         Serial.print(achsenName);
         Serial.print(" - MAXIMALE POSITION ERREICHT (");
