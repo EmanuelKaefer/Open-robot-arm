@@ -1302,379 +1302,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Driver_Motor:Pololu_Breakout_A4988"
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "A"
-				(at -2.54 19.05 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify right)
-				)
-			)
-			(property "Value" "Pololu_Breakout_A4988"
-				(at -2.54 16.51 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify right)
-				)
-			)
-			(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-				(at 6.985 -19.05 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-				(at 2.54 -7.62 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "Pololu Breakout Board Stepper Driver A4988"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "Pololu*Breakout*15.2x20.3mm*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "Pololu_Breakout_A4988_0_1"
-				(rectangle
-					(start 10.16 -17.78)
-					(end -7.62 15.24)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-			)
-			(symbol "Pololu_Breakout_A4988_1_1"
-				(pin input line
-					(at -10.16 10.16 0)
-					(length 2.54)
-					(name "~{RESET}"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "13"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 7.62 0)
-					(length 2.54)
-					(name "~{SLEEP}"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "14"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 2.54 0)
-					(length 2.54)
-					(name "~{ENABLE}"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "9"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 0 0)
-					(length 2.54)
-					(name "STEP"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "15"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 -2.54 0)
-					(length 2.54)
-					(name "DIR"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "16"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 -7.62 0)
-					(length 2.54)
-					(name "MS1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "10"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 -10.16 0)
-					(length 2.54)
-					(name "MS2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "11"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin input line
-					(at -10.16 -12.7 0)
-					(length 2.54)
-					(name "MS3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "12"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 17.78 270)
-					(length 2.54)
-					(name "VDD"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 0 -20.32 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 5.08 17.78 270)
-					(length 2.54)
-					(name "VMOT"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "8"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_in line
-					(at 5.08 -20.32 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "7"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 2.54 180)
-					(length 2.54)
-					(name "1B"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 0 180)
-					(length 2.54)
-					(name "1A"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 -2.54 180)
-					(length 2.54)
-					(name "2A"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin output line
-					(at 12.7 -5.08 180)
-					(length 2.54)
-					(name "2B"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "RF_Module:ESP32-WROOM-32"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -2763,6 +2390,480 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "open_robot_arm_lib:Pololu_Breakout_A4988"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "A"
+				(at -2.54 19.05 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Value" "Pololu_Breakout_A4988"
+				(at -2.54 16.51 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify right)
+				)
+			)
+			(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+				(at 6.985 -19.05 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+				(at 2.54 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "Pololu Breakout Board Stepper Driver A4988"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "Pololu*Breakout*15.2x20.3mm*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "Pololu_Breakout_A4988_0_1"
+				(rectangle
+					(start 10.16 -17.78)
+					(end -7.62 15.24)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
+			)
+			(symbol "Pololu_Breakout_A4988_1_1"
+				(pin input line
+					(at -10.16 10.16 0)
+					(length 2.54)
+					(name "~{RESET}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "13"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 7.62 0)
+					(length 2.54)
+					(name "~{SLEEP}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "14"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 2.54 0)
+					(length 2.54)
+					(name "~{ENABLE}"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 0 0)
+					(length 2.54)
+					(name "STEP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "15"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 -2.54 0)
+					(length 2.54)
+					(name "DIR"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "16"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 -7.62 0)
+					(length 2.54)
+					(name "MS1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "10"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 -10.16 0)
+					(length 2.54)
+					(name "MS2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "11"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin input line
+					(at -10.16 -12.7 0)
+					(length 2.54)
+					(name "MS3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "12"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 0 17.78 270)
+					(length 2.54)
+					(name "VDD"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 0 -20.32 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin power_in line
+					(at 5.08 17.78 270)
+					(length 2.54)
+					(name "VMOT"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 -20.32 90)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 2.54 180)
+					(length 2.54)
+					(name "1B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 0 180)
+					(length 2.54)
+					(name "1A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 -2.54 180)
+					(length 2.54)
+					(name "2A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 12.7 -5.08 180)
+					(length 2.54)
+					(name "2B"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "power:GND"
+			(power)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -6.35 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Value" "GND"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "global power"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "GND_0_1"
+				(polyline
+					(pts
+						(xy 0 0) (xy 0 -1.27) (xy 1.27 -1.27) (xy 0 -2.54) (xy -1.27 -1.27) (xy 0 -1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "GND_1_1"
+				(pin power_in line
+					(at 0 0 270)
+					(length 0)
+					(name "~"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:PWR_FLAG"
 			(power)
 			(pin_numbers
@@ -2864,46 +2965,6 @@
 			)
 			(embedded_fonts no)
 		)
-	)
-	(text "GND"
-		(exclude_from_sim no)
-		(at 24.13 39.37 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "7a7d5b56-151e-4b9e-a7e8-ea5607e0e583")
-	)
-	(text "+24V"
-		(exclude_from_sim no)
-		(at 24.13 29.21 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "9e9b2242-021d-48a1-976c-8cf72afd7690")
-	)
-	(text "+5V"
-		(exclude_from_sim no)
-		(at 24.13 36.83 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "e429b49d-01e4-4e85-8e4a-92f9a3ac29b9")
-	)
-	(text "GND"
-		(exclude_from_sim no)
-		(at 24.13 31.75 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "eca53084-0433-4f87-b66b-e495d4d847ac")
 	)
 	(junction
 		(at 27.94 95.25)
@@ -3245,6 +3306,16 @@
 	)
 	(wire
 		(pts
+			(xy 86.36 34.29) (xy 83.82 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0f75259f-4e7c-49df-97aa-80c2f7f7f700")
+	)
+	(wire
+		(pts
 			(xy 227.33 62.23) (xy 270.51 62.23)
 		)
 		(stroke
@@ -3332,6 +3403,16 @@
 			(type default)
 		)
 		(uuid "21d68652-1dfe-4112-aed2-cdb5d8e90328")
+	)
+	(wire
+		(pts
+			(xy 81.28 91.44) (xy 83.82 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "26c98c4b-b5c8-4939-8a98-230370164c9f")
 	)
 	(wire
 		(pts
@@ -3485,6 +3566,16 @@
 	)
 	(wire
 		(pts
+			(xy 86.36 91.44) (xy 83.82 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "463c08cf-cbda-4865-bf5b-cc70fc9cb2ca")
+	)
+	(wire
+		(pts
 			(xy 83.82 30.48) (xy 158.75 30.48)
 		)
 		(stroke
@@ -3535,6 +3626,16 @@
 	)
 	(wire
 		(pts
+			(xy 146.05 91.44) (xy 148.59 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4fb8b7ad-e5a0-4354-a2f5-3e1c1fb2bfb8")
+	)
+	(wire
+		(pts
 			(xy 134.62 167.64) (xy 135.89 167.64)
 		)
 		(stroke
@@ -3542,6 +3643,16 @@
 			(type default)
 		)
 		(uuid "521dfa4c-b389-42f5-a642-763ad47492a4")
+	)
+	(wire
+		(pts
+			(xy 71.12 91.44) (xy 73.66 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "52b87246-ecc7-4651-8c45-75e6bdd592f2")
 	)
 	(wire
 		(pts
@@ -3755,6 +3866,16 @@
 	)
 	(wire
 		(pts
+			(xy 81.28 34.29) (xy 83.82 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7817acd8-51ae-456a-9f58-d6cfef82c943")
+	)
+	(wire
+		(pts
 			(xy 30.48 30.48) (xy 59.69 30.48)
 		)
 		(stroke
@@ -3892,6 +4013,16 @@
 			(type default)
 		)
 		(uuid "8bee6619-89d6-4005-a4d8-5c7e3435e0db")
+	)
+	(wire
+		(pts
+			(xy 96.52 34.29) (xy 93.98 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8efd2d41-dd65-443a-81a3-f25e75100888")
 	)
 	(wire
 		(pts
@@ -4122,6 +4253,16 @@
 			(type default)
 		)
 		(uuid "a69cbf6d-4607-4264-ac84-585908e7e86e")
+	)
+	(wire
+		(pts
+			(xy 161.29 91.44) (xy 158.75 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a949d28f-3b7a-4fc0-8a7f-00a22fa05bc8")
 	)
 	(wire
 		(pts
@@ -4425,6 +4566,16 @@
 	)
 	(wire
 		(pts
+			(xy 156.21 91.44) (xy 158.75 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6a3ab95-cfcb-4254-8e08-051ee7c8ca6f")
+	)
+	(wire
+		(pts
 			(xy 134.62 170.18) (xy 135.89 170.18)
 		)
 		(stroke
@@ -4455,6 +4606,16 @@
 	)
 	(wire
 		(pts
+			(xy 96.52 91.44) (xy 93.98 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fc7b1ea8-8eba-4639-a21d-3a11298edaf1")
+	)
+	(wire
+		(pts
 			(xy 29.21 81.28) (xy 29.21 138.43)
 		)
 		(stroke
@@ -4473,27 +4634,45 @@
 		)
 		(uuid "fcd27e74-c0f0-47c7-9059-544ac1e13cab")
 	)
-	(global_label "GND"
-		(shape input)
-		(at 76.2 144.78 180)
-		(fields_autoplaced yes)
+	(label "+5V"
+		(at 22.86 38.1 0)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left bottom)
 		)
-		(uuid "00b0604a-b3c9-4bb5-91c4-ce834bdff233")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.3443 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
+		(uuid "24cd0faf-2a69-463b-a615-a633a54e8006")
+	)
+	(label "GND"
+		(at 22.86 33.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
+		(uuid "e0067873-b748-4d9b-8f6a-ac25092193e2")
+	)
+	(label "GND"
+		(at 22.86 40.64 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "f5a5845e-ea49-40b1-b940-3ebb92f809da")
+	)
+	(label "+24V"
+		(at 22.86 30.48 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "ff84ab60-5ac6-45a1-8197-5dbbe388dbad")
 	)
 	(global_label "NC"
 		(shape input)
@@ -4561,28 +4740,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 143.51 53.34 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "04ad1416-dfcc-4dcb-947d-2457b4a11eb6")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 136.6543 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "IO34"
 		(shape input)
 		(at 68.58 68.58 180)
@@ -4596,28 +4753,6 @@
 		(uuid "07367010-e878-48c2-afd4-43b55a663050")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 61.2405 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 151.13 34.29 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "098d8765-76cf-4944-9635-3a4a94a31a29")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 144.2743 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4684,28 +4819,6 @@
 		(uuid "14b9c999-2333-4a09-8b54-e927cf26f7fa")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 134.9005 127 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 68.58 53.34 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "18a7798b-7d36-4ce2-b5ee-ed2ebc1e7c99")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 61.7243 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4816,28 +4929,6 @@
 		(uuid "2b2b04ed-8aab-4949-bae5-acf0175bd4f6")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 263.8795 107.95 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 166.37 144.78 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "2eefeba2-342c-438b-98e6-e8de2377d4de")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 173.2257 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5045,28 +5136,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 59.69 22.86 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "41e2f8f3-2cb6-4876-a42c-dfce22ede4db")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 59.69 16.0043 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "IO34"
 		(shape input)
 		(at 68.58 177.8 180)
@@ -5080,28 +5149,6 @@
 		(uuid "46f982d4-a107-4729-8de0-9491fd51bd53")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 61.2405 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 143.51 109.22 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "4738d711-59c2-47c5-b51f-26fa14a4459d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 136.6543 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5155,28 +5202,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 67.31 22.86 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "4e9771b5-edfb-4257-9366-394ed498a4bb")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 67.31 16.0043 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "IO34"
 		(shape input)
 		(at 142.24 124.46 180)
@@ -5190,28 +5215,6 @@
 		(uuid "52535944-c219-47ba-a245-1b9646c6d451")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 134.9005 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 151.13 144.78 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "54a4fcfa-9bd2-4e32-9f68-f888dd402f67")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 144.2743 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -5283,28 +5286,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 91.44 144.78 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "5cd8a781-3904-4dbd-b633-159929cbe7e8")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 98.2957 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 				(hide yes)
 			)
 		)
@@ -5485,28 +5466,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 68.58 109.22 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "8c3a8f8f-7a13-4933-9750-9020c7bd7869")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 61.7243 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "A4_Dir"
 		(shape input)
 		(at 125.73 116.84 180)
@@ -5661,72 +5620,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 68.58 162.56 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "a1bb5dd3-7863-4a69-b6d1-28519ef34d36")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 61.7243 162.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 91.44 91.44 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "a265f986-b204-4a81-9366-9d5ffa246265")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 98.2957 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 76.2 91.44 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "a4c14980-982d-4e1a-89fa-40c2927ecfe0")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.3443 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "NC"
 		(shape input)
 		(at 196.85 85.09 180)
@@ -5745,28 +5638,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 166.37 34.29 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "a9c064b4-76f2-4946-8162-4fca3e134007")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 173.2257 34.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 				(hide yes)
 			)
 		)
@@ -5947,28 +5818,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 151.13 91.44 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "cc11b951-9f8f-417d-8e51-201938cc24f9")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 144.2743 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "A2_Dir"
 		(shape input)
 		(at 227.33 80.01 0)
@@ -6048,28 +5897,6 @@
 		(uuid "d3e218e2-9ba1-452f-83cc-faf3d2a72539")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 118.0881 170.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 76.2 34.29 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "d5d21e41-ea77-487d-b850-f4aa6bf0ef76")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 69.3443 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6211,28 +6038,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 166.37 91.44 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "ee84eaf6-7614-47f1-9f8a-9471935b59d7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 173.2257 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "IO34"
 		(shape input)
 		(at 68.58 124.46 180)
@@ -6321,50 +6126,6 @@
 			)
 		)
 	)
-	(global_label "GND"
-		(shape input)
-		(at 91.44 34.29 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "fd97e9fc-3f2e-4644-a409-5c1672e71d3d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 98.2957 34.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "GND"
-		(shape input)
-		(at 143.51 162.56 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "fe6cabb6-a86d-4d82-a68b-8670366035b1")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 136.6543 162.56 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "IO33"
 		(shape input)
 		(at 142.24 121.92 180)
@@ -6389,7 +6150,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 154.94 91.44 90)
+		(at 152.4 91.44 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6397,7 +6158,7 @@
 		(dnp no)
 		(uuid "03a09023-550f-4f90-acec-ac9bfc6be634")
 		(property "Reference" "C10"
-			(at 155.956 94.488 90)
+			(at 153.416 94.488 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6405,15 +6166,15 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 154.94 86.36 90)
+			(at 152.4 86.36 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 158.75 90.4748 0)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 156.21 90.4748 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6422,7 +6183,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 154.94 91.44 0)
+			(at 152.4 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6431,7 +6192,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 154.94 91.44 0)
+			(at 152.4 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6530,120 +6291,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Driver_Motor:Pololu_Breakout_A4988")
-		(at 78.74 114.3 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "08d05cca-8b81-422f-a711-855b2f9d4026")
-		(property "Reference" "A3"
-			(at 106.68 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Pololu_Breakout_A4988"
-			(at 83.82 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-			(at 85.725 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-			(at 81.28 121.92 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-			(at 78.74 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e3d7ff44-521e-40a0-8ed4-c36b421d9644")
-		)
-		(pin "10"
-			(uuid "244be491-4d3a-41a0-916f-2e5047ebb242")
-		)
-		(pin "11"
-			(uuid "ac770a01-a488-4968-b0d3-9b904c5ebd2c")
-		)
-		(pin "12"
-			(uuid "f9fd65fd-2a0a-427e-a87e-0b9829c4b3f6")
-		)
-		(pin "13"
-			(uuid "8338e4ed-5393-404a-9778-26e60b530a5c")
-		)
-		(pin "14"
-			(uuid "e38ace1a-6380-4da2-8ce7-d84901dc3d09")
-		)
-		(pin "15"
-			(uuid "0c118869-7133-4c19-8e74-b8b248fea4dc")
-		)
-		(pin "16"
-			(uuid "781b4aac-9478-4a5b-a6ed-f9d1e7876303")
-		)
-		(pin "2"
-			(uuid "ef2c91f5-4dc0-4344-b4f4-b385791a5daf")
-		)
-		(pin "3"
-			(uuid "20550b9b-6a86-4d70-969d-b1b37089639b")
-		)
-		(pin "4"
-			(uuid "87c77a71-ea62-4c29-9e19-ce15c50bd524")
-		)
-		(pin "5"
-			(uuid "9c38aa93-552e-4a65-a61f-ed9dd7fac935")
-		)
-		(pin "6"
-			(uuid "34267abf-9d22-437d-9ba7-d94dbdb08d3d")
-		)
-		(pin "7"
-			(uuid "fff8f451-a848-4687-9249-24edb8e8d034")
-		)
-		(pin "8"
-			(uuid "378647da-433b-439c-a01b-4dc9687f76e9")
-		)
-		(pin "9"
-			(uuid "a46ed4ad-eb0d-47f6-bca1-741515312355")
-		)
-		(instances
-			(project "driver_board"
-				(path "/185b80a7-4519-478f-bc15-453044043b7f"
-					(reference "A3")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:C")
-		(at 80.01 91.44 90)
+		(at 77.47 91.44 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -6651,7 +6300,7 @@
 		(dnp no)
 		(uuid "0a7806fb-d589-440b-a83c-9bc1a8d46e2b")
 		(property "Reference" "C9"
-			(at 80.518 94.488 90)
+			(at 77.978 94.488 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6659,15 +6308,15 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 80.01 86.36 90)
+			(at 77.47 86.36 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 83.82 90.4748 0)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 81.28 90.4748 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6676,7 +6325,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 80.01 91.44 0)
+			(at 77.47 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6685,7 +6334,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 80.01 91.44 0)
+			(at 77.47 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6733,7 +6382,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 58.7248 22.86 0)
 			(effects
 				(font
@@ -6770,6 +6419,118 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "C13")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "open_robot_arm_lib:Pololu_Breakout_A4988")
+		(at 78.74 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0cba1901-ab14-4327-8ee7-13c5785fc14d")
+		(property "Reference" "A3"
+			(at 84.582 97.282 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Pololu_Breakout_A4988"
+			(at 87.376 97.282 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+			(at 85.725 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+			(at 81.28 121.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+			(at 78.74 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "12"
+			(uuid "4d615352-644f-4747-b73d-ba9d6c58ac52")
+		)
+		(pin "13"
+			(uuid "c07f5ff2-57a2-4d0d-a63e-ea30158079ef")
+		)
+		(pin "9"
+			(uuid "1a9f7775-5c4d-4832-a198-8cd59354dbae")
+		)
+		(pin "10"
+			(uuid "c77447d2-465e-4332-a811-e513c093ed74")
+		)
+		(pin "2"
+			(uuid "dad57322-0f44-487d-a5cf-6287f46b9be9")
+		)
+		(pin "14"
+			(uuid "27c3ee94-7f06-42c4-8194-47e8bffb2576")
+		)
+		(pin "3"
+			(uuid "1e45433c-025f-4160-919e-d2b3db8cb34a")
+		)
+		(pin "4"
+			(uuid "3714b8d6-e49b-41c2-9f53-a119922d2753")
+		)
+		(pin "5"
+			(uuid "597078a4-5617-4189-8b66-a54b2e359823")
+		)
+		(pin "6"
+			(uuid "9c045261-137d-4c82-bc65-ed1b1e2d60db")
+		)
+		(pin "16"
+			(uuid "4fedcfea-c89d-4c30-9867-ceeae5dd2bfd")
+		)
+		(pin "11"
+			(uuid "ba02414b-0ab4-477d-b0d7-165ce2461718")
+		)
+		(pin "7"
+			(uuid "d9ba14b9-5135-4b19-82e3-df342b0d29e8")
+		)
+		(pin "15"
+			(uuid "12873550-43e0-4bcb-8a1e-90aab2fa6f0f")
+		)
+		(pin "8"
+			(uuid "c2d50c30-05fe-493e-a925-24fa0dc3c2d5")
+		)
+		(pin "1"
+			(uuid "ba1b6732-2032-462e-b8a6-df8975cb28c0")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "A3")
 					(unit 1)
 				)
 			)
@@ -6852,6 +6613,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 143.51 162.56 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0f38a343-d583-48c0-9f12-e18cd289c94c")
+		(property "Reference" "#PWR012"
+			(at 137.16 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 139.7 162.5599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 143.51 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 143.51 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 143.51 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "728cbf59-d9f9-479c-bf5a-3f2dfb7d5bce")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR012")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 130.81 167.64 270)
 		(unit 1)
@@ -6876,7 +6704,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 130.81 165.862 90)
 			(effects
 				(font
@@ -6995,6 +6823,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 96.52 91.44 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "14eb68e7-3b8b-4fea-b29a-cbb0fae7185d")
+		(property "Reference" "#PWR02"
+			(at 102.87 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 100.33 91.4399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 96.52 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 96.52 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 96.52 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5cc98a6f-30c0-4336-8fe1-fc969da2775c")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR02")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 130.81 170.18 270)
 		(unit 1)
@@ -7019,7 +6914,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 130.81 168.402 90)
 			(effects
 				(font
@@ -7127,6 +7022,118 @@
 		)
 	)
 	(symbol
+		(lib_id "open_robot_arm_lib:Pololu_Breakout_A4988")
+		(at 78.74 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1b1ad75a-702c-48a8-9419-48f19f373a4e")
+		(property "Reference" "A1"
+			(at 84.582 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Pololu_Breakout_A4988"
+			(at 87.376 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+			(at 85.725 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+			(at 81.28 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+			(at 78.74 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "12"
+			(uuid "a7d0cd71-b066-404d-9623-73107c52a9b1")
+		)
+		(pin "13"
+			(uuid "5d5b2de7-e673-40e9-b7c1-fe475e1555a0")
+		)
+		(pin "9"
+			(uuid "6eecae7c-b216-4ce6-9c75-c388c850a631")
+		)
+		(pin "10"
+			(uuid "85069d18-fc74-4f36-b61e-03443882daab")
+		)
+		(pin "2"
+			(uuid "6d49701c-c387-49c0-babf-e869bf547022")
+		)
+		(pin "14"
+			(uuid "b4c8b0de-67fc-4aba-b50d-e30156f313c2")
+		)
+		(pin "3"
+			(uuid "077b85bd-3501-4f20-8938-f51d9623e324")
+		)
+		(pin "4"
+			(uuid "a9e74532-9181-4b21-8fd7-72515c2d93ef")
+		)
+		(pin "5"
+			(uuid "61926c8e-1d95-49b1-948e-0eb2b7ab03ef")
+		)
+		(pin "6"
+			(uuid "0d643d63-abbc-40b0-bd0b-cf37174a62be")
+		)
+		(pin "16"
+			(uuid "63982ff7-6f80-4735-85d9-707bc68326d1")
+		)
+		(pin "11"
+			(uuid "9a860f5a-0fbc-4b71-b534-f8c69234eb52")
+		)
+		(pin "7"
+			(uuid "cf84f8e8-6306-4d36-8a70-2d97f0b21db2")
+		)
+		(pin "15"
+			(uuid "bcfa77c7-a4da-420b-925d-571ce6857380")
+		)
+		(pin "8"
+			(uuid "c99ef0e4-acf1-4af7-bd00-7669cbdbf669")
+		)
+		(pin "1"
+			(uuid "7626d488-dcab-4a99-9326-bd0df007741e")
+		)
+		(instances
+			(project ""
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "A1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 55.88 170.18 270)
 		(unit 1)
@@ -7151,7 +7158,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 55.88 168.402 90)
 			(effects
 				(font
@@ -7188,6 +7195,73 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 76.2 144.78 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "22ae82f6-040e-4325-8e27-41b668cb13ba")
+		(property "Reference" "#PWR08"
+			(at 69.85 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 72.39 144.7799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 76.2 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 76.2 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 76.2 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3a3a688e-3e0d-4b67-8f58-beed80762782")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR08")
 					(unit 1)
 				)
 			)
@@ -7270,6 +7344,252 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 68.58 109.22 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "24e9e6c8-10d5-4070-a1f7-d762c68177e7")
+		(property "Reference" "#PWR06"
+			(at 62.23 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 64.77 109.2199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 68.58 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "0ee72332-d1c8-4a9e-befe-1fff5ec6eb52")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR06")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 143.51 53.34 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "2f781a0f-0d14-436d-a6b0-79780b36f098")
+		(property "Reference" "#PWR016"
+			(at 137.16 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 139.7 53.3399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 143.51 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 143.51 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 143.51 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b5b3ac97-0b82-4ef5-91d5-4ea95e2c9aed")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR016")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "open_robot_arm_lib:Pololu_Breakout_A4988")
+		(at 153.67 167.64 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2fe2f155-e3a3-4cba-86be-12f924ed32a1")
+		(property "Reference" "A6"
+			(at 159.512 150.622 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Pololu_Breakout_A4988"
+			(at 162.306 150.622 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+			(at 160.655 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+			(at 156.21 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+			(at 153.67 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "12"
+			(uuid "13a10b39-adbe-4ab6-b418-8d0f82ee83b8")
+		)
+		(pin "13"
+			(uuid "ddfb612b-c49e-4d26-941b-78690c0ca94e")
+		)
+		(pin "9"
+			(uuid "90a83331-a8ac-4f73-b3ba-eb2abe43e009")
+		)
+		(pin "10"
+			(uuid "c815dc94-2837-4cb1-b17c-4d05e9375798")
+		)
+		(pin "2"
+			(uuid "d5dff2a5-7812-4d10-8e8a-6644522172d4")
+		)
+		(pin "14"
+			(uuid "f8d8d100-5424-4c85-a364-c78f93c87d4a")
+		)
+		(pin "3"
+			(uuid "daa2e2ae-dfe4-44d2-b823-a465a4f0062e")
+		)
+		(pin "4"
+			(uuid "f6efa119-807c-4f2b-8682-9430bc047e36")
+		)
+		(pin "5"
+			(uuid "407b93d6-2299-4d99-a1c7-0ab99937daff")
+		)
+		(pin "6"
+			(uuid "0aab304e-41c7-4d84-a21c-f49eec64d556")
+		)
+		(pin "16"
+			(uuid "8cf37322-efba-4231-80f6-d26d6b9345fe")
+		)
+		(pin "11"
+			(uuid "a384c9d9-a190-455a-ab09-9c2d20798995")
+		)
+		(pin "7"
+			(uuid "c3d7e0f4-aada-474c-9011-ac81b13b2e77")
+		)
+		(pin "15"
+			(uuid "3af1dfb3-0690-4a5c-88c9-7d594cd76780")
+		)
+		(pin "8"
+			(uuid "9980cff5-7212-4bb7-98f4-b02a3d533a7b")
+		)
+		(pin "1"
+			(uuid "13fdea84-a586-4232-9e6f-71d87a069775")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "A6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Generic:Conn_01x04")
 		(at 96.52 114.3 0)
 		(unit 1)
@@ -7345,6 +7665,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 166.37 144.78 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "335461f8-7ec4-41dd-985d-bddc85f45480")
+		(property "Reference" "#PWR011"
+			(at 172.72 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 170.18 144.7799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 166.37 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 166.37 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 166.37 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "70c7cb77-2220-420b-bef2-6dc3da3331cb")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR011")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 130.81 116.84 270)
 		(unit 1)
@@ -7369,7 +7756,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 130.81 115.062 90)
 			(effects
 				(font
@@ -7436,7 +7823,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 132.08 56.642 90)
 			(effects
 				(font
@@ -7480,7 +7867,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 162.56 91.44 90)
+		(at 165.1 91.44 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7488,7 +7875,7 @@
 		(dnp no)
 		(uuid "3d9523aa-617b-432b-b19b-bd37694ebc57")
 		(property "Reference" "C4"
-			(at 161.798 84.836 90)
+			(at 164.338 84.836 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7496,15 +7883,15 @@
 			)
 		)
 		(property "Value" "100µF"
-			(at 163.83 86.614 90)
+			(at 166.37 86.614 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 166.37 90.4748 0)
+		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
+			(at 168.91 90.4748 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7513,7 +7900,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 162.56 91.44 0)
+			(at 165.1 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7522,7 +7909,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 162.56 91.44 0)
+			(at 165.1 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -7540,230 +7927,6 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "C4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Driver_Motor:Pololu_Breakout_A4988")
-		(at 78.74 167.64 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3fd68486-97ed-4f9b-925b-0586f4ac2d58")
-		(property "Reference" "A5"
-			(at 106.68 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Pololu_Breakout_A4988"
-			(at 83.82 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-			(at 85.725 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-			(at 81.28 175.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-			(at 78.74 167.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bfc9abec-9431-4a52-a2ae-f61ce9bac37b")
-		)
-		(pin "10"
-			(uuid "96955dac-a46b-4cea-8b95-319ab57294b4")
-		)
-		(pin "11"
-			(uuid "73b77a2f-dcea-4038-836a-9f786dcd1e65")
-		)
-		(pin "12"
-			(uuid "eb0635ac-23fd-4a03-a076-07fa7272e7d9")
-		)
-		(pin "13"
-			(uuid "4e6aa630-78ea-45ce-9346-9dd745905ec5")
-		)
-		(pin "14"
-			(uuid "9770a713-0807-46e6-b5ce-d4c747d00db7")
-		)
-		(pin "15"
-			(uuid "e07ac16b-71ce-42cb-b271-2731ebf18786")
-		)
-		(pin "16"
-			(uuid "76c0a84c-a3fa-477f-8382-66712fd16aad")
-		)
-		(pin "2"
-			(uuid "346b2b4e-ef83-41b1-9545-8294a565a34f")
-		)
-		(pin "3"
-			(uuid "a1261887-6997-42e5-8596-737ef3556e53")
-		)
-		(pin "4"
-			(uuid "59973368-7ad9-4609-9433-1012963b32c6")
-		)
-		(pin "5"
-			(uuid "a9313e15-b045-415b-af2e-d8a25f23782c")
-		)
-		(pin "6"
-			(uuid "c0999f2a-b487-45cd-8703-d7eea409dbf0")
-		)
-		(pin "7"
-			(uuid "dc0ec752-5d3a-4ef3-aa2b-3b823e51d395")
-		)
-		(pin "8"
-			(uuid "3093cb50-f609-4fbf-bf7a-696cddbc03be")
-		)
-		(pin "9"
-			(uuid "b3104390-52ec-4f8e-b982-f919bd0c06ee")
-		)
-		(instances
-			(project "driver_board"
-				(path "/185b80a7-4519-478f-bc15-453044043b7f"
-					(reference "A5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Driver_Motor:Pololu_Breakout_A4988")
-		(at 153.67 58.42 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4324a6d4-125c-45b8-ad61-117b520c6373")
-		(property "Reference" "A2"
-			(at 184.15 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Pololu_Breakout_A4988"
-			(at 160.9441 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-			(at 160.655 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-			(at 156.21 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-			(at 153.67 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "07be0680-f824-4639-b19e-8304b75e18cc")
-		)
-		(pin "10"
-			(uuid "b3742251-c290-499f-a24e-7da63a3ce942")
-		)
-		(pin "11"
-			(uuid "80af754d-7f48-4bea-be2c-ca9e4fd4fc67")
-		)
-		(pin "12"
-			(uuid "1edb3889-4b93-4f83-bd7a-d9a801888ecd")
-		)
-		(pin "13"
-			(uuid "fc085ad2-2b85-4819-b75a-d25c57840fc2")
-		)
-		(pin "14"
-			(uuid "e135ffc0-0ff4-4a2b-9724-5bfbb8561e4a")
-		)
-		(pin "15"
-			(uuid "13de0210-70af-4506-9c93-64973e4268a8")
-		)
-		(pin "16"
-			(uuid "84586eff-d136-4d32-825c-3db1cf930040")
-		)
-		(pin "2"
-			(uuid "8f855a43-4634-4dec-b091-8796c828ad4f")
-		)
-		(pin "3"
-			(uuid "e26af23c-5084-4186-9ae1-1afdf668d23d")
-		)
-		(pin "4"
-			(uuid "55389f64-020d-4947-a498-f958b524f647")
-		)
-		(pin "5"
-			(uuid "f9497b4d-9af6-4f26-9394-11935613de3c")
-		)
-		(pin "6"
-			(uuid "2a314d89-64f9-4b20-bb1d-3ed707bafc1f")
-		)
-		(pin "7"
-			(uuid "404c4101-5cd7-44e6-a432-94a56e4c6ae4")
-		)
-		(pin "8"
-			(uuid "f2bd9cf6-01e0-4213-80b6-988facef2a27")
-		)
-		(pin "9"
-			(uuid "2c962e87-be27-4b12-94fc-e73c409ff1eb")
-		)
-		(instances
-			(project "driver_board"
-				(path "/185b80a7-4519-478f-bc15-453044043b7f"
-					(reference "A2")
 					(unit 1)
 				)
 			)
@@ -7869,7 +8032,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 83.82 143.8148 0)
 			(effects
 				(font
@@ -7989,7 +8152,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 80.01 34.29 90)
+		(at 77.47 34.29 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -7997,7 +8160,7 @@
 		(dnp no)
 		(uuid "54289d24-8a4d-4a4b-af07-5f96a705269b")
 		(property "Reference" "C7"
-			(at 80.518 37.338 90)
+			(at 77.978 37.338 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8005,15 +8168,15 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 80.01 29.21 90)
+			(at 77.47 29.21 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 83.82 33.3248 0)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 81.28 33.3248 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8022,7 +8185,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 80.01 34.29 0)
+			(at 77.47 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8031,7 +8194,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor"
-			(at 80.01 34.29 0)
+			(at 77.47 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8079,7 +8242,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 130.81 112.522 90)
 			(effects
 				(font
@@ -8146,7 +8309,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 57.15 59.182 90)
 			(effects
 				(font
@@ -8394,7 +8557,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 132.08 59.182 90)
 			(effects
 				(font
@@ -8514,7 +8677,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 87.63 34.29 90)
+		(at 90.17 34.29 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -8522,7 +8685,7 @@
 		(dnp no)
 		(uuid "6130e831-6956-42d4-8ca4-59cf9d0efefc")
 		(property "Reference" "C1"
-			(at 87.376 27.178 90)
+			(at 89.916 27.178 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8530,15 +8693,15 @@
 			)
 		)
 		(property "Value" "100µF"
-			(at 89.154 29.21 90)
+			(at 91.694 29.21 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 91.44 33.3248 0)
+		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
+			(at 93.98 33.3248 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8547,7 +8710,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 87.63 34.29 0)
+			(at 90.17 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8556,7 +8719,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 87.63 34.29 0)
+			(at 90.17 34.29 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -8604,7 +8767,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 57.15 112.522 90)
 			(effects
 				(font
@@ -8723,6 +8886,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 166.37 34.29 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "62fdbf41-55dc-4e68-b4eb-fd522e4164e5")
+		(property "Reference" "#PWR018"
+			(at 172.72 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 170.18 34.2899 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 166.37 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 166.37 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 166.37 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2b072f9e-d94d-47a4-8b86-6a699fc5cb35")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR018")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 162.56 144.78 90)
 		(unit 1)
@@ -8747,7 +8977,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
 			(at 166.37 143.8148 0)
 			(effects
 				(font
@@ -8931,6 +9161,431 @@
 		)
 	)
 	(symbol
+		(lib_id "open_robot_arm_lib:Pololu_Breakout_A4988")
+		(at 153.67 114.3 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "69b3f107-f680-49aa-91ec-8415d11e1da2")
+		(property "Reference" "A4"
+			(at 159.766 97.028 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Pololu_Breakout_A4988"
+			(at 162.56 97.028 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+			(at 160.655 133.35 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+			(at 156.21 121.92 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+			(at 153.67 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "12"
+			(uuid "f2e1a6ba-7b4d-4d15-a72b-3a6c4e61a05b")
+		)
+		(pin "13"
+			(uuid "8e2f91c0-aba4-4002-8b4f-ab6b93d33636")
+		)
+		(pin "9"
+			(uuid "ce2aabd2-05f1-46c8-be0e-0f5f52fce49a")
+		)
+		(pin "10"
+			(uuid "2149029e-0fa1-4f10-a88c-e3adf675d5f2")
+		)
+		(pin "2"
+			(uuid "6513ceee-2123-477d-ac98-f57581b2be7e")
+		)
+		(pin "14"
+			(uuid "2ecb608f-02fb-47db-8a70-b8b68f1b268a")
+		)
+		(pin "3"
+			(uuid "78db2cfb-5802-4f9d-b0f4-bf3754e2dfb4")
+		)
+		(pin "4"
+			(uuid "9488ad48-4643-4549-936f-e0273eda91e6")
+		)
+		(pin "5"
+			(uuid "92bbb62e-8ec7-4166-a727-a032003b2a76")
+		)
+		(pin "6"
+			(uuid "f61f7d6b-24d4-4ab5-aa7f-5beb4044e6aa")
+		)
+		(pin "16"
+			(uuid "cc0c9d12-8c5e-4b62-816a-9ff0bc64f1ef")
+		)
+		(pin "11"
+			(uuid "26703396-0db0-4fde-bf72-1ac0bd9918e6")
+		)
+		(pin "7"
+			(uuid "0bfc3b04-5de6-4ced-bb34-67799d7c95df")
+		)
+		(pin "15"
+			(uuid "736cc94a-7400-470d-9dca-982125fcd4bf")
+		)
+		(pin "8"
+			(uuid "df62e922-ca2d-455e-b482-eaf7e56dd5fd")
+		)
+		(pin "1"
+			(uuid "543f1b4d-3d49-4459-bc55-079b15924f47")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "A4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 168.91 91.44 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "6b1cc58d-60ce-4bd0-a55a-f2db0cbab067")
+		(property "Reference" "#PWR015"
+			(at 175.26 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 172.72 91.4399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 168.91 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 168.91 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 168.91 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "2124736a-0743-4e4c-88c0-805db1105c59")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR015")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 151.13 144.78 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7611f33c-dd04-47fa-bc3b-dcf3a66096c9")
+		(property "Reference" "#PWR010"
+			(at 144.78 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 147.32 144.7799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 151.13 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 151.13 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 151.13 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "27a91b4e-41f9-45ff-861d-61d4fece60e2")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR010")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "open_robot_arm_lib:Pololu_Breakout_A4988")
+		(at 153.67 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "793f2eff-ed38-435a-9067-38b950e066cd")
+		(property "Reference" "A2"
+			(at 159.766 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Pololu_Breakout_A4988"
+			(at 162.814 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+			(at 160.655 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+			(at 156.21 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+			(at 153.67 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "12"
+			(uuid "ca9cee8d-6e6e-4419-8a83-966594a04a0b")
+		)
+		(pin "13"
+			(uuid "a949d247-607e-48cd-9b5c-6fb9f4f5bf79")
+		)
+		(pin "9"
+			(uuid "512b9169-2b80-4874-af38-fec4bf8a9cc6")
+		)
+		(pin "10"
+			(uuid "d9b87e26-4fe4-405b-9ad9-8f6bf4a6ad0a")
+		)
+		(pin "2"
+			(uuid "e45d4f18-2576-4341-b1d3-3a89494c3c16")
+		)
+		(pin "14"
+			(uuid "c36fff75-8aba-4a67-ae3d-5111f474d173")
+		)
+		(pin "3"
+			(uuid "01ef3644-64f3-4785-9bdb-0e4e9ef5818b")
+		)
+		(pin "4"
+			(uuid "4c4ed4f7-1119-409a-83a4-4e257cad917c")
+		)
+		(pin "5"
+			(uuid "bce64feb-94be-421d-9268-d1a921773340")
+		)
+		(pin "6"
+			(uuid "0394b92b-0ee9-48ac-b521-96d4ef6ccaec")
+		)
+		(pin "16"
+			(uuid "4c614787-5173-4b8b-a410-e9838043acb0")
+		)
+		(pin "11"
+			(uuid "f0924300-0126-4d61-a0ff-5712bbb9d5ab")
+		)
+		(pin "7"
+			(uuid "467f15ce-c6c2-438f-827e-602a6ba4cc44")
+		)
+		(pin "15"
+			(uuid "27c4850c-bd3b-480c-bed6-e740fd8b56cd")
+		)
+		(pin "8"
+			(uuid "b2126c04-64ad-40b1-b188-520434f450e3")
+		)
+		(pin "1"
+			(uuid "a80a08e1-80ae-46e4-8794-34b105deab3a")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "A2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 73.66 34.29 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "7dbe89bc-a7a6-4bf2-ba3f-0b77ecc061a2")
+		(property "Reference" "#PWR03"
+			(at 67.31 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 69.85 34.2899 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 73.66 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 73.66 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 73.66 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "ef62c93f-6a1f-42d1-b28e-b6012b30d9d3")
+		)
+		(instances
+			(project ""
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Generic:Conn_01x04")
 		(at 171.45 58.42 0)
 		(unit 1)
@@ -9030,7 +9685,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 158.75 143.8148 0)
 			(effects
 				(font
@@ -9067,118 +9722,6 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "C12")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Driver_Motor:Pololu_Breakout_A4988")
-		(at 153.67 114.3 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "8a5bdc56-1c98-4765-9555-2bc69215e97a")
-		(property "Reference" "A4"
-			(at 184.15 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Pololu_Breakout_A4988"
-			(at 160.9441 96.52 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-			(at 160.655 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-			(at 156.21 121.92 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-			(at 153.67 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b6020584-3c0b-4425-8b0e-d23ea96f2f34")
-		)
-		(pin "10"
-			(uuid "16c6eef8-2ff0-41f4-89b9-df9921401964")
-		)
-		(pin "11"
-			(uuid "d2d55a79-80a3-42d9-ba69-c61ed8c9270d")
-		)
-		(pin "12"
-			(uuid "1c35eeac-d8a0-4264-8b93-ff24ae0fb967")
-		)
-		(pin "13"
-			(uuid "85d01c62-76c6-4a80-817d-5824ef39cc32")
-		)
-		(pin "14"
-			(uuid "2cd3190c-967d-4858-93e4-882b781db926")
-		)
-		(pin "15"
-			(uuid "2a493fd6-8796-4708-bd7c-d4d85de925d8")
-		)
-		(pin "16"
-			(uuid "38684c9a-4d6f-46d7-9be7-036a37871017")
-		)
-		(pin "2"
-			(uuid "96f7a30f-27e6-4837-9b7a-b2eb6a7b3158")
-		)
-		(pin "3"
-			(uuid "ca5b8912-fbe1-453f-b914-16fc8988bbdf")
-		)
-		(pin "4"
-			(uuid "b4299c6b-3025-442a-beb3-b13514e329f7")
-		)
-		(pin "5"
-			(uuid "0e327e88-3839-485f-8dbe-6185cc73d941")
-		)
-		(pin "6"
-			(uuid "4a8de0eb-b142-47dd-a4ae-a771848ae346")
-		)
-		(pin "7"
-			(uuid "212fa5f6-84bf-45dd-95db-416cf759c85d")
-		)
-		(pin "8"
-			(uuid "c53a2c30-6a5c-487f-b8c3-2d0dc399086d")
-		)
-		(pin "9"
-			(uuid "90da5063-ff69-4811-b6a1-30bc9015b264")
-		)
-		(instances
-			(project "driver_board"
-				(path "/185b80a7-4519-478f-bc15-453044043b7f"
-					(reference "A4")
 					(unit 1)
 				)
 			)
@@ -9288,7 +9831,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 158.75 33.3248 0)
 			(effects
 				(font
@@ -9431,7 +9974,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 55.88 165.862 90)
 			(effects
 				(font
@@ -9474,6 +10017,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 96.52 34.29 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "966d973a-aece-4235-84d0-b071ce27c062")
+		(property "Reference" "#PWR04"
+			(at 102.87 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 100.33 34.2899 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 96.52 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 96.52 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 96.52 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "40749407-b99b-4c0d-9f85-679a02db23a0")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR04")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 67.31 26.67 180)
 		(unit 1)
@@ -9501,7 +10111,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 66.3448 22.86 0)
 			(effects
 				(font
@@ -9795,7 +10405,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
 			(at 17.78 33.02 0)
 			(effects
 				(font
@@ -9862,7 +10472,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
 			(at 91.44 143.8148 0)
 			(effects
 				(font
@@ -10006,7 +10616,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
 			(at 278.13 40.64 0)
 			(effects
 				(font
@@ -10079,7 +10689,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 57.15 115.062 90)
 			(effects
 				(font
@@ -10146,7 +10756,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TerminalBlock_Phoenix:TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal"
 			(at 17.78 40.64 0)
 			(effects
 				(font
@@ -10189,44 +10799,17 @@
 		)
 	)
 	(symbol
-		(lib_id "Driver_Motor:Pololu_Breakout_A4988")
-		(at 78.74 58.42 0)
+		(lib_id "power:GND")
+		(at 91.44 144.78 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "bf3d2bda-07c2-4fdf-845d-6bfe305b4f61")
-		(property "Reference" "A1"
-			(at 106.68 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Pololu_Breakout_A4988"
-			(at 83.82 40.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-			(at 85.725 77.47 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-			(at 81.28 66.04 0)
+		(fields_autoplaced yes)
+		(uuid "c9a1a78f-a819-431b-98ef-b19634ac25e2")
+		(property "Reference" "#PWR07"
+			(at 97.79 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10234,8 +10817,35 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-			(at 78.74 58.42 0)
+		(property "Value" "GND"
+			(at 95.25 144.7799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 91.44 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 91.44 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 91.44 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10244,57 +10854,79 @@
 			)
 		)
 		(pin "1"
-			(uuid "9787e159-c0a3-4e5c-8454-e9a0443c8a4f")
-		)
-		(pin "10"
-			(uuid "9db0a08c-4779-4f4d-99a4-a68aee711cf6")
-		)
-		(pin "11"
-			(uuid "cd9d07d6-417f-45b7-afab-fecb7961b4c1")
-		)
-		(pin "12"
-			(uuid "80aaf153-2264-4fd3-89e0-9b197a2af7ad")
-		)
-		(pin "13"
-			(uuid "61bc701e-484f-401c-b73c-a4addc4fe6ea")
-		)
-		(pin "14"
-			(uuid "5741c28f-8904-438f-8ca8-62f05c26f37a")
-		)
-		(pin "15"
-			(uuid "c35e94bd-d783-40fe-b47c-b2927f3de9c1")
-		)
-		(pin "16"
-			(uuid "75e17b05-0b30-4be3-97cc-d657a4edf94e")
-		)
-		(pin "2"
-			(uuid "0c75f9c4-e575-41bc-8375-20a1125cb79c")
-		)
-		(pin "3"
-			(uuid "ad8c82bc-9417-4f52-99fd-ce19af1a10e6")
-		)
-		(pin "4"
-			(uuid "3becf319-7279-4008-b72f-1b8a4b89cce7")
-		)
-		(pin "5"
-			(uuid "d944ad34-8ef2-4af8-8161-64fe23095dc2")
-		)
-		(pin "6"
-			(uuid "1f269d7e-cc85-43fa-805b-681e4cc55439")
-		)
-		(pin "7"
-			(uuid "0924e008-ab52-48ec-95c8-d4ad33c465de")
-		)
-		(pin "8"
-			(uuid "e192dc7b-f9bf-4fdd-ad3b-5ac8d1a63a55")
-		)
-		(pin "9"
-			(uuid "b012d569-f287-4810-b2cb-72d3a7878955")
+			(uuid "04e68c72-ed02-46d6-ae98-81898e16e3df")
 		)
 		(instances
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
-					(reference "A1")
+					(reference "#PWR07")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 71.12 91.44 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "cbcfa4f6-5028-443e-9788-3901ac814d2d")
+		(property "Reference" "#PWR01"
+			(at 64.77 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 67.31 91.4399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 71.12 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 71.12 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 71.12 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "204e0ab0-75c7-4ee8-bcb5-52944ceb4b49")
+		)
+		(instances
+			(project ""
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR01")
 					(unit 1)
 				)
 			)
@@ -10302,7 +10934,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 87.63 91.44 90)
+		(at 90.17 91.44 90)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -10310,7 +10942,7 @@
 		(dnp no)
 		(uuid "cca65d96-5997-4343-8652-609f87487cbf")
 		(property "Reference" "C3"
-			(at 86.868 84.582 90)
+			(at 89.408 84.582 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10318,15 +10950,15 @@
 			)
 		)
 		(property "Value" "100µF"
-			(at 88.646 86.614 90)
+			(at 91.186 86.614 90)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" ""
-			(at 91.44 90.4748 0)
+		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
+			(at 93.98 90.4748 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10335,7 +10967,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 87.63 91.44 0)
+			(at 90.17 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10344,7 +10976,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 87.63 91.44 0)
+			(at 90.17 91.44 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -10362,6 +10994,73 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "C3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 151.13 34.29 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ccff540c-4276-4bcf-99f4-d9a55bc2c7f5")
+		(property "Reference" "#PWR017"
+			(at 144.78 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 147.32 34.2899 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 151.13 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 151.13 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 151.13 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "06a79acd-8dc2-48e9-9423-f248be6a6ff6")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR017")
 					(unit 1)
 				)
 			)
@@ -10392,7 +11091,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
 			(at 57.15 56.642 90)
 			(effects
 				(font
@@ -10429,6 +11128,140 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 68.58 53.34 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d300e792-90f5-450e-8a3c-51f7ec8a2ab5")
+		(property "Reference" "#PWR05"
+			(at 62.23 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 64.77 53.3399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 68.58 53.34 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "5ea37071-dc7b-4c34-ad7d-8240b21792b0")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR05")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 146.05 91.44 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d3ef5699-5266-45f7-bf6e-9aa10405cb57")
+		(property "Reference" "#PWR014"
+			(at 139.7 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 142.24 91.4399 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 146.05 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 146.05 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 146.05 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "383305e6-37e0-4a3e-80c2-09da6e9b6fbf")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR014")
 					(unit 1)
 				)
 			)
@@ -10511,6 +11344,118 @@
 		)
 	)
 	(symbol
+		(lib_id "open_robot_arm_lib:Pololu_Breakout_A4988")
+		(at 78.74 167.64 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "d8c77ade-6b4c-49c0-8ff1-4a77059c08f6")
+		(property "Reference" "A5"
+			(at 84.582 150.368 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "Pololu_Breakout_A4988"
+			(at 87.376 150.368 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
+			(at 85.725 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
+			(at 81.28 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
+			(at 78.74 167.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "12"
+			(uuid "f181852e-ff00-46d5-870c-61316a58f588")
+		)
+		(pin "13"
+			(uuid "be6f320e-5520-425b-b918-6d4996cd9b8b")
+		)
+		(pin "9"
+			(uuid "c32f4732-5309-47b5-b1ef-0d6a8630634a")
+		)
+		(pin "10"
+			(uuid "67a959c6-05df-4082-ad1a-58a0dce002fc")
+		)
+		(pin "2"
+			(uuid "330bc523-c290-4591-8412-4de37b3df63e")
+		)
+		(pin "14"
+			(uuid "a0ac5785-f0d5-48e2-8026-3335de02e90c")
+		)
+		(pin "3"
+			(uuid "fd7e542a-a3fc-4426-96f0-05a1446bbafb")
+		)
+		(pin "4"
+			(uuid "6ef73bbb-d56b-4eea-8dac-5da12614662f")
+		)
+		(pin "5"
+			(uuid "6c928e90-11fc-4970-9c10-501780b77c5a")
+		)
+		(pin "6"
+			(uuid "e367bc9f-27a8-481d-9dfc-a3867e6843de")
+		)
+		(pin "16"
+			(uuid "974ef655-3591-4968-a760-4994ab35900c")
+		)
+		(pin "11"
+			(uuid "63af3782-82eb-4906-80f7-1f41c62aae5e")
+		)
+		(pin "7"
+			(uuid "240c831a-657e-4604-9a69-2d4534a76435")
+		)
+		(pin "15"
+			(uuid "0aafc49e-1e38-4ec0-9eea-5d1b21538c84")
+		)
+		(pin "8"
+			(uuid "92aacd62-f54a-4753-9024-4c0fdc91f0e7")
+		)
+		(pin "1"
+			(uuid "6ef3a1fd-5d45-4689-aad4-7bc687af773d")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "A5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:PWR_FLAG")
 		(at 29.21 191.77 90)
 		(unit 1)
@@ -10576,6 +11521,140 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 143.51 109.22 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f0abea98-d0a4-4c8c-8ecb-25e2a70cac38")
+		(property "Reference" "#PWR013"
+			(at 137.16 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 139.7 109.2199 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 143.51 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 143.51 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 143.51 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "45650ced-c04b-48c1-9edc-1a7b2a0f79e4")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 68.58 162.56 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "f483b4c8-41e7-4fd9-900d-09985d0874e9")
+		(property "Reference" "#PWR09"
+			(at 62.23 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 64.77 162.5599 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 68.58 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 68.58 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 68.58 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "55d21003-098f-4576-a69a-ac45f437643b")
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(reference "#PWR09")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Polarized")
 		(at 162.56 34.29 90)
 		(unit 1)
@@ -10600,7 +11679,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_SMD:CP_Elec_6.3x7.7"
 			(at 166.37 33.3248 0)
 			(effects
 				(font
@@ -10637,118 +11716,6 @@
 			(project "driver_board"
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "C2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Driver_Motor:Pololu_Breakout_A4988")
-		(at 153.67 167.64 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "fb4c1c41-a2bc-4414-9c80-05f4fae9d2d4")
-		(property "Reference" "A6"
-			(at 184.15 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "Pololu_Breakout_A4988"
-			(at 160.9441 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Module:Pololu_Breakout-16_15.2x20.3mm"
-			(at 160.655 186.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.pololu.com/product/2980/pictures"
-			(at 156.21 175.26 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" "Pololu Breakout Board, Stepper Driver A4988"
-			(at 153.67 167.64 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e20d892f-00a0-45ab-be50-38e585112ba2")
-		)
-		(pin "10"
-			(uuid "70a9bb82-a11c-4bb0-9709-9cefcf44d4fc")
-		)
-		(pin "11"
-			(uuid "650744e1-fb66-4cff-88b4-4572e0ac40b1")
-		)
-		(pin "12"
-			(uuid "c5613ebd-97d8-48af-8245-afc6f1c90c45")
-		)
-		(pin "13"
-			(uuid "7ed0f33d-6aaf-42d6-a260-ff82698ca3a7")
-		)
-		(pin "14"
-			(uuid "df9fe387-9f83-4936-a008-9cd72ed2e4b2")
-		)
-		(pin "15"
-			(uuid "77acc53d-6b2f-483b-9463-762a37225c1f")
-		)
-		(pin "16"
-			(uuid "ca4cde18-8ef6-48a8-ae78-e1892a39139e")
-		)
-		(pin "2"
-			(uuid "d167c649-f8e2-4a11-a0ad-d4502bdc65fe")
-		)
-		(pin "3"
-			(uuid "d4f6b27c-4346-4ac6-9186-ffa13aaf6b9c")
-		)
-		(pin "4"
-			(uuid "9349dda7-91ac-4369-8d12-a8be965962d7")
-		)
-		(pin "5"
-			(uuid "6b43024c-c7ed-4200-ba9b-4db44054c791")
-		)
-		(pin "6"
-			(uuid "332767a1-8710-4821-88ea-9e00584968b6")
-		)
-		(pin "7"
-			(uuid "88da0172-b9bb-402c-adeb-8d3ffda914a0")
-		)
-		(pin "8"
-			(uuid "0a7105f2-dfb0-4d0a-8a04-fcb278f0fd68")
-		)
-		(pin "9"
-			(uuid "b4ec4950-acc4-487c-8328-3072d15b144b")
-		)
-		(instances
-			(project "driver_board"
-				(path "/185b80a7-4519-478f-bc15-453044043b7f"
-					(reference "A6")
 					(unit 1)
 				)
 			)
@@ -10826,6 +11793,56 @@
 				(path "/185b80a7-4519-478f-bc15-453044043b7f"
 					(reference "D11")
 					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet
+		(at 228.6 149.86)
+		(size 33.02 11.43)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "151cc414-4f3b-49e9-b7f3-2c5f9503aba0")
+		(property "Sheetname" "Neuer Zettel"
+			(at 228.6 149.1484 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "untitled.kicad_sch"
+			(at 228.6 161.8746 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(property "Field2" ""
+			(at 228.6 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "driver_board"
+				(path "/185b80a7-4519-478f-bc15-453044043b7f"
+					(page "2")
 				)
 			)
 		)

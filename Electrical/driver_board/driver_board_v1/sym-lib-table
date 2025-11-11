@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "open_robot_arm_lib")(type "KiCad")(uri "${KIPRJMOD}/open_robot_arm_lib.kicad_sym")(options "")(descr ""))
+)
