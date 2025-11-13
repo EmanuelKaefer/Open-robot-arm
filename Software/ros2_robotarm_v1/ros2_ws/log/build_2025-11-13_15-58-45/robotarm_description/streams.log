@@ -1,0 +1,30 @@
+[0.052s] Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_description -- -j7 -l7
+[0.113s] Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_description -- -j7 -l7
+[0.138s] Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_description
+[0.149s] -- Install configuration: ""
+[0.150s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/launch
+[0.150s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes
+[0.150s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_2_colision.STL
+[0.150s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/base_link_colision.STL
+[0.150s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_4.STL
+[0.150s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_3_colision.STL
+[0.152s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_4_colision.STL
+[0.152s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_3.STL
+[0.153s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/robotarm_280
+[0.153s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/robotarm_280/visual
+[0.154s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_1_colision.STL
+[0.154s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/base_link.STL
+[0.154s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_1.STL
+[0.155s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_2.STL
+[0.155s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf
+[0.155s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/mech
+[0.155s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/robots
+[0.159s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/sensors
+[0.160s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/control
+[0.160s] [31mCMake Error at cmake_install.cmake:46 (file):
+[0.160s]   file INSTALL cannot find
+[0.160s]   "/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description/rivz": No such
+[0.160s]   file or directory.
+[0.160s] 
+[0.160s] [0m
+[0.163s] Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_description

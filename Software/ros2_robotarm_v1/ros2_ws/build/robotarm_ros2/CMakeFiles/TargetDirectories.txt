@@ -1,0 +1,9 @@
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/uninstall.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/robotarm_ros2_uninstall.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/test.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/edit_cache.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/rebuild_cache.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/list_install_components.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/install.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/install/local.dir
+/home/matteo/ros2_ws/build/robotarm_ros2/CMakeFiles/install/strip.dir

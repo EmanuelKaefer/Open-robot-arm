@@ -1,0 +1,15 @@
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ament_index/resource_index/package_run_dependencies/ros2_robotarm
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ament_index/resource_index/parent_prefix_path/ros2_robotarm
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/environment/ament_prefix_path.sh
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/environment/ament_prefix_path.dsv
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/environment/path.sh
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/environment/path.dsv
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/local_setup.bash
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/local_setup.sh
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/local_setup.zsh
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/local_setup.dsv
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.dsv
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ament_index/resource_index/packages/ros2_robotarm
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/cmake/ros2_robotarmConfig.cmake
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/cmake/ros2_robotarmConfig-version.cmake
+/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.xml

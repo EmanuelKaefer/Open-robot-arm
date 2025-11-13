@@ -1,0 +1,42 @@
+[0.024s] Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description -DCMAKE_INSTALL_PREFIX=/home/matteo/ros2_ws/install/robotarm_description
+[0.118s] -- The C compiler identification is GNU 13.3.0
+[0.193s] -- The CXX compiler identification is GNU 13.3.0
+[0.238s] -- Detecting C compiler ABI info
+[0.389s] -- Detecting C compiler ABI info - done
+[0.397s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.397s] -- Detecting C compile features
+[0.397s] -- Detecting C compile features - done
+[0.419s] -- Detecting CXX compiler ABI info
+[0.535s] -- Detecting CXX compiler ABI info - done
+[0.542s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.542s] -- Detecting CXX compile features
+[0.543s] -- Detecting CXX compile features - done
+[0.546s] -- Found ament_cmake: 2.5.4 (/opt/ros/jazzy/share/ament_cmake/cmake)
+[0.669s] -- Found Python3: /usr/bin/python3 (found version "3.12.3") found components: Interpreter 
+[0.756s] -- Found ament_lint_auto: 0.17.3 (/opt/ros/jazzy/share/ament_lint_auto/cmake)
+[0.842s] -- Added test 'lint_cmake' to check CMake code style
+[0.844s] -- Added test 'xmllint' to check XML markup files
+[0.846s] -- Configuring done (0.8s)
+[0.850s] -- Generating done (0.0s)
+[0.853s] -- Build files have been written to: /home/matteo/ros2_ws/build/robotarm_description
+[0.862s] Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description -DCMAKE_INSTALL_PREFIX=/home/matteo/ros2_ws/install/robotarm_description
+[0.862s] Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_description -- -j7 -l7
+[1.008s] Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_description -- -j7 -l7
+[1.011s] Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_description
+[1.042s] -- Install configuration: ""
+[1.042s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/ament_index/resource_index/package_run_dependencies/robotarm_description
+[1.042s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/ament_index/resource_index/parent_prefix_path/robotarm_description
+[1.044s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/environment/ament_prefix_path.sh
+[1.044s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/environment/ament_prefix_path.dsv
+[1.044s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/environment/path.sh
+[1.047s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/environment/path.dsv
+[1.050s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/local_setup.bash
+[1.050s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/local_setup.sh
+[1.050s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/local_setup.zsh
+[1.050s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/local_setup.dsv
+[1.050s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.dsv
+[1.050s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/ament_index/resource_index/packages/robotarm_description
+[1.051s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/cmake/robotarm_descriptionConfig.cmake
+[1.051s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/cmake/robotarm_descriptionConfig-version.cmake
+[1.051s] -- Installing: /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.xml
+[1.056s] Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_description

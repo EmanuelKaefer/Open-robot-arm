@@ -1,0 +1,280 @@
+[0.108s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build']
+[0.108s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=False, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=7, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, allow_overriding=[], cmake_args=None, cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x770f54487110>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x770f545ab830>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x770f545ab830>>, mixin_verb=('build',))
+[0.147s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.147s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.147s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.147s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.147s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.147s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.148s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/matteo/ros2_ws'
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.148s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.173s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ignore', 'ignore_ament_install']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ignore_ament_install'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_pkg']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_pkg'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['colcon_meta']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'colcon_meta'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['ros']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'ros'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['cmake', 'python']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'cmake'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extensions ['python_setup_py']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src) by extension 'python_setup_py'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extensions ['ignore', 'ignore_ament_install']
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'ignore'
+[0.174s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'ignore_ament_install'
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extensions ['colcon_pkg']
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'colcon_pkg'
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extensions ['colcon_meta']
+[0.176s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'colcon_meta'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extensions ['ros']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'ros'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extensions ['cmake', 'python']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'cmake'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'python'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extensions ['python_setup_py']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2) by extension 'python_setup_py'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extensions ['ignore', 'ignore_ament_install']
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extension 'ignore'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extension 'ignore_ament_install'
+[0.177s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extensions ['colcon_pkg']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extension 'colcon_pkg'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extensions ['colcon_meta']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extension 'colcon_meta'
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extensions ['ros']
+[0.179s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_description) by extension 'ros'
+[0.182s] DEBUG:colcon.colcon_core.package_identification:Package 'src/robotarm_ros2/robotarm_description' with type 'ros.ament_cmake' and name 'robotarm_description'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extensions ['colcon_pkg']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extension 'colcon_pkg'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extensions ['colcon_meta']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extension 'colcon_meta'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/robotarm_ros2/robotarm_ros2) by extension 'ros'
+[0.182s] DEBUG:colcon.colcon_core.package_identification:Package 'src/robotarm_ros2/robotarm_ros2' with type 'ros.ament_cmake' and name 'robotarm_ros2'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extensions ['ignore', 'ignore_ament_install']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extension 'ignore'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extension 'ignore_ament_install'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extensions ['colcon_pkg']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extension 'colcon_pkg'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extensions ['colcon_meta']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extension 'colcon_meta'
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extensions ['ros']
+[0.182s] Level 1:colcon.colcon_core.package_identification:_identify(src/ros2_robotarm) by extension 'ros'
+[0.183s] DEBUG:colcon.colcon_core.package_identification:Package 'src/ros2_robotarm' with type 'ros.ament_cmake' and name 'ros2_robotarm'
+[0.183s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.183s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.183s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.183s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.183s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.196s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) check parameters
+[0.198s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) discover
+[0.198s] DEBUG:colcon.colcon_installed_package_information.package_discovery:Found 285 installed packages in /opt/ros/jazzy
+[0.198s] Level 1:colcon.colcon_core.package_discovery:discover_packages(prefix_path) using defaults
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'cmake_target' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'cmake_clean_cache' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'cmake_clean_first' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'cmake_force_configure' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'ament_cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'catkin_cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_description' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.198s] DEBUG:colcon.colcon_core.verb:Building package 'robotarm_description' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matteo/ros2_ws/build/robotarm_description', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matteo/ros2_ws/install/robotarm_description', 'merge_install': False, 'path': '/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description', 'symlink_install': False, 'test_result_base': None}
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'cmake_target' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'cmake_clean_cache' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'cmake_clean_first' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'cmake_force_configure' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'ament_cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'catkin_cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'ros2_robotarm' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.198s] DEBUG:colcon.colcon_core.verb:Building package 'ros2_robotarm' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matteo/ros2_ws/build/ros2_robotarm', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matteo/ros2_ws/install/ros2_robotarm', 'merge_install': False, 'path': '/home/matteo/ros2_ws/src/ros2_robotarm', 'symlink_install': False, 'test_result_base': None}
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'cmake_target' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'cmake_clean_cache' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'cmake_clean_first' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'cmake_force_configure' from command line to 'False'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'ament_cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'catkin_cmake_args' from command line to 'None'
+[0.198s] Level 5:colcon.colcon_core.verb:set package 'robotarm_ros2' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.198s] DEBUG:colcon.colcon_core.verb:Building package 'robotarm_ros2' with the following arguments: {'ament_cmake_args': None, 'build_base': '/home/matteo/ros2_ws/build/robotarm_ros2', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': None, 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/home/matteo/ros2_ws/install/robotarm_ros2', 'merge_install': False, 'path': '/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_ros2', 'symlink_install': False, 'test_result_base': None}
+[0.198s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.231s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.234s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description' with build type 'ament_cmake'
+[0.234s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description'
+[0.236s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.236s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.236s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.241s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matteo/ros2_ws/src/ros2_robotarm' with build type 'ament_cmake'
+[0.243s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matteo/ros2_ws/src/ros2_robotarm'
+[0.243s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.243s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.258s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description -DCMAKE_INSTALL_PREFIX=/home/matteo/ros2_ws/install/robotarm_description
+[0.269s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/ros2_robotarm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/ros2_robotarm -- -j7 -l7
+[0.342s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/ros2_robotarm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/ros2_robotarm -- -j7 -l7
+[0.354s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/ros2_robotarm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/ros2_robotarm
+[0.372s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros2_robotarm)
+[0.374s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/ros2_robotarm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/ros2_robotarm
+[0.375s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm' for CMake module files
+[0.375s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm' for CMake config files
+[0.375s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros2_robotarm', 'cmake_prefix_path')
+[0.375s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/hook/cmake_prefix_path.ps1'
+[0.375s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/hook/cmake_prefix_path.dsv'
+[0.378s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/hook/cmake_prefix_path.sh'
+[0.378s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/bin'
+[0.379s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/lib/pkgconfig/ros2_robotarm.pc'
+[0.379s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/lib/python3.12/site-packages'
+[0.379s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/bin'
+[0.379s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.ps1'
+[0.380s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.dsv'
+[0.381s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.sh'
+[0.382s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.bash'
+[0.382s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.zsh'
+[0.383s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matteo/ros2_ws/install/ros2_robotarm/share/colcon-core/packages/ros2_robotarm)
+[0.383s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ros2_robotarm)
+[0.383s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm' for CMake module files
+[0.383s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm' for CMake config files
+[0.383s] Level 1:colcon.colcon_core.shell:create_environment_hook('ros2_robotarm', 'cmake_prefix_path')
+[0.383s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/hook/cmake_prefix_path.ps1'
+[0.385s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/hook/cmake_prefix_path.dsv'
+[0.385s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/hook/cmake_prefix_path.sh'
+[0.386s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/bin'
+[0.386s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/lib/pkgconfig/ros2_robotarm.pc'
+[0.386s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/lib/python3.12/site-packages'
+[0.387s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/ros2_robotarm/bin'
+[0.387s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.ps1'
+[0.388s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.dsv'
+[0.388s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.sh'
+[0.388s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.bash'
+[0.389s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/ros2_robotarm/share/ros2_robotarm/package.zsh'
+[0.389s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matteo/ros2_ws/install/ros2_robotarm/share/colcon-core/packages/ros2_robotarm)
+[1.096s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/matteo/ros2_ws/src/robotarm_ros2/robotarm_description -DCMAKE_INSTALL_PREFIX=/home/matteo/ros2_ws/install/robotarm_description
+[1.096s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_description -- -j7 -l7
+[1.242s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_description -- -j7 -l7
+[1.245s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/robotarm_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_description
+[1.287s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robotarm_description)
+[1.287s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description' for CMake module files
+[1.290s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/robotarm_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_description
+[1.294s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description' for CMake config files
+[1.294s] Level 1:colcon.colcon_core.shell:create_environment_hook('robotarm_description', 'cmake_prefix_path')
+[1.294s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/hook/cmake_prefix_path.ps1'
+[1.296s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/hook/cmake_prefix_path.dsv'
+[1.296s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/hook/cmake_prefix_path.sh'
+[1.296s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/bin'
+[1.296s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/lib/pkgconfig/robotarm_description.pc'
+[1.296s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/lib/python3.12/site-packages'
+[1.300s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/bin'
+[1.300s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.ps1'
+[1.300s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.dsv'
+[1.301s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.sh'
+[1.301s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.bash'
+[1.301s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.zsh'
+[1.302s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matteo/ros2_ws/install/robotarm_description/share/colcon-core/packages/robotarm_description)
+[1.302s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robotarm_description)
+[1.302s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description' for CMake module files
+[1.303s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description' for CMake config files
+[1.303s] Level 1:colcon.colcon_core.shell:create_environment_hook('robotarm_description', 'cmake_prefix_path')
+[1.303s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/hook/cmake_prefix_path.ps1'
+[1.303s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/hook/cmake_prefix_path.dsv'
+[1.304s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/hook/cmake_prefix_path.sh'
+[1.305s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/bin'
+[1.305s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/lib/pkgconfig/robotarm_description.pc'
+[1.305s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/lib/python3.12/site-packages'
+[1.305s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_description/bin'
+[1.305s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.ps1'
+[1.306s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.dsv'
+[1.308s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.sh'
+[1.308s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.bash'
+[1.309s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/package.zsh'
+[1.309s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matteo/ros2_ws/install/robotarm_description/share/colcon-core/packages/robotarm_description)
+[1.310s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_ros2' with build type 'ament_cmake'
+[1.310s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/home/matteo/ros2_ws/src/robotarm_ros2/robotarm_ros2'
+[1.310s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[1.311s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[1.332s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/robotarm_ros2': AMENT_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/matteo/ros2_ws/src/robotarm_ros2/robotarm_ros2 -DCMAKE_INSTALL_PREFIX=/home/matteo/ros2_ws/install/robotarm_ros2
+[2.488s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/robotarm_ros2' returned '0': AMENT_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake /home/matteo/ros2_ws/src/robotarm_ros2/robotarm_ros2 -DCMAKE_INSTALL_PREFIX=/home/matteo/ros2_ws/install/robotarm_ros2
+[2.488s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/robotarm_ros2': AMENT_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_ros2 -- -j7 -l7
+[2.553s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/robotarm_ros2' returned '0': AMENT_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/robotarm_ros2 -- -j7 -l7
+[2.553s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/home/matteo/ros2_ws/build/robotarm_ros2': AMENT_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_ros2
+[2.581s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robotarm_ros2)
+[2.581s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/home/matteo/ros2_ws/build/robotarm_ros2' returned '0': AMENT_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:${AMENT_PREFIX_PATH} CMAKE_PREFIX_PATH=/home/matteo/ros2_ws/install/robotarm_description:/opt/ros/jazzy/opt/gz_math_vendor:/opt/ros/jazzy/opt/gz_utils_vendor:/opt/ros/jazzy/opt/gz_cmake_vendor:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/robotarm_ros2
+[2.581s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2' for CMake module files
+[2.581s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2' for CMake config files
+[2.581s] Level 1:colcon.colcon_core.shell:create_environment_hook('robotarm_ros2', 'cmake_prefix_path')
+[2.581s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/hook/cmake_prefix_path.ps1'
+[2.581s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/hook/cmake_prefix_path.dsv'
+[2.581s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/hook/cmake_prefix_path.sh'
+[2.591s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/bin'
+[2.591s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/lib/pkgconfig/robotarm_ros2.pc'
+[2.591s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/lib/python3.12/site-packages'
+[2.591s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/bin'
+[2.591s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.ps1'
+[2.591s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.dsv'
+[2.593s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.sh'
+[2.593s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.bash'
+[2.593s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.zsh'
+[2.593s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matteo/ros2_ws/install/robotarm_ros2/share/colcon-core/packages/robotarm_ros2)
+[2.595s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(robotarm_ros2)
+[2.596s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2' for CMake module files
+[2.596s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2' for CMake config files
+[2.596s] Level 1:colcon.colcon_core.shell:create_environment_hook('robotarm_ros2', 'cmake_prefix_path')
+[2.596s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/hook/cmake_prefix_path.ps1'
+[2.604s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/hook/cmake_prefix_path.dsv'
+[2.604s] INFO:colcon.colcon_core.shell:Creating environment hook '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/hook/cmake_prefix_path.sh'
+[2.604s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/bin'
+[2.604s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/lib/pkgconfig/robotarm_ros2.pc'
+[2.604s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/lib/python3.12/site-packages'
+[2.604s] Level 1:colcon.colcon_core.environment:checking '/home/matteo/ros2_ws/install/robotarm_ros2/bin'
+[2.604s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.ps1'
+[2.604s] INFO:colcon.colcon_core.shell:Creating package descriptor '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.dsv'
+[2.604s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.sh'
+[2.604s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.bash'
+[2.604s] INFO:colcon.colcon_core.shell:Creating package script '/home/matteo/ros2_ws/install/robotarm_ros2/share/robotarm_ros2/package.zsh'
+[2.604s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/home/matteo/ros2_ws/install/robotarm_ros2/share/colcon-core/packages/robotarm_ros2)
+[2.613s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[2.613s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[2.613s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '0'
+[2.614s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[2.620s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[2.620s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[2.620s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[2.654s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[2.654s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matteo/ros2_ws/install/local_setup.ps1'
+[2.655s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/matteo/ros2_ws/install/_local_setup_util_ps1.py'
+[2.657s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matteo/ros2_ws/install/setup.ps1'
+[2.657s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matteo/ros2_ws/install/local_setup.sh'
+[2.657s] INFO:colcon.colcon_core.shell:Creating prefix util module '/home/matteo/ros2_ws/install/_local_setup_util_sh.py'
+[2.658s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matteo/ros2_ws/install/setup.sh'
+[2.659s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matteo/ros2_ws/install/local_setup.bash'
+[2.659s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matteo/ros2_ws/install/setup.bash'
+[2.660s] INFO:colcon.colcon_core.shell:Creating prefix script '/home/matteo/ros2_ws/install/local_setup.zsh'
+[2.660s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/home/matteo/ros2_ws/install/setup.zsh'

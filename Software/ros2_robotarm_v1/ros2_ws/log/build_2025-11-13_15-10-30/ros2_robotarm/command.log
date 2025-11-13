@@ -1,0 +1,4 @@
+Invoking command in '/home/matteo/ros2_ws/build/ros2_robotarm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/ros2_robotarm -- -j7 -l7
+Invoked command in '/home/matteo/ros2_ws/build/ros2_robotarm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/ros2_robotarm -- -j7 -l7
+Invoking command in '/home/matteo/ros2_ws/build/ros2_robotarm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/ros2_robotarm
+Invoked command in '/home/matteo/ros2_ws/build/ros2_robotarm' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/matteo/ros2_ws/build/ros2_robotarm

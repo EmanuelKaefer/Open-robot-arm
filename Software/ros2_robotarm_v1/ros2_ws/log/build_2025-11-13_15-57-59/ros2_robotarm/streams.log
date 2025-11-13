@@ -1,0 +1,5 @@
+[0.018s] Invoking command in '/home/matteo/ros2_ws/build/ros2_robotarm': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/ros2_robotarm -- -j7 -l7
+[0.050s] [0mCMake Error: The source directory "/home/matteo/ros2_ws/src/ros2_robotarm" does not exist.
+[0.050s] Specify --help for usage, or press the help button on the CMake GUI.[0m
+[0.052s] gmake: *** [Makefile:226: cmake_check_build_system] Error 1
+[0.055s] Invoked command in '/home/matteo/ros2_ws/build/ros2_robotarm' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/matteo/ros2_ws/build/ros2_robotarm -- -j7 -l7
