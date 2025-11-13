@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Base_shoulder_forearm_colision">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0625 0.015 0.045"
+        rpy="0 0 0" />
+      <mass
+        value="0.9" />
+      <inertia
+        ixx="0.0010875"
+        ixy="6.86661375907486E-20"
+        ixz="2.71833068627654E-35"
+        iyy="0.001779375"
+        iyz="2.82344315751434E-20"
+        izz="0.001651875" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.796078431372549 0.823529411764706 0.937254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="Link_1_colision">
+    <inertial>
+      <origin
+        xyz="0.0163072875765666 1.36696209906972E-15 0.0143764724359981"
+        rpy="0 0 0" />
+      <mass
+        value="0.6367" />
+      <inertia
+        ixx="0.000470014126223758"
+        ixy="-9.9214392180417E-20"
+        ixz="0.000316138506832103"
+        iyy="0.0028559194054094"
+        iyz="7.41686611634826E-20"
+        izz="0.00280017694585231" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_1_colision.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.76078431372549 0.4 0.180392156862745 0.3" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_1_colision.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_1"
+    type="revolute">
+    <origin
+      xyz="0.0624999999999998 0.0150000000000011 0.106"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="Link_1_colision" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-628320"
+      upper="628320"
+      effort="10"
+      velocity="20" />
+  </joint>
+  <link
+    name="Link_2_colision">
+    <inertial>
+      <origin
+        xyz="-0.0512196926157863 -0.000731320595335157 0.104459356244441"
+        rpy="0 0 0" />
+      <mass
+        value="1.350232" />
+      <inertia
+        ixx="0.00695370549657839"
+        ixy="-4.47103054903182E-18"
+        ixz="-0.000933186590156374"
+        iyy="0.00816173939983962"
+        iyz="-3.40570097576402E-18"
+        izz="0.0024219679139279" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_2_colision.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.76078431372549 0.4 0.180392156862745 0.3" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_2_colision.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_2"
+    type="revolute">
+    <origin
+      xyz="0.104 0.000731320595335067 0.0269325090282281"
+      rpy="0 0 0" />
+    <parent
+      link="Link_1_colision" />
+    <child
+      link="Link_2_colision" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-296710"
+      upper="-296710"
+      effort="10"
+      velocity="20" />
+  </joint>
+  <link
+    name="Link_3_colision">
+    <inertial>
+      <origin
+        xyz="-0.0609999999999997 -0.0160590410734605 0.0307907261572494"
+        rpy="0 0 0" />
+      <mass
+        value="0.713133499616522" />
+      <inertia
+        ixx="0.00214817254249618"
+        ixy="6.21086979524065E-18"
+        ixz="-4.34901400942238E-18"
+        iyy="0.00155758926095847"
+        iyz="0.000405733572218967"
+        izz="0.000887722239711263" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_3_colision.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.76078431372549 0.4 0.180392156862745 0.3" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_3_colision.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_3"
+    type="revolute">
+    <origin
+      xyz="-0.0309999999999991 -0.000742651593437518 0.181795309072382"
+      rpy="0 0 0" />
+    <parent
+      link="Link_2_colision" />
+    <child
+      link="Link_3_colision" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-2.9671"
+      upper="296710"
+      effort="10"
+      velocity="20" />
+  </joint>
+  <link
+    name="Link_4_colision">
+    <inertial>
+      <origin
+        xyz="0.0130567974402149 -0.000172033492558121 -0.184709430448294"
+        rpy="0 0 0" />
+      <mass
+        value="3.60006549961652" />
+      <inertia
+        ixx="0.0530964078829574"
+        ixy="-0.000149635085660357"
+        ixz="-0.00460077712348275"
+        iyy="0.0584171040538013"
+        iyz="0.00218781523201406"
+        izz="0.00968258584827654" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_4_colision.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://Base_shoulder_forearm_colision/meshes/Link_4_colision.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_4"
+    type="revolute">
+    <origin
+      xyz="-0.0609999999999998 -0.00300000000000059 0.0599999999999999"
+      rpy="0 0 0" />
+    <parent
+      link="Link_3_colision" />
+    <child
+      link="Link_4_colision" />
+    <axis
+      xyz="0 -1 0" />
+    <limit
+      lower="-6.2832"
+      upper="6.2832"
+      effort="10"
+      velocity="20" />
+  </joint>
+</robot>
