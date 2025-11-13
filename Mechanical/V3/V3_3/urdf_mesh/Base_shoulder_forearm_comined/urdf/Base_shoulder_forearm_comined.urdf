@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/base_link.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/base_link.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/base_link_colision.STL" />
       </geometry>
     </collision>
   </link>
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_1.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_1.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_1.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_1_colision.STL" />
       </geometry>
     </collision>
   </link>
@@ -124,7 +124,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_2.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_2.STL" />
       </geometry>
       <material
         name="">
@@ -138,7 +138,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_2.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_2_colision.STL" />
       </geometry>
     </collision>
   </link>
@@ -182,7 +182,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_3.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_3.STL" />
       </geometry>
       <material
         name="">
@@ -196,7 +196,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_3.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_3_colision.STL" />
       </geometry>
     </collision>
   </link>
@@ -240,7 +240,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_4.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_4.STL" />
       </geometry>
       <material
         name="">
@@ -254,7 +254,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://Base_shoulder_forearm_comined/meshes/Link_4.STL" />
+          filename="package://Base_shoulder_forearm_combined/meshes/Link_4_colision.STL" />
       </geometry>
     </collision>
   </link>
