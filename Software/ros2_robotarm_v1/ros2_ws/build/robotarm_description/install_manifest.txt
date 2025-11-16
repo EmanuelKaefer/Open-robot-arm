@@ -8,9 +8,9 @@
 /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/base_link.STL
 /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_1.STL
 /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/meshes/Link_2.STL
-/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/Base_shoulder_forearm_comined.urdf
 /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/Base_shoulder_forearm_comined.csv
 /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/model.config
+/home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/urdf/robots/Base_shoulder_forearm_comined.urdf
 /home/matteo/ros2_ws/install/robotarm_description/share/ament_index/resource_index/package_run_dependencies/robotarm_description
 /home/matteo/ros2_ws/install/robotarm_description/share/ament_index/resource_index/parent_prefix_path/robotarm_description
 /home/matteo/ros2_ws/install/robotarm_description/share/robotarm_description/environment/ament_prefix_path.sh
