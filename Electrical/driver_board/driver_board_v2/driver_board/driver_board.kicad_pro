@@ -605,6 +605,10 @@
     [
       "465404f0-d3d7-43fb-a363-deca940ffc67",
       "MCU"
+    ],
+    [
+      "d8356156-726b-4444-b74b-74e8e554bca3",
+      "PSU"
     ]
   ],
   "text_variables": {}

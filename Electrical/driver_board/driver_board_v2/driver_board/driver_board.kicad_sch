@@ -30,7 +30,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "untitled.kicad_sch"
+		(property "Sheetfile" "microcontroller.kicad_sch"
 			(at 60.96 89.4846 0)
 			(effects
 				(font
@@ -43,6 +43,48 @@
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215"
 					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 119.38 68.58)
+		(size 43.18 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "d8356156-726b-4444-b74b-74e8e554bca3")
+		(property "Sheetname" "PSU"
+			(at 119.38 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power-supply.kicad_sch"
+			(at 119.38 89.4846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "driver_board"
+				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215"
+					(page "3")
 				)
 			)
 		)
