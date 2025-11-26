@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="robot_arm.SLDASM">
+  <link
+    name="shoulder_link">
+    <inertial>
+      <origin
+        xyz="0.048313 -0.00029727 0.021059"
+        rpy="0 0 0" />
+      <mass
+        value="0.2852" />
+      <inertia
+        ixx="0.00018494"
+        ixy="1.9606E-06"
+        ixz="6.6547E-07"
+        iyy="0.00045611"
+        iyz="4.7137E-07"
+        izz="0.00052794" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="upperarm_link">
+    <inertial>
+      <origin
+        xyz="-0.0477 -0.00051341 0.098804"
+        rpy="0 0 0" />
+      <mass
+        value="0.53985" />
+      <inertia
+        ixx="0.0030659"
+        ixy="-1.3602E-06"
+        ixz="2.5918E-06"
+        iyy="0.0028126"
+        iyz="3.6998E-06"
+        izz="0.00036425" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/upperarm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/upperarm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="shoulder_joint"
+    type="continuous">
+    <origin
+      xyz="0.099 5.5105E-05 0.0495"
+      rpy="0 0 0" />
+    <parent
+      link="shoulder_link" />
+    <child
+      link="upperarm_link" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <link
+    name="forearm_link">
+    <inertial>
+      <origin
+        xyz="0.0323163826057909 -0.0342521498357514 0.0290643523408674"
+        rpy="0 0 0" />
+      <mass
+        value="0.710086306476877" />
+      <inertia
+        ixx="0.0018701335963317"
+        ixy="4.02022046039309E-06"
+        ixz="-4.50731120991758E-06"
+        iyy="0.00138346884758172"
+        iyz="0.000230017841525673"
+        izz="0.0011441684244926" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/forearm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/forearm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="elbow_joint"
+    type="continuous">
+    <origin
+      xyz="-0.1315 0 0.18173"
+      rpy="0 0 0" />
+    <parent
+      link="upperarm_link" />
+    <child
+      link="forearm_link" />
+    <axis
+      xyz="-1 0 0" />
+  </joint>
+  <link
+    name="wrist_turn_link">
+    <inertial>
+      <origin
+        xyz="-0.0160659421843786 -0.164990696721511 0.00133880266500591"
+        rpy="0 0 0" />
+      <mass
+        value="0.202928307735687" />
+      <inertia
+        ixx="0.000380803246742115"
+        ixy="-8.66361281743901E-05"
+        ixz="2.22902076907321E-05"
+        iyy="0.000180195203933524"
+        iyz="9.05170151741001E-06"
+        izz="0.000394041580870373" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/wrist_turn_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/wrist_turn_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wrist_turn"
+    type="continuous">
+    <origin
+      xyz="0.0325 0.012143 0.0675"
+      rpy="0 0 0" />
+    <parent
+      link="forearm_link" />
+    <child
+      link="wrist_turn_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="wrist_tilt_link">
+    <inertial>
+      <origin
+        xyz="0.0521007325406729 -0.0154119081022636 -1.91718344977332E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.12185198168618" />
+      <inertia
+        ixx="0.000106316862410579"
+        ixy="9.5504040568459E-07"
+        ixz="-5.90823308399403E-10"
+        iyy="9.80062751348337E-05"
+        iyz="4.16147124606563E-10"
+        izz="0.000102272747310415" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/wrist_tilt_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_arm.SLDASM/meshes/wrist_tilt_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wrist_tilt_joint"
+    type="continuous">
+    <origin
+      xyz="-0.0525 -0.23103 0"
+      rpy="0 0 0" />
+    <parent
+      link="wrist_turn_link" />
+    <child
+      link="wrist_tilt_link" />
+    <axis
+      xyz="1 0 0" />
+  </joint>
+</robot>
