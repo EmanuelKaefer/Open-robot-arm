@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="robot_armV2.SLDASM">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.046 0.01 0.0348625258959964"
+        rpy="0 0 0" />
+      <mass
+        value="0.125732513086222" />
+      <inertia
+        ixx="9.31429511124145E-05"
+        ixy="-1.60429614385965E-13"
+        ixz="-3.2709602049349E-21"
+        iyy="0.000102068899935334"
+        iyz="-1.02676782451657E-20"
+        izz="9.20244219404304E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="shoulder_link">
+    <inertial>
+      <origin
+        xyz="-0.0411620910620459 0.000253271258416538 0.0895658513453212"
+        rpy="0 0 0" />
+      <mass
+        value="0.3347474320306" />
+      <inertia
+        ixx="0.000209631793443089"
+        ixy="1.96063863395588E-06"
+        ixz="-6.65465104917836E-07"
+        iyy="0.000480802278455939"
+        iyz="-4.71371433584401E-07"
+        izz="0.000538877213912492" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="shoulder_joint1"
+    type="continuous">
+    <origin
+      xyz="0.046 0.01 -0.001"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="shoulder_link" />
+    <axis
+      xyz="0 0 1" />
+  </joint>
+  <link
+    name="upperarm_link">
+    <inertial>
+      <origin
+        xyz="0.0562528131590313 0.000369945510000828 0.0857132446826368"
+        rpy="0 0 0" />
+      <mass
+        value="0.74419759620129" />
+      <inertia
+        ixx="0.00311409210759309"
+        ixy="-1.3420025229867E-06"
+        ixz="-2.59179284533756E-06"
+        iyy="0.00286004491912061"
+        iyz="-3.65747113838536E-06"
+        izz="0.000411842736380791" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/upperarm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/upperarm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="shoulder_joint2"
+    type="revolute">
+    <origin
+      xyz="-0.0990000000000002 -5.51050720872603E-05 0.1255"
+      rpy="0 0 0" />
+    <parent
+      link="shoulder_link" />
+    <child
+      link="upperarm_link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="forearm_link">
+    <inertial>
+      <origin
+        xyz="-0.0339069007034074 0.034016245127378 0.0255892821353269"
+        rpy="0 0 0" />
+      <mass
+        value="0.827081368308497" />
+      <inertia
+        ixx="0.00190548295642375"
+        ixy="4.02075573306254E-06"
+        ixz="4.50756639926959E-06"
+        iyy="0.0014340921873558"
+        iyz="-0.000236684960512004"
+        izz="0.00117235199608543" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/forearm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/forearm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="elbow_joint"
+    type="revolute">
+    <origin
+      xyz="0.1315 0 0.181727818450784"
+      rpy="0 0 0" />
+    <parent
+      link="upperarm_link" />
+    <child
+      link="forearm_link" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="-1.5708"
+      upper="1.5708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="wrist_turn_link">
+    <inertial>
+      <origin
+        xyz="0.0130010242685207 0.148847986470885 0.00093400676869082"
+        rpy="0 0 0" />
+      <mass
+        value="0.326308399182154" />
+      <inertia
+        ixx="0.000453076964015862"
+        ixy="-8.66444178665482E-05"
+        ixz="-2.22900213613411E-05"
+        iyy="0.000202627386733926"
+        iyz="-8.98936161112266E-06"
+        izz="0.000459193821112838" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/wrist_turn_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/wrist_turn_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wrist_turn_joint"
+    type="continuous">
+    <origin
+      xyz="-0.0325 -0.0121430516635518 0.0675"
+      rpy="0 0 0" />
+    <parent
+      link="forearm_link" />
+    <child
+      link="wrist_turn_link" />
+    <axis
+      xyz="0 -1 0" />
+  </joint>
+  <link
+    name="wrist_tilt_link">
+    <inertial>
+      <origin
+        xyz="-0.0465163188756428 0.0127257186993177 -6.95422703256288E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.246094957683812" />
+      <inertia
+        ixx="0.00013148982590547"
+        ixy="1.01409588245576E-06"
+        ixz="-4.25981717607657E-08"
+        iyy="0.000127545838586352"
+        iyz="4.91710427720937E-09"
+        izz="0.000126513938256532" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/wrist_tilt_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/wrist_tilt_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="wrist_tilt_joint"
+    type="revolute">
+    <origin
+      xyz="0.0525 0.23103426025101 0"
+      rpy="0 0 0" />
+    <parent
+      link="wrist_turn_link" />
+    <child
+      link="wrist_tilt_link" />
+    <axis
+      xyz="-1 0 0" />
+    <limit
+      lower="-2.0944"
+      upper="1.5708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="gripper_turn_link">
+    <inertial>
+      <origin
+        xyz="2.57228580218699E-06 0.0241506872670402 0.014424198571145"
+        rpy="0 0 0" />
+      <mass
+        value="0.108410327218271" />
+      <inertia
+        ixx="4.58275283057376E-05"
+        ixy="4.65305857207098E-09"
+        ixz="-8.36604042381948E-10"
+        iyy="2.58490008803313E-05"
+        iyz="-3.17004506939467E-07"
+        izz="5.05752813701646E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_turn_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_turn_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_turn_joint"
+    type="continuous">
+    <origin
+      xyz="-0.052084233509625 0.0664999999999997 0"
+      rpy="0 0 0" />
+    <parent
+      link="wrist_tilt_link" />
+    <child
+      link="gripper_turn_link" />
+    <axis
+      xyz="0 1 0" />
+  </joint>
+  <link
+    name="gripper_left_drive_arm_link">
+    <inertial>
+      <origin
+        xyz="0.00572745126727883 -0.00535327373986971 0.0309983439291242"
+        rpy="0 0 0" />
+      <mass
+        value="0.0398653672709471" />
+      <inertia
+        ixx="7.88822659937046E-06"
+        ixy="1.65305823116588E-06"
+        ixz="3.51515559004925E-08"
+        iyy="7.73647981186332E-06"
+        iyz="2.56569399621243E-08"
+        izz="6.77516177604906E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_left_drive_arm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_left_drive_arm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_left_drive_arm_joint"
+    type="revolute">
+    <origin
+      xyz="0.0184881047124418 0.0402722913625668 -0.0135499999999079"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_turn_link" />
+    <child
+      link="gripper_left_drive_arm_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-15708"
+      upper="15708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="gripper_left_finger_link">
+    <inertial>
+      <origin
+        xyz="-0.00944964977226048 0.0229398093296641 0.0187597694100742"
+        rpy="0 0 0" />
+      <mass
+        value="0.00424005766628173" />
+      <inertia
+        ixx="9.5999704178659E-07"
+        ixy="2.15828932738593E-07"
+        ixz="-2.18505541020691E-24"
+        iyy="1.15064892783557E-07"
+        iyz="2.67327805537615E-23"
+        izz="1.00945243092395E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_left_finger_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_left_finger_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_left_finger_joint"
+    type="revolute">
+    <origin
+      xyz="0.021694113337709 0.0207211352602839 -0.00500000000001855"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_left_drive_arm_link" />
+    <child
+      link="gripper_left_finger_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-15708"
+      upper="15708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="gripper_right_drive_arm_link">
+    <inertial>
+      <origin
+        xyz="0.0050850174980434 0.00596689837489034 0.0309983426162281"
+        rpy="0 0 0" />
+      <mass
+        value="0.0398653672457436" />
+      <inertia
+        ixx="7.88823993413354E-06"
+        ixy="-1.65305761638946E-06"
+        ixz="-2.72418077715053E-08"
+        iyy="7.73646645936332E-06"
+        iyz="3.39380971984017E-08"
+        izz="6.77516176896231E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_right_drive_arm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.776470588235294 0.756862745098039 0.737254901960784 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_right_drive_arm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_right_drive_arm_joint"
+    type="revolute">
+    <origin
+      xyz="-0.0184881047119306 0.0402722913623553 -0.0135499999999926"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_turn_link" />
+    <child
+      link="gripper_right_drive_arm_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-15708"
+      upper="15708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="gripper_right_finger_link">
+    <inertial>
+      <origin
+        xyz="0.00944964977288004 0.0229398093301211 0.0187597694102918"
+        rpy="0 0 0" />
+      <mass
+        value="0.00424005766628173" />
+      <inertia
+        ixx="9.59997041786556E-07"
+        ixy="-2.1582893273866E-07"
+        ixz="1.25952529911048E-23"
+        iyy="1.15064892783592E-07"
+        iyz="1.02840970138901E-23"
+        izz="1.00945243092395E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_right_finger_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_right_finger_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_right_finger_joint"
+    type="revolute">
+    <origin
+      xyz="-0.0216941133391642 0.0207211352593293 -0.00500000000024353"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_right_drive_arm_link" />
+    <child
+      link="gripper_right_finger_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-15708"
+      upper="15708"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="gripper_left_support_arm_link">
+    <inertial>
+      <origin
+        xyz="0.00965216983384645 0.00921927130978883 0.0135250000005198"
+        rpy="0 0 0" />
+      <mass
+        value="0.00214833979343004" />
+      <inertia
+        ixx="1.19250126835757E-07"
+        ixy="-1.06343430327574E-07"
+        ixz="7.19647132921134E-23"
+        iyy="1.29013059345702E-07"
+        iyz="6.78288102293483E-23"
+        izz="2.26137406929615E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_left_support_arm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_left_support_arm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_left_support_arm_joint"
+    type="revolute">
+    <origin
+      xyz="0.005 0.0625 -0.01355"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_turn_link" />
+    <child
+      link="gripper_left_support_arm_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="gripper_left_finger_joint"
+      multiplier="1"
+      offset="0" />
+  </joint>
+  <link
+    name="gripper_right_support_arm_link">
+    <inertial>
+      <origin
+        xyz="-0.00965216983379519 0.0092192713084982 0.0135249999991228"
+        rpy="0 0 0" />
+      <mass
+        value="0.00214833979343004" />
+      <inertia
+        ixx="1.19250126831771E-07"
+        ixy="1.06343430327391E-07"
+        ixz="1.29040175558272E-22"
+        iyy="1.29013059349687E-07"
+        iyz="-1.3400325923359E-22"
+        izz="2.26137406929615E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_right_support_arm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://robot_armV2.SLDASM/meshes/gripper_right_support_arm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="gripper_right_support_arm_joint"
+    type="revolute">
+    <origin
+      xyz="-0.005 0.0625 -0.01355"
+      rpy="0 0 0" />
+    <parent
+      link="gripper_turn_link" />
+    <child
+      link="gripper_right_support_arm_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+    <mimic
+      joint="gripper_right_finger_joint"
+      multiplier="1"
+      offset="0" />
+  </joint>
+</robot>
