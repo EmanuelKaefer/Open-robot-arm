@@ -26,7 +26,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/base_link.STL" />
+          filename="../meshes/base_link.STL" />
       </geometry>
       <material
         name="">
@@ -40,7 +40,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/base_link.STL" />
+          filename="..meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -66,7 +66,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/shoulder_link.STL" />
+          filename="../meshes/shoulder_link.STL" />
       </geometry>
       <material
         name="">
@@ -80,7 +80,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/shoulder_link.STL" />
+          filename="../meshes/shoulder_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -119,7 +119,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/upperarm_link.STL" />
+          filename="../meshes/upperarm_link.STL" />
       </geometry>
       <material
         name="">
@@ -133,7 +133,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/upperarm_link.STL" />
+          filename="../meshes/upperarm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -177,7 +177,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/forearm_link.STL" />
+          filename="../meshes/forearm_link.STL" />
       </geometry>
       <material
         name="">
@@ -191,7 +191,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/forearm_link.STL" />
+          filename="../meshes/forearm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -235,7 +235,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/wrist_turn_link.STL" />
+          filename="../meshes/wrist_turn_link.STL" />
       </geometry>
       <material
         name="">
@@ -249,7 +249,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/wrist_turn_link.STL" />
+          filename="../meshes/wrist_turn_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -288,7 +288,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/wrist_tilt_link.STL" />
+          filename="../meshes/wrist_tilt_link.STL" />
       </geometry>
       <material
         name="">
@@ -302,7 +302,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/wrist_tilt_link.STL" />
+          filename="../meshes/wrist_tilt_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -346,7 +346,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_turn_link.STL" />
+          filename="../meshes/gripper_turn_link.STL" />
       </geometry>
       <material
         name="">
@@ -360,7 +360,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_turn_link.STL" />
+          filename="../meshes/gripper_turn_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -399,7 +399,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_left_drive_arm_link.STL" />
+          filename="../meshes/gripper_left_drive_arm_link.STL" />
       </geometry>
       <material
         name="">
@@ -413,7 +413,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_left_drive_arm_link.STL" />
+          filename="../meshes/gripper_left_drive_arm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -430,8 +430,8 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="-15708"
-      upper="15708"
+      lower="-1.5708"
+      upper="1.5708"
       effort="1"
       velocity="1" />
   </joint>
@@ -457,7 +457,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_left_finger_link.STL" />
+          filename="../meshes/gripper_left_finger_link.STL" />
       </geometry>
       <material
         name="">
@@ -471,7 +471,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_left_finger_link.STL" />
+          filename="../meshes/gripper_left_finger_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -488,8 +488,8 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="-15708"
-      upper="15708"
+      lower="-1.5708"
+      upper="1.5708"
       effort="1"
       velocity="1" />
   </joint>
@@ -515,7 +515,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_right_drive_arm_link.STL" />
+          filename="../meshes/gripper_right_drive_arm_link.STL" />
       </geometry>
       <material
         name="">
@@ -529,7 +529,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_right_drive_arm_link.STL" />
+          filename="../meshes/gripper_right_drive_arm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -546,8 +546,8 @@
     <axis
       xyz="0 0 -1" />
     <limit
-      lower="-15708"
-      upper="15708"
+      lower="-1.5708"
+      upper="1.5708"
       effort="1"
       velocity="1" />
   </joint>
@@ -573,7 +573,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_right_finger_link.STL" />
+          filename="../meshes/gripper_right_finger_link.STL" />
       </geometry>
       <material
         name="">
@@ -587,7 +587,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_right_finger_link.STL" />
+          filename="../meshes/gripper_right_finger_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -604,8 +604,8 @@
     <axis
       xyz="0 0 1" />
     <limit
-      lower="-15708"
-      upper="15708"
+      lower="-1.5708"
+      upper="1.5708"
       effort="1"
       velocity="1" />
   </joint>
@@ -631,7 +631,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_left_support_arm_link.STL" />
+          filename="../meshes/gripper_left_support_arm_link.STL" />
       </geometry>
       <material
         name="">
@@ -645,7 +645,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_left_support_arm_link.STL" />
+          filename="../meshes/gripper_left_support_arm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -663,7 +663,7 @@
       xyz="0 0 1" />
     <limit
       lower="0"
-      upper="0"
+      upper="6.37"
       effort="0"
       velocity="0" />
     <mimic
@@ -693,7 +693,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_right_support_arm_link.STL" />
+          filename="../meshes/gripper_right_support_arm_link.STL" />
       </geometry>
       <material
         name="">
@@ -707,7 +707,7 @@
         rpy="0 0 0" />
       <geometry>
         <mesh
-          filename="package://robot_armV2.SLDASM/meshes/gripper_right_support_arm_link.STL" />
+          filename="../meshes/gripper_right_support_arm_link.STL" />
       </geometry>
     </collision>
   </link>
@@ -725,7 +725,7 @@
       xyz="0 0 1" />
     <limit
       lower="0"
-      upper="0"
+      upper="6.37"
       effort="0"
       velocity="0" />
     <mimic
