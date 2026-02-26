@@ -14,10 +14,3 @@ fprintf('✓ Robot loaded: %d joints\n\n', numel(robot.Bodies));
 
 
 
-%% 7. Instructions
-fprintf('=== NEXT STEPS ===\n');
-fprintf('1. Open your Simulink model\n');
-fprintf('2. Use a CONSTANT block (not MATLAB Function!)\n');
-fprintf('3. Set Constant value to: initialGuess\n');
-fprintf('4. This will work for code generation!\n');
-fprintf('==================\n');
