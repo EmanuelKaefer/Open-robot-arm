@@ -27,11 +27,11 @@ initialGuess = homeConfiguration(robot);
 waypoints = [
 0.0414, 0.3578, 0.3602;	%home position
 0.2000, 0.4000, 0.11000;	%Above pick
-0.2000, 0.4000, 0.0600;		%pick position
-0.0414,0.2578,0.2502;		%between pick and place
--0.2000, 0.4000, 0.11000;	%Above place
--0.2000, 0.4000, 0.0600;	%plave position
-0.0414, 0.3578, 0.3602;		%back to home
+%0.2000, 0.4000, 0.0600;		%pick position
+%0.0414,0.2578,0.2502;		%between pick and place
+%-0.2000, 0.4000, 0.11000;	%Above place
+%-0.2000, 0.4000, 0.0600;	%plave position
+%0.0414, 0.3578, 0.3602;		%back to home
 ];
 
 % Calculate IK for each waypoint
