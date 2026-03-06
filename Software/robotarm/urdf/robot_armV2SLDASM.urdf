@@ -377,6 +377,7 @@
     <axis
       xyz="0 1 0" />
   </joint>
+    <!--
   <link
     name="gripper_left_drive_arm_link">
     <inertial>
@@ -733,4 +734,6 @@
       multiplier="1"
       offset="0" />
   </joint>
+
+  -->
 </robot>
