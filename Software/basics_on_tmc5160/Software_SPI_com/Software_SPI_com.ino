@@ -5,9 +5,9 @@
 
 #include <TMCStepper.h>
 
-#define EN_PIN           38 // Enable
-#define DIR_PIN          36 // Direction
-#define STEP_PIN         34 // Step
+#define EN_PIN           13 // Enable
+#define DIR_PIN          3 // Direction
+#define STEP_PIN         4 // Step
 #define CS_PIN           53 // Chip select
 //#define SW_MOSI          50 // Software Master Out Slave In (MOSI)
 //#define SW_MISO          52 // Software Master In Slave Out (MISO)
@@ -34,7 +34,7 @@ void setup() {
 	while(!Serial);
 	Serial.println("Start...");
 	driver.begin(); 			// Initiate pins and registeries
-	driver.rms_current(1700); 	// Set stepper current to 600mA. The command is the same as command TMC2130.setCurrent(600, 0.11, 0.5);
+	driver.rms_current(2000); 	// Set stepper current to 600mA. The command is the same as command TMC2130.setCurrent(600, 0.11, 0.5);
 	driver.en_pwm_mode(1);  	// Enable extremely quiet stepping
 
 	pinMode(EN_PIN, OUTPUT);
