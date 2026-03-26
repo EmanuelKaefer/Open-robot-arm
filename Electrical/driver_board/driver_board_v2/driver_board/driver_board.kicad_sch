@@ -6,6 +6,48 @@
 	(paper "A4")
 	(lib_symbols)
 	(sheet
+		(at 60.96 101.6)
+		(size 43.18 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "147120b2-4873-41c0-b3ac-f217f740a2da")
+		(property "Sheetname" "Motordrivers"
+			(at 60.96 100.8884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Motordrivers.kicad_sch"
+			(at 60.96 122.5046 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "driver_board"
+				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 60.96 68.58)
 		(size 43.18 20.32)
 		(exclude_from_sim no)
