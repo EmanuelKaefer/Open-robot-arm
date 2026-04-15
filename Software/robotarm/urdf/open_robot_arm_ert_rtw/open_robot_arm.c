@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'open_robot_arm'.
  *
- * Model version                  : 2.3
+ * Model version                  : 2.4
  * Simulink Coder version         : 25.2 (R2025b) 28-Jul-2025
- * C/C++ source code generated on : Fri Apr 10 21:45:59 2026
+ * C/C++ source code generated on : Sat Apr 11 14:57:06 2026
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-A (64-bit)
@@ -1444,31 +1444,18 @@ void open_robot_arm_step(void)
     tmp = (rtb_Clock > 0.0);
   }
 
-  /* RelationalOperator: '<S2>/Compare' incorporates:
+  /* MATLABSystem: '<Root>/GPIO Write' incorporates:
    *  Constant: '<S2>/Constant'
+   *  RelationalOperator: '<S2>/Compare'
    *  Signum: '<S1>/Sign'
    */
-  open_robot_arm_B.Compare = (tmp >= open_robot_arm_P.CompareToConstant_const);
-
-  /* MATLABSystem: '<Root>/GPIO Write' */
-  EXT_GPIO_write(20U, (uint8_T)open_robot_arm_B.Compare);
+  EXT_GPIO_write(20U, (uint8_T)(tmp >= open_robot_arm_P.CompareToConstant_const));
 
   /* Abs: '<S1>/Abs' */
   open_robot_arm_B.Abs = fabs(rtb_Clock);
 
-  /* Start for MATLABSystem: '<Root>/PWM' */
-  if (open_robot_arm_B.Abs <= 1.0) {
-    rtb_Clock = open_robot_arm_B.Abs;
-  } else {
-    rtb_Clock = 1.0;
-  }
-
-  if (!(rtb_Clock >= 0.0)) {
-    rtb_Clock = 0.0;
-  }
-
   /* MATLABSystem: '<Root>/PWM' */
-  EXT_PWMBlock_setDutyCycle(open_robot_arm_DW.obj_l.PinNumber, rtb_Clock);
+  EXT_PWMBlock_setDutyCycle(open_robot_arm_DW.obj_l.PinNumber, 0.0);
 
   /* Update for UnitDelay: '<S1>/Unit Delay' */
   open_robot_arm_DW.UnitDelay_DSTATE = open_robot_arm_B.Round;
@@ -1536,10 +1523,10 @@ void open_robot_arm_initialize(void)
   open_robot_arm_M->Timing.stepSize0 = 0.001;
 
   /* External mode info */
-  open_robot_arm_M->Sizes.checksums[0] = (3046052321U);
-  open_robot_arm_M->Sizes.checksums[1] = (1171764642U);
-  open_robot_arm_M->Sizes.checksums[2] = (1073275869U);
-  open_robot_arm_M->Sizes.checksums[3] = (4053188882U);
+  open_robot_arm_M->Sizes.checksums[0] = (685375497U);
+  open_robot_arm_M->Sizes.checksums[1] = (3229197383U);
+  open_robot_arm_M->Sizes.checksums[2] = (3927482110U);
+  open_robot_arm_M->Sizes.checksums[3] = (2994853293U);
 
   {
     static const sysRanDType rtAlwaysEnabled = SUBSYS_RAN_BC_ENABLE;
@@ -1597,14 +1584,14 @@ void open_robot_arm_initialize(void)
     /* Start for MATLABSystem: '<Root>/PWM' */
     open_robot_arm_DW.obj_l.matlabCodegenIsDeleted = false;
     open_robot_arm_DW.obj_l.isInitialized = 1;
-    open_robot_arm_DW.obj_l.PinNumber = 21U;
-    i = EXT_PWMBlock_init(21U, 800U, 0.0);
+    open_robot_arm_DW.obj_l.PinNumber = 18U;
+    i = EXT_PWMBlock_init(18U, 800U, 0.0);
     if (i != 0) {
       for (i = 0; i < 45; i++) {
         b[i] = b_0[i];
       }
 
-      printf(&b[0], 21U);
+      printf(&b[0], 18U);
     }
 
     open_robot_arm_DW.obj_l.isSetupComplete = true;

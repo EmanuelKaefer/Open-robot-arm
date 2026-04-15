@@ -7,9 +7,9 @@
  *
  * Code generation for model "open_robot_arm".
  *
- * Model version              : 2.3
+ * Model version              : 2.4
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C source code generated on : Fri Apr 10 21:45:59 2026
+ * C source code generated on : Sat Apr 11 14:57:06 2026
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-A (64-bit)
