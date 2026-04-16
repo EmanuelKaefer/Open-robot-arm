@@ -1,0 +1,103 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{_2026_robotics}{misc}{}{}
+      \list{organization}{1}{%
+        {Mathworks.com}%
+      }
+      \list{publisher}{1}{%
+        {MathWorks}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Robotics System Toolbox}
+      \field{urlday}{9}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://de.mathworks.com/products/robotics.html
+      \endverb
+      \verb{url}
+      \verb https://de.mathworks.com/products/robotics.html
+      \endverb
+    \endentry
+    \entry{a2026_simscape}{misc}{}{}
+      \list{organization}{1}{%
+        {Mathworks.com}%
+      }
+      \list{publisher}{1}{%
+        {MathWorks}%
+      }
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{Simscape}
+      \field{urlday}{9}
+      \field{urlmonth}{2}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://de.mathworks.com/products/simscape.html
+      \endverb
+      \verb{url}
+      \verb https://de.mathworks.com/products/simscape.html
+      \endverb
+    \endentry
+    \entry{ws2812b}{misc}{}{}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{title}{WS2812B Intelligent control LED integrated light source Features and Benefits}
+      \verb{urlraw}
+      \verb https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf
+      \endverb
+      \verb{url}
+      \verb https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf
+      \endverb
+    \endentry
+    \entry{ws2812}{misc}{}{}
+      \list{organization}{1}{%
+        {Mikrocontroller.net}%
+      }
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{title}{WS2812 Ansteuerung – Mikrocontroller.net}
+      \field{urlday}{10}
+      \field{urlmonth}{2}
+      \field{urlyear}{2025}
+      \field{year}{2025}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.mikrocontroller.net/articles/WS2812_Ansteuerung?
+      \endverb
+      \verb{url}
+      \verb https://www.mikrocontroller.net/articles/WS2812_Ansteuerung?
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

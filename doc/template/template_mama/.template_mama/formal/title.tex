@@ -1,0 +1,77 @@
+%%%% Time-stamp: <2013-02-25 16:05:46 vk>
+%% ========================================================================
+%%%% Titelseite für eine Vorwissenschaftliche Arbeit
+%% ========================================================================
+%%
+%% created by
+%%
+%%      Karl Voit
+%%
+
+
+\thispagestyle{empty}  %% no page header or footer
+
+\large  %% basic font size of the titlepage
+
+\begin{center}
+
+{\huge\bfseries\mytitle}
+
+\vfill
+
+\includegraphics[width=9cm]{figures/allgemein/abcdxyz.png}\\[5mm]
+
+\vfill
+
+ASIT-Projekt verfasst von\\[5mm]
+\begin{spacing}{1.0}
+	\Large\bfseries\myauthor\\
+\end{spacing}
+
+\vfill
+
+
+
+Betreuer: \mysupervisor
+
+\vfill
+
+\myinstitute\\
+
+\includegraphics[width=5cm]{figures/allgemein/HTBLA_Saalfelden_Logo.png}\\[5mm]
+
+\vfill
+
+%%\mysubmissiontown, \mysubmissionmonth~\mysubmissionyear
+\end{center}
+
+\hrule
+
+Abgabevermerk:
+
+%%\hfill
+
+\mysubmissiontown, 2 \mysubmissionmonth~\mysubmissionyear \quad \quad \quad \quad \quad \quad übernommen von: 
+
+\normalsize %% new page, reset font size
+\newpage
+
+%% if myaddcolophon is set to "true", colophon is added:
+\ifthenelse{\boolean{myaddcolophon}}{
+  \newpage
+  \thispagestyle{empty}  %% no page header or footer
+
+  ~
+  \vfill
+  \mycolophon
+}{}
+\newpage
+
+%% end of title page
+%%% Local Variables:
+%%% mode: latex
+%%% mode: auto-fill
+%%% mode: flyspell
+%%% eval: (ispell-change-dictionary "de_AT")
+%%% TeX-master: "../main"
+%%% End:
