@@ -27,7 +27,6 @@ Desktop.ini
 # If your repo already contains them, remove these two lines.
 # .project
 # .cproject
-
 # Launch configurations (per-user)
 *.launch
 
@@ -128,7 +127,6 @@ venv/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 compile_commands.json
 .ninja_deps
 .ninja_log
