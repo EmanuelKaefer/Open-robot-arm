@@ -1,0 +1,134 @@
+# ============================================================
+# OS / editor junk
+# ============================================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+*.swp
+*.swo
+*~
+*.tmp
+*.temp
+*.log
+
+# ============================================================
+# STM32CubeIDE / Eclipse workspace + IDE metadata
+# (Keep project files in the repo; ignore per-user/workspace files)
+# ============================================================
+.metadata/
+.recommenders/
+.settings/
+
+# These are Eclipse project descriptors.
+# NOTE: Usually you DO want these committed for CubeIDE projects,
+# because they define the project in the IDE.
+# If your repo already contains them, remove these two lines.
+# .project
+# .cproject
+
+# Launch configurations (per-user)
+*.launch
+
+# ============================================================
+# Build output folders (CubeIDE and common build dirs)
+# ============================================================
+Debug/
+Release/
+debug/
+release/
+build/
+Build/
+out/
+
+# Some toolchains generate these
+*.d
+*.o
+*.obj
+*.a
+*.lib
+*.lo
+*.la
+
+# Firmware / linker outputs
+*.elf
+*.axf
+*.out
+*.hex
+*.bin
+*.map
+*.srec
+*.list
+*.lst
+
+# Debug / profiling / misc compiler outputs
+*.su
+*.gcno
+*.gcda
+*.gcov
+
+# Windows/MSVC artifacts (sometimes appear from tooling)
+*.pdb
+*.idb
+*.ilk
+*.exp
+*.dll
+
+# macOS debug bundles
+*.dSYM/
+
+# ============================================================
+# CubeMX
+# ============================================================
+# Do NOT ignore *.ioc (commit it!)
+# *.ioc
+
+# ============================================================
+# MATLAB / Simulink (incl. hardware support packages workflows)
+# ============================================================
+# Autosave / backup
+*.asv
+*.m~
+*.mlx~
+*.slx~
+*.mdl~
+
+# Simulink cache + build folders (always ignore)
+slprj/
+*.slxc
+
+# Code generation output:
+# In teams, it’s usually better to generate this locally/CI
+# rather than commit it (tool/version dependent).
+codegen/
+
+# MATLAB user/path/toolbox caches (per-user)
+*.autosave
+*.bak
+*.cache
+
+# MATLAB project local settings (safe to ignore if present)
+*.prj.user
+*.slxp
+
+# ============================================================
+# Python (if you have scripts)
+# ============================================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+
+# ============================================================
+# CMake / Ninja (if used anywhere in tooling)
+# ============================================================
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+.ninja_deps
+.ninja_log
