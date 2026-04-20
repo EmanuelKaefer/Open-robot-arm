@@ -3850,6 +3850,42 @@
 			(embedded_fonts no)
 		)
 	)
+	(rectangle
+		(start 177.8 81.28)
+		(end 180.34 121.92)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid 56e7aa78-44e8-4060-a251-90f7b24233a2)
+	)
+	(rectangle
+		(start 119.38 106.68)
+		(end 121.92 109.22)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid 86a64033-8d6f-46d0-a3e1-db9dee5ef1bc)
+	)
+	(rectangle
+		(start 177.8 48.26)
+		(end 180.34 73.66)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type none)
+		)
+		(uuid b9305a39-c7c1-46e3-829a-f118d8125874)
+	)
 	(junction
 		(at 177.8 134.62)
 		(diameter 0)
