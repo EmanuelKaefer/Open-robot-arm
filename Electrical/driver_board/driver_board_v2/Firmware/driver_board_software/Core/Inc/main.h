@@ -61,6 +61,10 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define TMC1_CS_Pin GPIO_PIN_0
 #define TMC1_CS_GPIO_Port GPIOC
+#define usart_from_pi_rx_Pin GPIO_PIN_5
+#define usart_from_pi_rx_GPIO_Port GPIOC
+#define usart_to_pi_tx_Pin GPIO_PIN_10
+#define usart_to_pi_tx_GPIO_Port GPIOB
 #define TMC1_STEP_Pin GPIO_PIN_8
 #define TMC1_STEP_GPIO_Port GPIOA
 #define TMC1_DIR_Pin GPIO_PIN_13

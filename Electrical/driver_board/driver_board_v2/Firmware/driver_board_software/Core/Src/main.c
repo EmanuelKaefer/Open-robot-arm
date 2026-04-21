@@ -45,6 +45,7 @@ SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart2;
+UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
@@ -56,6 +57,7 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -106,6 +108,33 @@ uint32_t TMC_ReadReg(uint8_t addr) {
     return ((uint32_t)rx_data[1] << 24) | ((uint32_t)rx_data[2] << 16) |
            ((uint32_t)rx_data[3] << 8)  | rx_data[4];
 }
+//Speed etc for driver
+static void Step_Start(void)
+{
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+}
+
+static void Step_Stop(void)
+{
+  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+}
+
+static void Step_SetFreqHz(uint32_t freq_hz)
+{
+  if (freq_hz == 0) {
+    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0); // keine Pulse
+    return;
+  }
+
+  const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
+  uint32_t arr = (timer_tick_hz / freq_hz) - 1;
+
+  if (arr < 2) arr = 2;
+  if (arr > 0xFFFF) arr = 0xFFFF;
+
+  __HAL_TIM_SET_AUTORELOAD(&htim1, arr);
+  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (arr + 1) / 2); // 50% duty
+}
 /* USER CODE END 0 */
 
 /**
@@ -140,6 +169,7 @@ int main(void)
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -187,12 +217,14 @@ int main(void)
         break;
 
       case STATE_HOMING:
-    	HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET); // Richtung
-    	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    	  HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
+    	  Step_SetFreqHz(8000);
+    	  Step_Start();
     	currentState = STATE_READY;
         break;
 
       case STATE_READY:
+
         // später: UART lesen, Sollwerte setzen, etc.
         break;
 
@@ -201,10 +233,9 @@ int main(void)
         printf("Warte auf Fehlerbehebung...\r\n");
         break;
     }
-    /* USER CODE END 3 */
-  }
-  /* USER CODE END WHILE */
+  /* USER CODE END 3 */
 }
+
 /**
   * @brief System Clock Configuration
   * @retval None
@@ -393,6 +424,39 @@ static void MX_USART2_UART_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -407,6 +471,7 @@ static void MX_GPIO_Init(void)
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_SET);
