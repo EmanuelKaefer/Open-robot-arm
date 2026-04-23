@@ -55,6 +55,8 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,6 +78,12 @@ static void MX_TIM10_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+// Homeangles from urdf
+float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
+//Limitangles from solidworks
+float limit_rad[6]={0.0171, 0.0174, 0.017453, -1.0126, 1.7453f, 2.1291f};
+
 // Die Konstanten für die State Machine
 typedef enum {
     STATE_INIT,
@@ -147,6 +155,8 @@ static void Step_SetFreqHz(uint32_t freq_hz)
   __HAL_TIM_SET_AUTORELOAD(&htim1, arr);
   __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (arr + 1) / 2); // 50% duty
 }
+
+
 /* USER CODE END 0 */
 
 /**
@@ -235,10 +245,13 @@ int main(void)
         break;
 
       case STATE_HOMING:
-    	  HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
-    	  Step_SetFreqHz(8000);
-    	  Step_Start();
-    	currentState = STATE_READY;
+    	  static uint8_t started = 0;
+    	    if (!started) {
+    	      started = 1;
+    	      HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
+    	      Step_SetFreqHz(200);
+    	      Step_Start();
+    	    }
         break;
 
       case STATE_READY:
@@ -834,23 +847,22 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, TMC1_CS_Pin|TMC2_DIR_Pin|TMC3_DIR_Pin|TMC6_DIR_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC5_CS_Pin
+                          |TMC2_DIR_Pin|TMC3_DIR_Pin|TMC6_DIR_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, TMC2_CS_Pin|TMC3_CS_Pin|TMC5_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, TMC4_CS_Pin|TMC5_DIR_Pin|TMC4_DIR_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, TMC6_CS_Pin|TMC1_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, TMC6_CS_Pin|TMC1_DIR_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, TMC5_DIR_Pin|TMC4_DIR_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pins : TMC1_CS_Pin TMC2_CS_Pin TMC3_CS_Pin TMC5_CS_Pin
-                           TMC2_DIR_Pin TMC3_DIR_Pin TMC6_DIR_Pin */
-  GPIO_InitStruct.Pin = TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC5_CS_Pin
-                          |TMC2_DIR_Pin|TMC3_DIR_Pin|TMC6_DIR_Pin;
+  /*Configure GPIO pins : TMC1_CS_Pin TMC2_CS_Pin TMC3_CS_Pin TMC2_DIR_Pin
+                           TMC3_DIR_Pin TMC6_DIR_Pin */
+  GPIO_InitStruct.Pin = TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC2_DIR_Pin
+                          |TMC3_DIR_Pin|TMC6_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -858,30 +870,72 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : TMC4_CS_Pin */
   GPIO_InitStruct.Pin = TMC4_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(TMC4_CS_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : TMC5_CS_Pin */
+  GPIO_InitStruct.Pin = TMC5_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(TMC5_CS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TMC6_CS_Pin TMC1_DIR_Pin */
   GPIO_InitStruct.Pin = TMC6_CS_Pin|TMC1_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LimitSwitch_3_Pin LimitSwitch_4_Pin LimitSwitch_5_Pin */
+  GPIO_InitStruct.Pin = LimitSwitch_3_Pin|LimitSwitch_4_Pin|LimitSwitch_5_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TMC5_DIR_Pin TMC4_DIR_Pin */
   GPIO_InitStruct.Pin = TMC5_DIR_Pin|TMC4_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_2_Pin */
+  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LimitSwitch_6_Pin */
+  GPIO_InitStruct.Pin = LimitSwitch_6_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(LimitSwitch_6_GPIO_Port, &GPIO_InitStruct);
+
   /* USER CODE BEGIN MX_GPIO_Init_2 */
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+
+//EXTI callback for homing
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+  static uint32_t last = 0;
+  uint32_t now = HAL_GetTick();
+  if (now - last < 30) return;
+  last = now;
+
+  if (GPIO_Pin == LimitSwitch_1_Pin) {
+    Step_Stop();
+  }
+}
 
 int _write(int file, char *ptr, int len) {
     HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
