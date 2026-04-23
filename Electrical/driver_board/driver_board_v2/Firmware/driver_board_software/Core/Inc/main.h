@@ -61,14 +61,40 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define TMC1_CS_Pin GPIO_PIN_0
 #define TMC1_CS_GPIO_Port GPIOC
-#define usart_from_pi_rx_Pin GPIO_PIN_5
-#define usart_from_pi_rx_GPIO_Port GPIOC
-#define usart_to_pi_tx_Pin GPIO_PIN_10
-#define usart_to_pi_tx_GPIO_Port GPIOB
+#define TMC2_CS_Pin GPIO_PIN_1
+#define TMC2_CS_GPIO_Port GPIOC
+#define TMC3_CS_Pin GPIO_PIN_2
+#define TMC3_CS_GPIO_Port GPIOC
+#define TMC4_CS_Pin GPIO_PIN_3
+#define TMC4_CS_GPIO_Port GPIOC
+#define TMC2_STEP_Pin GPIO_PIN_0
+#define TMC2_STEP_GPIO_Port GPIOA
+#define TMC5_CS_Pin GPIO_PIN_4
+#define TMC5_CS_GPIO_Port GPIOC
+#define TMC6_CS_Pin GPIO_PIN_0
+#define TMC6_CS_GPIO_Port GPIOB
+#define TMC1_DIR_Pin GPIO_PIN_15
+#define TMC1_DIR_GPIO_Port GPIOB
+#define TMC5_STEP_Pin GPIO_PIN_6
+#define TMC5_STEP_GPIO_Port GPIOC
+#define TMC2_DIR_Pin GPIO_PIN_7
+#define TMC2_DIR_GPIO_Port GPIOC
+#define TMC3_DIR_Pin GPIO_PIN_8
+#define TMC3_DIR_GPIO_Port GPIOC
+#define TMC6_DIR_Pin GPIO_PIN_9
+#define TMC6_DIR_GPIO_Port GPIOC
 #define TMC1_STEP_Pin GPIO_PIN_8
 #define TMC1_STEP_GPIO_Port GPIOA
-#define TMC1_DIR_Pin GPIO_PIN_13
-#define TMC1_DIR_GPIO_Port GPIOA
+#define TMC5_DIR_Pin GPIO_PIN_9
+#define TMC5_DIR_GPIO_Port GPIOA
+#define TMC4_DIR_Pin GPIO_PIN_10
+#define TMC4_DIR_GPIO_Port GPIOA
+#define TMC3_STEP_Pin GPIO_PIN_4
+#define TMC3_STEP_GPIO_Port GPIOB
+#define TMC4_STEP_Pin GPIO_PIN_6
+#define TMC4_STEP_GPIO_Port GPIOB
+#define TMC6_STEP_Pin GPIO_PIN_8
+#define TMC6_STEP_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
