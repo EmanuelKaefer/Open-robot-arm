@@ -202,9 +202,9 @@ void SysTick_Handler(void)
 void EXTI15_10_IRQHandler(void)
 {
   HAL_GPIO_EXTI_IRQHandler(LimitSwitch_1_Pin);
-  // optional: HAL_GPIO_EXTI_IRQHandler(LimitSwitch_2_Pin);
-  // optional: HAL_GPIO_EXTI_IRQHandler(LimitSwitch_3_Pin);
-  // optional: HAL_GPIO_EXTI_IRQHandler(LimitSwitch_4_Pin);
-  // optional: HAL_GPIO_EXTI_IRQHandler(LimitSwitch_5_Pin);
+  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_2_Pin);
+  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_3_Pin);
+  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_4_Pin);
+  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_5_Pin);
 }
 /* USER CODE END 1 */

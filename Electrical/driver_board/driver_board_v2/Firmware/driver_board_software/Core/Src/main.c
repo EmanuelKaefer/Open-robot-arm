@@ -78,7 +78,7 @@ static void MX_TIM10_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+volatile uint8_t stoprequest=0;
 // Homeangles from urdf
 float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
 //Limitangles from solidworks
@@ -131,12 +131,16 @@ uint32_t TMC_ReadReg(uint8_t addr) {
 //Speed etc for driver
 static void Step_Start(void)
 {
+	//set holding current back to normal
+  TMC_WriteReg(0x10, 0x00061008);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 }
 
 static void Step_Stop(void)
 {
   HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+  __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(&htim1); // MOE force disable
+
 }
 
 static void Step_SetFreqHz(uint32_t freq_hz)
@@ -249,9 +253,13 @@ int main(void)
     	    if (!started) {
     	      started = 1;
     	      HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
-    	      Step_SetFreqHz(200);
+    	      Step_SetFreqHz(800);
     	      Step_Start();
-    	    }
+    	    }else if (stoprequest) {
+    	    	stoprequest=0;
+    	    	//set lower holding current when stopping because of psu going into cc
+    	    	TMC_WriteReg(0x10, 0x00061002);
+			}
         break;
 
       case STATE_READY:
@@ -373,7 +381,7 @@ static void MX_TIM1_Init(void)
   htim1.Init.Period = 999;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -919,12 +927,15 @@ static void MX_GPIO_Init(void)
   HAL_NVIC_SetPriority(EXTI15_10_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+
   /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
 
-//EXTI callback for homing
+//EXTI156_10 callback for homing
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   static uint32_t last = 0;
@@ -934,8 +945,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
   if (GPIO_Pin == LimitSwitch_1_Pin) {
     Step_Stop();
+    stoprequest=1;
   }
 }
+
+//EXTI_2 callback for homing
+//void EXTI2_IRQHandler(void)
+//{
+  //  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+//}
+
 
 int _write(int file, char *ptr, int len) {
     HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
