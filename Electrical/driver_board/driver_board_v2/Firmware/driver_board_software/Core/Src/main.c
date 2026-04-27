@@ -82,9 +82,9 @@ volatile uint8_t stoprequest=0;
 // Homeangles from urdf
 float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
 //Limitangles from solidworks
-float limit_rad[6]={0.0171, 0.0174, 0.017453, -1.0126, 1.7453f, 2.1291f};
+float limit_rad[6]={0.0171f, 0.0174f, 0.017453f, -1.0126f, 1.7453f, 2.1291f};
 
-// Die Konstanten für die State Machine
+// Constants for state machine
 typedef enum {
     STATE_INIT,
 	STATE_HOMING,
@@ -94,41 +94,8 @@ typedef enum {
 
 SystemState currentState = STATE_INIT;
 
-// --- SPI Write Funktion ---
-void TMC_WriteReg(uint8_t addr, uint32_t value) {
-    uint8_t data[5];
-    data[0] = addr | 0x80; // MSB auf 1 setzen für Write
-    data[1] = (value >> 24) & 0xFF;
-    data[2] = (value >> 16) & 0xFF;
-    data[3] = (value >> 8)  & 0xFF;
-    data[4] = value & 0xFF;
 
-    // CS LOW, Senden, CS HIGH
-    HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi1, data, 5, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_SET);
-}
-
-// --- SPI Read Funktion ---
-uint32_t TMC_ReadReg(uint8_t addr) {
-    uint8_t tx_data[5] = {addr & 0x7F, 0, 0, 0, 0}; // MSB auf 0 für Read
-    uint8_t rx_data[5] = {0};
-
-    // 1. Transfer: Dem TMC5160 sagen, welches Register wir wollen
-    HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi1, tx_data, 5, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_SET);
-
-    // 2. Transfer: Die eigentlichen Daten abholen
-    HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_RESET);
-    HAL_SPI_TransmitReceive(&hspi1, tx_data, rx_data, 5, HAL_MAX_DELAY);
-    HAL_GPIO_WritePin(TMC1_CS_GPIO_Port, TMC1_CS_Pin, GPIO_PIN_SET);
-
-    // Bytes zusammenbauen (rx_data[0] ist die Dummy-Antwort der Adresse)
-    return ((uint32_t)rx_data[1] << 24) | ((uint32_t)rx_data[2] << 16) |
-           ((uint32_t)rx_data[3] << 8)  | rx_data[4];
-}
-//Speed etc for driver
+//Stop/Start/Speed for driver
 static void Step_Start(void)
 {
 	//set holding current back to normal
@@ -256,7 +223,7 @@ int main(void)
     	      Step_SetFreqHz(800);
     	      Step_Start();
     	    }else if (stoprequest) {
-    	    	stoprequest=0;
+    	    	stoprequest=0;//reset the flag
     	    	//set lower holding current when stopping because of psu going into cc
     	    	TMC_WriteReg(0x10, 0x00061002);
 			}
@@ -264,7 +231,7 @@ int main(void)
 
       case STATE_READY:
 
-        // später: UART lesen, Sollwerte setzen, etc.
+        // later reading UART from raspi etc...
         break;
 
       case STATE_ERROR:
@@ -944,8 +911,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   last = now;
 
   if (GPIO_Pin == LimitSwitch_1_Pin) {
-    Step_Stop();
-    stoprequest=1;
+    Step_Stop();//stop the motor
+    stoprequest=1;//set flag
   }
 }
 
