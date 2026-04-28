@@ -3,6 +3,8 @@
  *
  *  Created on: 27.04.2026
  *      Author: matteo gassler
+ *      LICENCED under the GNU GENERAL PUBLIC LICENSE
+ *
  */
 
 #ifndef INC_SPICONFIG_H_

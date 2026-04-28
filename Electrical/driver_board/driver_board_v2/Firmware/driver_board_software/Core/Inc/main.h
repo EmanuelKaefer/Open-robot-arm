@@ -13,6 +13,7 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
+  * LICENCED under the GNU GENERAL PUBLIC LICENSE
   *
   ******************************************************************************
   */
@@ -97,8 +98,8 @@ void Error_Handler(void);
 #define TMC4_DIR_GPIO_Port GPIOA
 #define LimitSwitch_1_Pin GPIO_PIN_10
 #define LimitSwitch_1_GPIO_Port GPIOC
-#define LimitSwitch_2_Pin GPIO_PIN_11
-#define LimitSwitch_2_GPIO_Port GPIOC
+#define LimitSwitch_base_Pin GPIO_PIN_11
+#define LimitSwitch_base_GPIO_Port GPIOC
 #define LimitSwitch_6_Pin GPIO_PIN_2
 #define LimitSwitch_6_GPIO_Port GPIOD
 #define TMC3_STEP_Pin GPIO_PIN_4

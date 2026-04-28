@@ -12,7 +12,7 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
+  *LICENCED under the GNU GENERAL PUBLIC LICENSE
   ******************************************************************************
   */
 /* USER CODE END Header */
@@ -55,6 +55,19 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
+volatile uint8_t stoprequest = 0;
+
+// Variabls for counting steps
+volatile uint32_t target_steps = 0;
+volatile uint32_t step_counter = 0;
+volatile uint8_t is_moving_offset = 0;
+
+
+#define PI 3.14159265359f //PI
+#define MOTOR_STEPS 200.0f //steps/revolution
+#define MICROSTEPS 16.0f //defined microsteps
+#define GEAR_RATIO 20.0f //gear ratio for every axis
+
 
 
 /* USER CODE END PV */
@@ -78,7 +91,7 @@ static void MX_TIM10_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-volatile uint8_t stoprequest=0;
+
 // Homeangles from urdf
 float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
 //Limitangles from solidworks
@@ -94,6 +107,24 @@ typedef enum {
 
 SystemState currentState = STATE_INIT;
 
+static void Step_Start_Exact(uint32_t steps)
+{
+    if (steps == 0) return;
+
+    // TMC Run-Current wiederherstellen, falls er im Hold-Modus war
+    TMC_WriteReg(0x10, 0x00061008);
+
+    step_counter = 0;
+    target_steps = steps;
+    is_moving_offset = 1;
+
+    // Interrupt-Flag löschen (verhindert sofortiges, fälschliches Auslösen)
+    __HAL_TIM_CLEAR_IT(&htim1, TIM_IT_UPDATE);
+
+    // Timer Base Interrupt UND PWM starten
+    HAL_TIM_Base_Start_IT(&htim1);
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+}
 
 //Stop/Start/Speed for driver
 static void Step_Start(void)
@@ -106,6 +137,7 @@ static void Step_Start(void)
 static void Step_Stop(void)
 {
   HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_Base_Stop_IT(&htim1);
   __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(&htim1); // MOE force disable
 
 }
@@ -217,27 +249,47 @@ int main(void)
 
       case STATE_HOMING:
     	  static uint8_t started = 0;
-    	    if (!started) {
-    	      started = 1;
-    	      HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
-    	      Step_SetFreqHz(800);
-    	      Step_Start();
-    	    }else if (stoprequest) {
-    	    	stoprequest=0;//reset the flag
-    	    	//set lower holding current when stopping because of psu going into cc
-    	    	TMC_WriteReg(0x10, 0x00061002);
-			}
-        break;
 
+          // Phase 1: Fahre Richtung Endschalter
+          if (!started) {
+              started = 1;
+              // Richtung Schalter (Annahme: SET ist Richtung Schalter)
+              HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
+              Step_SetFreqHz(200);
+              Step_Start();
+          }
+          // Phase 2: Endschalter wurde getroffen
+          else if (stoprequest) {
+              stoprequest = 0;
+              printf("Endschalter Achse 1 erreicht. Berechne Offset...\r\n");
+
+              // 1. Differenzwinkel berechnen (Index 1)
+              float delta_rad = limit_rad[1] - home_rad[1];
+              if (delta_rad < 0) delta_rad = -delta_rad; // float Betrag (Absolutwert)
+
+              // 2. Winkel in Schritte umrechnen
+              float steps_per_out_rev = MOTOR_STEPS * MICROSTEPS * GEAR_RATIO; // 64000
+              uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * steps_per_out_rev);
+
+              printf("Fahre %lu Schritte zur Home-Position.\r\n", steps_to_move);
+
+              // 3. Richtung umkehren! (Fahre WEC vom Schalter)
+              HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_RESET);
+
+              // 4. Etwas schneller fahren für den Offset (z.B. 500 Hz)
+              Step_SetFreqHz(500);
+
+              // 5. Exakte Schrittzahl abfahren (Der Callback stoppt automatisch und setzt STATE_READY)
+              Step_Start_Exact(steps_to_move);
+          }
+          break;
       case STATE_READY:
 
-        // later reading UART from raspi etc...
-        break;
-
+	  break;
       case STATE_ERROR:
-        HAL_Delay(1000);
-        printf("Warte auf Fehlerbehebung...\r\n");
-        break;
+
+      break;
+
     }
   }
   /* USER CODE END 3 */
@@ -348,7 +400,7 @@ static void MX_TIM1_Init(void)
   htim1.Init.Period = 999;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -877,8 +929,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_2_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_2_Pin;
+  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_base_Pin */
+  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_base_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -902,6 +954,23 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+    // Prüfen, ob der Interrupt von Timer 1 kommt
+    if (htim->Instance == TIM1) {
+        if (is_moving_offset) {
+            step_counter++;
+            if (step_counter >= target_steps) {
+                // Ziel erreicht! Motor stoppen
+                Step_Stop();
+                is_moving_offset = 0;
+                // Setze den State auf READY, da die Homing-Prozedur komplett fertig ist
+                currentState = STATE_READY;
+            }
+        }
+    }
+}
+
 //EXTI156_10 callback for homing
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -916,11 +985,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
-//EXTI_2 callback for homing
-//void EXTI2_IRQHandler(void)
-//{
-  //  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
-//}
+
 
 
 int _write(int file, char *ptr, int len) {
