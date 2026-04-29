@@ -275,15 +275,18 @@ int main(void)
 
               // 3. Richtung umkehren! (Fahre WEC vom Schalter)
               HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_RESET);
-
+              HAL_Delay(5);
               // 4. Etwas schneller fahren für den Offset (z.B. 500 Hz)
               Step_SetFreqHz(500);
 
               // 5. Exakte Schrittzahl abfahren (Der Callback stoppt automatisch und setzt STATE_READY)
               Step_Start_Exact(steps_to_move);
+
+
           }
           break;
       case STATE_READY:
+    	  printf("State Ready erreicht\n");
 
 	  break;
       case STATE_ERROR:
