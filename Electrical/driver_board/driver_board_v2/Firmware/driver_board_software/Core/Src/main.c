@@ -12,9 +12,20 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
-  *LICENCED under the GNU GENERAL PUBLIC LICENSE
+  *
   ******************************************************************************
   */
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY.
+ * See LICENSE-SOFTWARE in the project root for details.
+ */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -255,7 +266,7 @@ int main(void)
               started = 1;
               // Richtung Schalter (Annahme: SET ist Richtung Schalter)
               HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
-              Step_SetFreqHz(200);
+              Step_SetFreqHz(5000);
               Step_Start();
           }
           // Phase 2: Endschalter wurde getroffen
@@ -277,7 +288,7 @@ int main(void)
               HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_RESET);
               HAL_Delay(5);
               // 4. Etwas schneller fahren für den Offset (z.B. 500 Hz)
-              Step_SetFreqHz(500);
+              Step_SetFreqHz(2000);
 
               // 5. Exakte Schrittzahl abfahren (Der Callback stoppt automatisch und setzt STATE_READY)
               Step_Start_Exact(steps_to_move);
