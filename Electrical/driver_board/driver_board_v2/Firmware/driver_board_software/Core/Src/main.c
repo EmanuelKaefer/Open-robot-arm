@@ -66,12 +66,12 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
-volatile uint8_t stoprequest = 0;
+
 
 // Variabls for counting steps
 volatile uint32_t target_steps = 0;
 volatile uint32_t step_counter = 0;
-volatile uint8_t is_moving_offset = 0;
+
 
 
 #define PI 3.14159265359f //PI
@@ -106,7 +106,16 @@ static void MX_TIM10_Init(void);
 // Homeangles from urdf
 float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
 //Limitangles from solidworks
-float limit_rad[6]={0.0171f, 0.0174f, 0.017453f, -1.0126f, 1.7453f, 2.1291f};
+float limit_rad[6]={0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f};
+
+//array for homing
+GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port, TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
+uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin, TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
+
+// Status-Variables
+volatile uint8_t stoprequest[6] = {0};
+volatile uint8_t is_moving_offset[6] = {0};
+uint8_t current_homingaxis = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
 // Constants for state machine
 typedef enum {
@@ -264,38 +273,44 @@ int main(void)
           // Phase 1: Fahre Richtung Endschalter
           if (!started) {
               started = 1;
+              printf("Starte Homing fuer Achse %d...\r\n", current_homingaxis);
               // Richtung Schalter (Annahme: SET ist Richtung Schalter)
-              HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
-              Step_SetFreqHz(5000);
+              HAL_GPIO_WritePin(DIR_PORTS[current_homingaxis], DIR_PINS[current_homingaxis], GPIO_PIN_SET);
+              Step_SetFreqHz(current_homingaxis, 5000);
               Step_Start();
           }
           // Phase 2: Endschalter wurde getroffen
-          else if (stoprequest) {
-              stoprequest = 0;
-              printf("Endschalter Achse 1 erreicht. Berechne Offset...\r\n");
+          else if (stoprequest[current_homingaxis]) {
+                        stoprequest[current_homingaxis] = 0;
 
-              // 1. Differenzwinkel berechnen (Index 1)
-              float delta_rad = limit_rad[1] - home_rad[1];
-              if (delta_rad < 0) delta_rad = -delta_rad; // float Betrag (Absolutwert)
+                        // 2. Schalter getroffen! Brauchen wir ein Offset?
+                        float delta_rad = limit_rad[current_homingaxis] - home_rad[current_homingaxis];
+                        if (delta_rad < 0) delta_rad = -delta_rad;
 
-              // 2. Winkel in Schritte umrechnen
-              float steps_per_out_rev = MOTOR_STEPS * MICROSTEPS * GEAR_RATIO; // 64000
-              uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * steps_per_out_rev);
+                        if (delta_rad > 0.001f) {
+                            // Achse BRAUCHT Offset (wie Achse 1, 2, 5)
+                            uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * 3.14159f)) * 64000.0f);
 
-              printf("Fahre %lu Schritte zur Home-Position.\r\n", steps_to_move);
+                            HAL_GPIO_WritePin(DIR_PORTS[current_homingaxis], DIR_PINS[current_homingaxis], GPIO_PIN_RESET);
+                            Step_SetFreqHz(current_homingaxis, 500);
+                            Step_Start_Exact(current_homingaxis, steps_to_move);
 
-              // 3. Richtung umkehren! (Fahre WEC vom Schalter)
-              HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_RESET);
-              HAL_Delay(5);
-              // 4. Etwas schneller fahren für den Offset (z.B. 500 Hz)
-              Step_SetFreqHz(2000);
+                            currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
+                        }
+                        else {
+                            // Achse dreht endlos, BRAUCHT KEIN Offset (wie Base, 4, 6)
+                            // -> Achse ist SOFORT fertig!
+                            current_homing_axis++;
+                            started = 0; // Reset für die nächste Achse
 
-              // 5. Exakte Schrittzahl abfahren (Der Callback stoppt automatisch und setzt STATE_READY)
-              Step_Start_Exact(steps_to_move);
-
-
-          }
-          break;
+                            if (current_homing_axis >= 6) {
+                                printf("Homing komplett abgeschlossen!\r\n");
+                                currentState = STATE_READY;
+                            }
+                            // Bleibt in STATE_HOMING, aber im nächsten Schleifendurchlauf ist ax um 1 höher!
+                        }
+                    }
+                    break;
       case STATE_READY:
     	  printf("State Ready erreicht\n");
 
@@ -993,13 +1008,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (now - last < 30) return;
   last = now;
 
-  if (GPIO_Pin == LimitSwitch_1_Pin) {
-    Step_Stop();//stop the motor
-    stoprequest=1;//set flag
-  }
+  if (currentState == STATE_HOMING) {
+      switch (GPIO_Pin) {
+          case LimitSwitch_Base_Pin:  Step_Stop(0); stoprequest[0] = 1; break;
+          case LimitSwitch_1_Pin:     Step_Stop(1); stoprequest[1] = 1; break;
+          case LimitSwitch_2_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
+          case LimitSwitch_3_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
+          case LimitSwitch_4_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
+          case LimitSwitch_5_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
+
 }
-
-
 
 
 int _write(int file, char *ptr, int len) {
