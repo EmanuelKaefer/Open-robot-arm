@@ -92,8 +92,8 @@ static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 // Deklaration der TMC Funktion, falls nicht über Header verfügbar
-extern void TMC_WriteReg(uint8_t addr, uint32_t value);
-extern uint32_t TMC_ReadReg(uint8_t addr);
+//extern void TMC_WriteReg(uint8_t addr, uint32_t value);
+//extern uint32_t TMC_ReadReg(uint8_t addr);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -117,6 +117,8 @@ volatile uint8_t stoprequest[6] = {0};
 volatile uint8_t is_moving_offset[6] = {0};
 uint8_t current_homingaxis = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
+
+
 // Constants for state machine
 typedef enum {
     STATE_INIT,
@@ -134,7 +136,7 @@ static void Step_Start_Exact(uint8_t ax, uint32_t steps)
 
     // HINWEIS: Wenn du später 6 Treiber hast, muss hier eventuell auch das CS-Pin Handling
     // für die jeweilige Achse rein! Aktuell globaler Broadcast/Standard.
-    TMC_WriteReg(0x10, 0x00061008);
+    TMC_WriteReg(ax, 0x10, 0x00061008);
 
     step_counter[ax] = 0;
     target_steps[ax] = steps;
@@ -155,7 +157,7 @@ static void Step_Start_Exact(uint8_t ax, uint32_t steps)
 static void Step_Start(uint8_t ax)
 {
     //set holding current back to normal
-    TMC_WriteReg(0x10, 0x00061008);
+    TMC_WriteReg(ax, 0x10, 0x00061008);
     HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
 }
 
@@ -249,32 +251,41 @@ int main(void)
         HAL_Delay(500); // Wichtiges Boot-Delay für die TMC Treiber!
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
 
-        TMC_WriteReg(0x01, 0x00000007);
-        HAL_Delay(100);
+                  uint8_t all_drivers_ok = 1;
 
-        TMC_WriteReg(0x00, 0x00000004);
-        TMC_WriteReg(0x10, 0x00061008);
-        TMC_WriteReg(0x6C, 0x14010053);
-        TMC_WriteReg(0x70, 0xC10D0024);
-        HAL_Delay(100);
+                  // Hier wird 'ax' deklariert! Die Schleife läuft von 1 bis kleiner 2 , 2 mit 6 auswechseln für alle achsen
+                  for (uint8_t ax = 1; ax < 2; ax++) {
+                      printf("Konfiguriere Achse %d... ", ax);
 
-        uint32_t gstat = TMC_ReadReg(0x01);
-        uint32_t drvstatus = TMC_ReadReg(0x6F);
-        uint32_t cs_actual = (drvstatus >> 16) & 0x1F;
-        uint8_t undervoltage = (gstat & (1<<2)) ? 1 : 0;
+                      TMC_WriteReg(ax, 0x01, 0x00000007);
+                      HAL_Delay(10);
 
-        printf("TMC5160 Konfiguration abgeschlossen\r\n");
-        printf("  GSTAT:     0x%08lX\r\n", gstat);
-        printf("  CS actual: %lu\r\n", cs_actual);
-        printf("  Undervoltage: %d\r\n", undervoltage);
+                      TMC_WriteReg(ax, 0x00, 0x00000004);
+                      TMC_WriteReg(ax, 0x10, 0x00061008);
+                      TMC_WriteReg(ax, 0x6C, 0x14010053);
+                      TMC_WriteReg(ax, 0x70, 0xC10D0024);
+                      HAL_Delay(10);
 
-        if (gstat == 0 && cs_actual > 0) {
-          printf("  >>> Treiber bereit! <<<\r\n");
-          currentState = STATE_HOMING;
-        } else {
-          printf("  >>> FEHLER - Verdrahtung/Strom prüfen! <<<\r\n");
-          currentState = STATE_ERROR;
-        }
+                      uint32_t gstat = TMC_ReadReg(ax, 0x01);
+                      uint32_t drvstatus = TMC_ReadReg(ax, 0x6F);
+                      uint32_t cs_actual = (drvstatus >> 16) & 0x1F;
+
+                      if (gstat == 0 && cs_actual > 0) {
+                          printf("OK! (CS actual: %lu)\r\n", cs_actual);
+                      } else {
+                          printf("FEHLER! (GSTAT: 0x%08lX)\r\n", gstat);
+                          all_drivers_ok = 0;
+                      }
+                  }
+
+                  if (all_drivers_ok) {
+                      printf("  >>> Treiber erfolgreich initialisiert! <<<\r\n");
+                      currentState = STATE_HOMING;
+                  } else {
+                      printf("  >>> INITIALISIERUNG ABGEBROCHEN - Verdrahtung prüfen! <<<\r\n");
+                      currentState = STATE_ERROR;
+                  }
+                  break;
         break;
 
       case STATE_HOMING:
