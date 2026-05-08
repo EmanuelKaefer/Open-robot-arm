@@ -66,20 +66,14 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
-
-
-// Variabls for counting steps
-volatile uint32_t target_steps = 0;
-volatile uint32_t step_counter = 0;
-
-
+// Arrays for counting steps for all 6 axes
+volatile uint32_t target_steps[6] = {0};
+volatile uint32_t step_counter[6] = {0};
 
 #define PI 3.14159265359f //PI
 #define MOTOR_STEPS 200.0f //steps/revolution
 #define MICROSTEPS 16.0f //defined microsteps
 #define GEAR_RATIO 20.0f //gear ratio for every axis
-
-
 
 /* USER CODE END PV */
 
@@ -97,88 +91,105 @@ static void MX_TIM5_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
-
+// Deklaration der TMC Funktion, falls nicht über Header verfügbar
+extern void TMC_WriteReg(uint8_t addr, uint32_t value);
+extern uint32_t TMC_ReadReg(uint8_t addr);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-// Homeangles from urdf
-float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
-//Limitangles from solidworks
-float limit_rad[6]={0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f};
+// Arrays für die Hardware-Timer
+TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &htim10};
+uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
 
-//array for homing
-GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port, TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
-uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin, TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
+// Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
+float home_rad[6]={ 0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
+//Limitangles from solidworks
+float limit_rad[6]={0.0171f, 1.7615f,  1.6177f, -1.0126f, 1.6481f, 2.1291f};
+
+//array for homing pins
+GPIO_TypeDef* DIR_PORTS[6] = {TMC2_DIR_GPIO_Port, TMC1_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
+uint16_t      DIR_PINS[6]  = {TMC2_DIR_Pin, TMC1_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 
 // Status-Variables
 volatile uint8_t stoprequest[6] = {0};
 volatile uint8_t is_moving_offset[6] = {0};
-uint8_t current_homingaxis = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+uint8_t current_homingaxis = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
 // Constants for state machine
 typedef enum {
     STATE_INIT,
-	STATE_HOMING,
+    STATE_HOMING,
+    STATE_HOMING_OFFSET, // NEU: Zustand für Offset-Fahrt
     STATE_READY,
     STATE_ERROR
 } SystemState;
 
 SystemState currentState = STATE_INIT;
 
-static void Step_Start_Exact(uint32_t steps)
+static void Step_Start_Exact(uint8_t ax, uint32_t steps)
 {
     if (steps == 0) return;
 
-    // TMC Run-Current wiederherstellen, falls er im Hold-Modus war
+    // HINWEIS: Wenn du später 6 Treiber hast, muss hier eventuell auch das CS-Pin Handling
+    // für die jeweilige Achse rein! Aktuell globaler Broadcast/Standard.
     TMC_WriteReg(0x10, 0x00061008);
 
-    step_counter = 0;
-    target_steps = steps;
-    is_moving_offset = 1;
+    step_counter[ax] = 0;
+    target_steps[ax] = steps;
+    is_moving_offset[ax] = 1;
 
-    // Interrupt-Flag löschen (verhindert sofortiges, fälschliches Auslösen)
-    __HAL_TIM_CLEAR_IT(&htim1, TIM_IT_UPDATE);
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    uint32_t channel = AXIS_CHANNELS[ax];
+
+    // Interrupt-Flag löschen
+    __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
 
     // Timer Base Interrupt UND PWM starten
-    HAL_TIM_Base_Start_IT(&htim1);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    HAL_TIM_Base_Start_IT(htim);
+    HAL_TIM_PWM_Start(htim, channel);
 }
 
-//Stop/Start/Speed for driver
-static void Step_Start(void)
+//Stop/Start/Speed for driver dynamically
+static void Step_Start(uint8_t ax)
 {
-	//set holding current back to normal
-  TMC_WriteReg(0x10, 0x00061008);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    //set holding current back to normal
+    TMC_WriteReg(0x10, 0x00061008);
+    HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
 }
 
-static void Step_Stop(void)
+static void Step_Stop(uint8_t ax)
 {
-  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_Base_Stop_IT(&htim1);
-  __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(&htim1); // MOE force disable
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    HAL_TIM_PWM_Stop(htim, AXIS_CHANNELS[ax]);
+    HAL_TIM_Base_Stop_IT(htim);
 
+    // MOE force disable funktioniert nur bei Advanced Timern (TIM1, TIM8)
+    if (htim->Instance == TIM1 || htim->Instance == TIM8) {
+        __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(htim);
+    }
 }
 
-static void Step_SetFreqHz(uint32_t freq_hz)
+static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
 {
-  if (freq_hz == 0) {
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0); // keine Pulse
-    return;
-  }
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    uint32_t channel = AXIS_CHANNELS[ax];
 
-  const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
-  uint32_t arr = (timer_tick_hz / freq_hz) - 1;
+    if (freq_hz == 0) {
+        __HAL_TIM_SET_COMPARE(htim, channel, 0); // keine Pulse
+        return;
+    }
 
-  if (arr < 2) arr = 2;
-  if (arr > 0xFFFF) arr = 0xFFFF;
+    const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
+    uint32_t arr = (timer_tick_hz / freq_hz) - 1;
 
-  __HAL_TIM_SET_AUTORELOAD(&htim1, arr);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (arr + 1) / 2); // 50% duty
+    if (arr < 2) arr = 2;
+    if (arr > 0xFFFF) arr = 0xFFFF;
+
+    __HAL_TIM_SET_AUTORELOAD(htim, arr);
+    __HAL_TIM_SET_COMPARE(htim, channel, (arr + 1) / 2); // 50% duty
 }
-
 
 /* USER CODE END 0 */
 
@@ -227,8 +238,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
@@ -237,6 +246,7 @@ int main(void)
     switch (currentState)
     {
       case STATE_INIT:
+        HAL_Delay(500); // Wichtiges Boot-Delay für die TMC Treiber!
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
 
         TMC_WriteReg(0x01, 0x00000007);
@@ -268,56 +278,74 @@ int main(void)
         break;
 
       case STATE_HOMING:
-    	  static uint8_t started = 0;
+          static uint8_t started = 0;
+          uint8_t ax = current_homingaxis;
 
           // Phase 1: Fahre Richtung Endschalter
           if (!started) {
               started = 1;
-              printf("Starte Homing fuer Achse %d...\r\n", current_homingaxis);
-              // Richtung Schalter (Annahme: SET ist Richtung Schalter)
-              HAL_GPIO_WritePin(DIR_PORTS[current_homingaxis], DIR_PINS[current_homingaxis], GPIO_PIN_SET);
-              Step_SetFreqHz(current_homingaxis, 5000);
-              Step_Start();
+              printf("Starte Homing fuer Achse %d...\r\n", ax);
+              // Richtung Schalter
+              HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
+              Step_SetFreqHz(ax, 5000);
+              Step_Start(ax);
           }
           // Phase 2: Endschalter wurde getroffen
-          else if (stoprequest[current_homingaxis]) {
-                        stoprequest[current_homingaxis] = 0;
+          else if (stoprequest[ax]) {
+              stoprequest[ax] = 0;
 
-                        // 2. Schalter getroffen! Brauchen wir ein Offset?
-                        float delta_rad = limit_rad[current_homingaxis] - home_rad[current_homingaxis];
-                        if (delta_rad < 0) delta_rad = -delta_rad;
+              // Schalter getroffen! Brauchen wir ein Offset?
+              float delta_rad = limit_rad[ax] - home_rad[ax];
+              if (delta_rad < 0) delta_rad = -delta_rad;
 
-                        if (delta_rad > 0.001f) {
-                            // Achse BRAUCHT Offset (wie Achse 1, 2, 5)
-                            uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * 3.14159f)) * 64000.0f);
+              if (delta_rad > 0.001f) {
+                  // Achse BRAUCHT Offset
+                  uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * MOTOR_STEPS * MICROSTEPS * GEAR_RATIO);
 
-                            HAL_GPIO_WritePin(DIR_PORTS[current_homingaxis], DIR_PINS[current_homingaxis], GPIO_PIN_RESET);
-                            Step_SetFreqHz(current_homingaxis, 500);
-                            Step_Start_Exact(current_homingaxis, steps_to_move);
+                  HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_RESET);
+                  HAL_Delay(5); // Kurze Setup-Time für DIR Pin geben!
+                  Step_SetFreqHz(ax, 5000);
+                  Step_Start_Exact(ax, steps_to_move);
 
-                            currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
-                        }
-                        else {
-                            // Achse dreht endlos, BRAUCHT KEIN Offset (wie Base, 4, 6)
-                            // -> Achse ist SOFORT fertig!
-                            current_homing_axis++;
-                            started = 0; // Reset für die nächste Achse
+                  currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
+              }
+              else {
+                  // Achse dreht endlos, BRAUCHT KEIN Offset
+                  current_homingaxis++;
+                  started = 0; // Reset für die nächste Achse
 
-                            if (current_homing_axis >= 6) {
-                                printf("Homing komplett abgeschlossen!\r\n");
-                                currentState = STATE_READY;
-                            }
-                            // Bleibt in STATE_HOMING, aber im nächsten Schleifendurchlauf ist ax um 1 höher!
-                        }
-                    }
-                    break;
+                  if (current_homingaxis >= 6) {
+                      printf("Homing komplett abgeschlossen!\r\n");
+                      currentState = STATE_READY;
+                  }
+              }
+          }
+          break;
+
+      case STATE_HOMING_OFFSET:
+          // Warten, bis der Timer-Callback der aktuellen Achse fertig ist
+          if (is_moving_offset[current_homingaxis] == 0) {
+              // Offset-Fahrt abgeschlossen!
+              current_homingaxis++; // Nächste Achse an die Reihe lassen
+
+              // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
+              // Da 'started' dort statisch ist, haben wir es so gelöst:
+              // Wir können den Block wieder betreten. Alternativ übergeben wir das Signal.
+              currentState = STATE_HOMING;
+
+              if (current_homingaxis >= 6) {
+                  printf("Homing komplett abgeschlossen!\r\n");
+                  currentState = STATE_READY;
+              }
+          }
+          break;
+
       case STATE_READY:
-    	  printf("State Ready erreicht\n");
+          // printf("State Ready erreicht\n"); // Auskommentiert, damit es nicht spammt
+          break;
 
-	  break;
       case STATE_ERROR:
-
-      break;
+          break;
 
     }
   }
@@ -983,40 +1011,46 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+// Callback für Timer Interrupts aller Achsen (zählt Schritte)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    // Prüfen, ob der Interrupt von Timer 1 kommt
-    if (htim->Instance == TIM1) {
-        if (is_moving_offset) {
-            step_counter++;
-            if (step_counter >= target_steps) {
-                // Ziel erreicht! Motor stoppen
-                Step_Stop();
-                is_moving_offset = 0;
-                // Setze den State auf READY, da die Homing-Prozedur komplett fertig ist
-                currentState = STATE_READY;
+    // Durch alle 6 Achsen loopen, um den auslösenden Timer zu finden
+    for (uint8_t ax = 0; ax < 6; ax++) {
+        if (htim->Instance == AXIS_TIMERS[ax]->Instance) {
+
+            // Wenn diese Achse gerade in Offset-Fahrt ist
+            if (is_moving_offset[ax]) {
+                step_counter[ax]++;
+
+                if (step_counter[ax] >= target_steps[ax]) {
+                    // Ziel erreicht! Motor stoppen
+                    Step_Stop(ax);
+                    is_moving_offset[ax] = 0;
+                }
             }
+            break; // Timer gefunden, Schleife abbrechen
         }
     }
 }
 
-//EXTI156_10 callback for homing
+// EXTI15_10 callback for homing switches
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  static uint32_t last = 0;
-  uint32_t now = HAL_GetTick();
-  if (now - last < 30) return;
-  last = now;
+    static uint32_t last = 0;
+    uint32_t now = HAL_GetTick();
+    if (now - last < 30) return;
+    last = now;
 
-  if (currentState == STATE_HOMING) {
-      switch (GPIO_Pin) {
-          case LimitSwitch_Base_Pin:  Step_Stop(0); stoprequest[0] = 1; break;
-          case LimitSwitch_1_Pin:     Step_Stop(1); stoprequest[1] = 1; break;
-          case LimitSwitch_2_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
-          case LimitSwitch_3_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
-          case LimitSwitch_4_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
-          case LimitSwitch_5_Pin:     Step_Stop(2); stoprequest[2] = 1; break;
-
+    if (currentState == STATE_HOMING) {
+        switch (GPIO_Pin) {
+            case LimitSwitch_base_Pin:  Step_Stop(0); stoprequest[0] = 1; break;
+            case LimitSwitch_1_Pin:     Step_Stop(1); stoprequest[1] = 1; break;
+            case LimitSwitch_3_Pin:     Step_Stop(3); stoprequest[3] = 1; break;
+            case LimitSwitch_4_Pin:     Step_Stop(4); stoprequest[4] = 1; break;
+            case LimitSwitch_5_Pin:     Step_Stop(5); stoprequest[5] = 1; break;
+            case LimitSwitch_6_Pin:     Step_Stop(5); stoprequest[5] = 1; break; // Anpassen auf deine Pin-Map!
+        }
+    }
 }
 
 
