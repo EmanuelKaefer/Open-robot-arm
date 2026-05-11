@@ -12,9 +12,20 @@
   * This software is licensed under terms that can be found in the LICENSE file
   * in the root directory of this software component.
   * If no LICENSE file comes with this software, it is provided AS-IS.
-  *LICENCED under the GNU GENERAL PUBLIC LICENSE
+  *
   ******************************************************************************
   */
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * This program is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY.
+ * See LICENSE-SOFTWARE in the project root for details.
+ */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -55,20 +66,14 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
-volatile uint8_t stoprequest = 0;
-
-// Variabls for counting steps
-volatile uint32_t target_steps = 0;
-volatile uint32_t step_counter = 0;
-volatile uint8_t is_moving_offset = 0;
-
+// Arrays for counting steps for all 6 axes
+volatile uint32_t target_steps[6] = {0};
+volatile uint32_t step_counter[6] = {0};
 
 #define PI 3.14159265359f //PI
 #define MOTOR_STEPS 200.0f //steps/revolution
 #define MICROSTEPS 16.0f //defined microsteps
 #define GEAR_RATIO 20.0f //gear ratio for every axis
-
-
 
 /* USER CODE END PV */
 
@@ -86,79 +91,107 @@ static void MX_TIM5_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
-
+// Deklaration der TMC Funktion, falls nicht über Header verfügbar
+//extern void TMC_WriteReg(uint8_t addr, uint32_t value);
+//extern uint32_t TMC_ReadReg(uint8_t addr);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-// Homeangles from urdf
-float home_rad[6]={0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
+// Arrays für die Hardware-Timer
+TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &htim10};
+uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
+
+// Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
+float home_rad[6]={ 0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
 //Limitangles from solidworks
-float limit_rad[6]={0.0171f, 0.0174f, 0.017453f, -1.0126f, 1.7453f, 2.1291f};
+float limit_rad[6]={0.0171f, 1.7615f,  1.6177f, -1.0126f, 1.6481f, 2.1291f};
+
+//array for homing pins
+GPIO_TypeDef* DIR_PORTS[6] = {TMC2_DIR_GPIO_Port, TMC1_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
+uint16_t      DIR_PINS[6]  = {TMC2_DIR_Pin, TMC1_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
+
+// Status-Variables
+volatile uint8_t stoprequest[6] = {0};
+volatile uint8_t is_moving_offset[6] = {0};
+uint8_t current_homingaxis = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+
+
 
 // Constants for state machine
 typedef enum {
     STATE_INIT,
-	STATE_HOMING,
+    STATE_HOMING,
+    STATE_HOMING_OFFSET, // NEU: Zustand für Offset-Fahrt
     STATE_READY,
     STATE_ERROR
 } SystemState;
 
 SystemState currentState = STATE_INIT;
 
-static void Step_Start_Exact(uint32_t steps)
+static void Step_Start_Exact(uint8_t ax, uint32_t steps)
 {
     if (steps == 0) return;
 
-    // TMC Run-Current wiederherstellen, falls er im Hold-Modus war
-    TMC_WriteReg(0x10, 0x00061008);
+    // HINWEIS: Wenn du später 6 Treiber hast, muss hier eventuell auch das CS-Pin Handling
+    // für die jeweilige Achse rein! Aktuell globaler Broadcast/Standard.
+    TMC_WriteReg(ax, 0x10, 0x00061008);
 
-    step_counter = 0;
-    target_steps = steps;
-    is_moving_offset = 1;
+    step_counter[ax] = 0;
+    target_steps[ax] = steps;
+    is_moving_offset[ax] = 1;
 
-    // Interrupt-Flag löschen (verhindert sofortiges, fälschliches Auslösen)
-    __HAL_TIM_CLEAR_IT(&htim1, TIM_IT_UPDATE);
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    uint32_t channel = AXIS_CHANNELS[ax];
+
+    // Interrupt-Flag löschen
+    __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
 
     // Timer Base Interrupt UND PWM starten
-    HAL_TIM_Base_Start_IT(&htim1);
-    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    HAL_TIM_Base_Start_IT(htim);
+    HAL_TIM_PWM_Start(htim, channel);
 }
 
-//Stop/Start/Speed for driver
-static void Step_Start(void)
+//Stop/Start/Speed for driver dynamically
+static void Step_Start(uint8_t ax)
 {
-	//set holding current back to normal
-  TMC_WriteReg(0x10, 0x00061008);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+    //set holding current back to normal
+    TMC_WriteReg(ax, 0x10, 0x00061008);
+    HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
 }
 
-static void Step_Stop(void)
+static void Step_Stop(uint8_t ax)
 {
-  HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_Base_Stop_IT(&htim1);
-  __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(&htim1); // MOE force disable
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    HAL_TIM_PWM_Stop(htim, AXIS_CHANNELS[ax]);
+    HAL_TIM_Base_Stop_IT(htim);
 
+    // MOE force disable funktioniert nur bei Advanced Timern (TIM1, TIM8)
+    if (htim->Instance == TIM1 || htim->Instance == TIM8) {
+        __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(htim);
+    }
 }
 
-static void Step_SetFreqHz(uint32_t freq_hz)
+static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
 {
-  if (freq_hz == 0) {
-    __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 0); // keine Pulse
-    return;
-  }
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    uint32_t channel = AXIS_CHANNELS[ax];
 
-  const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
-  uint32_t arr = (timer_tick_hz / freq_hz) - 1;
+    if (freq_hz == 0) {
+        __HAL_TIM_SET_COMPARE(htim, channel, 0); // keine Pulse
+        return;
+    }
 
-  if (arr < 2) arr = 2;
-  if (arr > 0xFFFF) arr = 0xFFFF;
+    const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
+    uint32_t arr = (timer_tick_hz / freq_hz) - 1;
 
-  __HAL_TIM_SET_AUTORELOAD(&htim1, arr);
-  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, (arr + 1) / 2); // 50% duty
+    if (arr < 2) arr = 2;
+    if (arr > 0xFFFF) arr = 0xFFFF;
+
+    __HAL_TIM_SET_AUTORELOAD(htim, arr);
+    __HAL_TIM_SET_COMPARE(htim, channel, (arr + 1) / 2); // 50% duty
 }
-
 
 /* USER CODE END 0 */
 
@@ -207,8 +240,6 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
@@ -217,81 +248,115 @@ int main(void)
     switch (currentState)
     {
       case STATE_INIT:
+        HAL_Delay(500); // Wichtiges Boot-Delay für die TMC Treiber!
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
 
-        TMC_WriteReg(0x01, 0x00000007);
-        HAL_Delay(100);
+                  uint8_t all_drivers_ok = 1;
 
-        TMC_WriteReg(0x00, 0x00000004);
-        TMC_WriteReg(0x10, 0x00061008);
-        TMC_WriteReg(0x6C, 0x14010053);
-        TMC_WriteReg(0x70, 0xC10D0024);
-        HAL_Delay(100);
+                  // Hier wird 'ax' deklariert! Die Schleife läuft von 1 bis kleiner 2 , 2 mit 6 auswechseln für alle achsen
+                  for (uint8_t ax = 1; ax < 2; ax++) {
+                      printf("Konfiguriere Achse %d... ", ax);
 
-        uint32_t gstat = TMC_ReadReg(0x01);
-        uint32_t drvstatus = TMC_ReadReg(0x6F);
-        uint32_t cs_actual = (drvstatus >> 16) & 0x1F;
-        uint8_t undervoltage = (gstat & (1<<2)) ? 1 : 0;
+                      TMC_WriteReg(ax, 0x01, 0x00000007);
+                      HAL_Delay(10);
 
-        printf("TMC5160 Konfiguration abgeschlossen\r\n");
-        printf("  GSTAT:     0x%08lX\r\n", gstat);
-        printf("  CS actual: %lu\r\n", cs_actual);
-        printf("  Undervoltage: %d\r\n", undervoltage);
+                      TMC_WriteReg(ax, 0x00, 0x00000004);
+                      TMC_WriteReg(ax, 0x10, 0x00061008);
+                      TMC_WriteReg(ax, 0x6C, 0x14010053);
+                      TMC_WriteReg(ax, 0x70, 0xC10D0024);
+                      HAL_Delay(10);
 
-        if (gstat == 0 && cs_actual > 0) {
-          printf("  >>> Treiber bereit! <<<\r\n");
-          currentState = STATE_HOMING;
-        } else {
-          printf("  >>> FEHLER - Verdrahtung/Strom prüfen! <<<\r\n");
-          currentState = STATE_ERROR;
-        }
+                      uint32_t gstat = TMC_ReadReg(ax, 0x01);
+                      uint32_t drvstatus = TMC_ReadReg(ax, 0x6F);
+                      uint32_t cs_actual = (drvstatus >> 16) & 0x1F;
+
+                      if (gstat == 0 && cs_actual > 0) {
+                          printf("OK! (CS actual: %lu)\r\n", cs_actual);
+                      } else {
+                          printf("FEHLER! (GSTAT: 0x%08lX)\r\n", gstat);
+                          all_drivers_ok = 0;
+                      }
+                  }
+
+                  if (all_drivers_ok) {
+                      printf("  >>> Treiber erfolgreich initialisiert! <<<\r\n");
+                      currentState = STATE_HOMING;
+                  } else {
+                      printf("  >>> INITIALISIERUNG ABGEBROCHEN - Verdrahtung prüfen! <<<\r\n");
+                      currentState = STATE_ERROR;
+                  }
+                  break;
         break;
 
       case STATE_HOMING:
-    	  static uint8_t started = 0;
+          static uint8_t started = 0;
+          uint8_t ax = current_homingaxis;
 
           // Phase 1: Fahre Richtung Endschalter
           if (!started) {
               started = 1;
-              // Richtung Schalter (Annahme: SET ist Richtung Schalter)
-              HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_SET);
-              Step_SetFreqHz(200);
-              Step_Start();
+              printf("Starte Homing fuer Achse %d...\r\n", ax);
+              // Richtung Schalter
+              HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
+              Step_SetFreqHz(ax, 5000);
+              Step_Start(ax);
           }
           // Phase 2: Endschalter wurde getroffen
-          else if (stoprequest) {
-              stoprequest = 0;
-              printf("Endschalter Achse 1 erreicht. Berechne Offset...\r\n");
+          else if (stoprequest[ax]) {
+              stoprequest[ax] = 0;
 
-              // 1. Differenzwinkel berechnen (Index 1)
-              float delta_rad = limit_rad[1] - home_rad[1];
-              if (delta_rad < 0) delta_rad = -delta_rad; // float Betrag (Absolutwert)
+              // Schalter getroffen! Brauchen wir ein Offset?
+              float delta_rad = limit_rad[ax] - home_rad[ax];
+              if (delta_rad < 0) delta_rad = -delta_rad;
 
-              // 2. Winkel in Schritte umrechnen
-              float steps_per_out_rev = MOTOR_STEPS * MICROSTEPS * GEAR_RATIO; // 64000
-              uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * steps_per_out_rev);
+              if (delta_rad > 0.001f) {
+                  // Achse BRAUCHT Offset
+                  uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * MOTOR_STEPS * MICROSTEPS * GEAR_RATIO);
 
-              printf("Fahre %lu Schritte zur Home-Position.\r\n", steps_to_move);
+                  HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_RESET);
+                  HAL_Delay(5); // Kurze Setup-Time für DIR Pin geben!
+                  Step_SetFreqHz(ax, 5000);
+                  Step_Start_Exact(ax, steps_to_move);
 
-              // 3. Richtung umkehren! (Fahre WEC vom Schalter)
-              HAL_GPIO_WritePin(TMC1_DIR_GPIO_Port, TMC1_DIR_Pin, GPIO_PIN_RESET);
-              HAL_Delay(5);
-              // 4. Etwas schneller fahren für den Offset (z.B. 500 Hz)
-              Step_SetFreqHz(500);
+                  currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
+              }
+              else {
+                  // Achse dreht endlos, BRAUCHT KEIN Offset
+                  current_homingaxis++;
+                  started = 0; // Reset für die nächste Achse
 
-              // 5. Exakte Schrittzahl abfahren (Der Callback stoppt automatisch und setzt STATE_READY)
-              Step_Start_Exact(steps_to_move);
-
-
+                  if (current_homingaxis >= 6) {
+                      printf("Homing komplett abgeschlossen!\r\n");
+                      currentState = STATE_READY;
+                  }
+              }
           }
           break;
+
+      case STATE_HOMING_OFFSET:
+          // Warten, bis der Timer-Callback der aktuellen Achse fertig ist
+          if (is_moving_offset[current_homingaxis] == 0) {
+              // Offset-Fahrt abgeschlossen!
+              current_homingaxis++; // Nächste Achse an die Reihe lassen
+
+              // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
+              // Da 'started' dort statisch ist, haben wir es so gelöst:
+              // Wir können den Block wieder betreten. Alternativ übergeben wir das Signal.
+              currentState = STATE_HOMING;
+
+              if (current_homingaxis >= 6) {
+                  printf("Homing komplett abgeschlossen!\r\n");
+                  currentState = STATE_READY;
+              }
+          }
+          break;
+
       case STATE_READY:
-    	  printf("State Ready erreicht\n");
+          // printf("State Ready erreicht\n"); // Auskommentiert, damit es nicht spammt
+          break;
 
-	  break;
       case STATE_ERROR:
-
-      break;
+          break;
 
     }
   }
@@ -957,38 +1022,47 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+// Callback für Timer Interrupts aller Achsen (zählt Schritte)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    // Prüfen, ob der Interrupt von Timer 1 kommt
-    if (htim->Instance == TIM1) {
-        if (is_moving_offset) {
-            step_counter++;
-            if (step_counter >= target_steps) {
-                // Ziel erreicht! Motor stoppen
-                Step_Stop();
-                is_moving_offset = 0;
-                // Setze den State auf READY, da die Homing-Prozedur komplett fertig ist
-                currentState = STATE_READY;
+    // Durch alle 6 Achsen loopen, um den auslösenden Timer zu finden
+    for (uint8_t ax = 0; ax < 6; ax++) {
+        if (htim->Instance == AXIS_TIMERS[ax]->Instance) {
+
+            // Wenn diese Achse gerade in Offset-Fahrt ist
+            if (is_moving_offset[ax]) {
+                step_counter[ax]++;
+
+                if (step_counter[ax] >= target_steps[ax]) {
+                    // Ziel erreicht! Motor stoppen
+                    Step_Stop(ax);
+                    is_moving_offset[ax] = 0;
+                }
             }
+            break; // Timer gefunden, Schleife abbrechen
         }
     }
 }
 
-//EXTI156_10 callback for homing
+// EXTI15_10 callback for homing switches
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  static uint32_t last = 0;
-  uint32_t now = HAL_GetTick();
-  if (now - last < 30) return;
-  last = now;
+    static uint32_t last = 0;
+    uint32_t now = HAL_GetTick();
+    if (now - last < 30) return;
+    last = now;
 
-  if (GPIO_Pin == LimitSwitch_1_Pin) {
-    Step_Stop();//stop the motor
-    stoprequest=1;//set flag
-  }
+    if (currentState == STATE_HOMING) {
+        switch (GPIO_Pin) {
+            case LimitSwitch_base_Pin:  Step_Stop(0); stoprequest[0] = 1; break;
+            case LimitSwitch_1_Pin:     Step_Stop(1); stoprequest[1] = 1; break;
+            case LimitSwitch_3_Pin:     Step_Stop(3); stoprequest[3] = 1; break;
+            case LimitSwitch_4_Pin:     Step_Stop(4); stoprequest[4] = 1; break;
+            case LimitSwitch_5_Pin:     Step_Stop(5); stoprequest[5] = 1; break;
+            case LimitSwitch_6_Pin:     Step_Stop(5); stoprequest[5] = 1; break; // Anpassen auf deine Pin-Map!
+        }
+    }
 }
-
-
 
 
 int _write(int file, char *ptr, int len) {
