@@ -4524,7 +4524,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 35.56 76.2 0)
 			(effects
 				(font
@@ -5003,7 +5003,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PinSocket_2x08_P2.54mm"
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 63.754 59.944 0)
 			(effects
 				(font
@@ -5825,7 +5825,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PinSocket_2x08_P2.54mm"
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 139.954 110.744 0)
 			(effects
 				(font
@@ -6200,7 +6200,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PinSocket_2x08_P2.54mm"
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 216.154 59.944 0)
 			(effects
 				(font
@@ -7317,7 +7317,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PinSocket_2x08_P2.54mm"
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 63.754 110.744 0)
 			(effects
 				(font
@@ -7561,7 +7561,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PinSocket_2x08_P2.54mm"
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 216.154 110.744 0)
 			(effects
 				(font
@@ -7870,7 +7870,7 @@
 				)
 			)
 		)
-		(property "Footprint" "PinSocket_2x08_P2.54mm"
+		(property "Footprint" "Robot:TMC5160T_Pro_V1.0_Breakout"
 			(at 139.954 59.944 0)
 			(effects
 				(font
