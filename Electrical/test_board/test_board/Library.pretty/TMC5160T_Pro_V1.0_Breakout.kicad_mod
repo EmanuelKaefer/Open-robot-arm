@@ -54,16 +54,6 @@
 		)
 	)
 	(attr smd)
-	(fp_line
-		(start -7 -10.5)
-		(end -5.5 -10.5)
-		(stroke
-			(width 0.2)
-			(type default)
-		)
-		(layer "F.Cu")
-		(uuid "320545a2-cdb6-4c2c-80ff-48c58f90372b")
-	)
 	(fp_rect
 		(start -8 -11)
 		(end 8 11)
