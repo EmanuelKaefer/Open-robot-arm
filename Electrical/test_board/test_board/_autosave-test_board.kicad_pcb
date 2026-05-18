@@ -7,6 +7,11 @@
 		(legacy_teardrops no)
 	)
 	(paper "A4")
+	(title_block
+		(title "Test board")
+		(date "2026-05-18")
+		(company "github.com/EmanuelKaefer/Open-robot-arm")
+	)
 	(layers
 		(0 "F.Cu" signal)
 		(2 "B.Cu" signal)
@@ -4072,7 +4077,7 @@
 		(at 110 45.18)
 		(descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x06 2.54mm single row")
-		(property "Reference" "J1"
+		(property "Reference" "J2"
 			(at 0 -2.38 0)
 			(layer "F.SilkS")
 			(uuid "616e0723-2899-47cf-8e67-94cb7084268a")
@@ -4341,7 +4346,7 @@
 		(at 154 140.62)
 		(descr "CP, Radial series, Radial, pin pitch=2.50mm, diameter=8mm, height=10mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 2.50mm diameter 8mm height 10mm Electrolytic Capacitor")
-		(property "Reference" "C11"
+		(property "Reference" "C8"
 			(at 1.25 -5.25 0)
 			(layer "F.SilkS")
 			(uuid "2eae3c1d-b643-4b7a-ad03-f62590a6807a")
@@ -6066,7 +6071,7 @@
 		(at 110 120.18)
 		(descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x06 2.54mm single row")
-		(property "Reference" "J7"
+		(property "Reference" "J8"
 			(at 0 -2.38 0)
 			(layer "F.SilkS")
 			(uuid "4d528550-850a-4bb1-8871-f8768c5636c2")
@@ -6335,7 +6340,7 @@
 		(at 136 70.283156 -90)
 		(descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST XH vertical")
-		(property "Reference" "J4"
+		(property "Reference" "J5"
 			(at 3.75 -3.55 90)
 			(layer "F.SilkS")
 			(uuid "dca2b14f-ab9a-40d3-acf7-da859947aac5")
@@ -6627,7 +6632,7 @@
 		(at 136.5 120.5 -90)
 		(descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST XH vertical")
-		(property "Reference" "J8"
+		(property "Reference" "J9"
 			(at 3.75 -3.55 90)
 			(layer "F.SilkS")
 			(uuid "6df4a931-7b56-495e-a2e2-3067643d0654")
@@ -6919,7 +6924,7 @@
 		(at 154 174.12)
 		(descr "CP, Radial series, Radial, pin pitch=2.50mm, diameter=8mm, height=10mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 2.50mm diameter 8mm height 10mm Electrolytic Capacitor")
-		(property "Reference" "C15"
+		(property "Reference" "C12"
 			(at 1.25 -5.25 0)
 			(layer "F.SilkS")
 			(uuid "82516df0-c327-4f66-ad35-34f444c80124")
@@ -8644,7 +8649,7 @@
 		(at 110 170.18)
 		(descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x06 2.54mm single row")
-		(property "Reference" "J11"
+		(property "Reference" "J12"
 			(at 0 -2.38 0)
 			(layer "F.SilkS")
 			(uuid "b9799cf8-d90e-492d-bd01-17b6b9b641a5")
@@ -8913,7 +8918,7 @@
 		(at 136.5 170.283156 -90)
 		(descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST XH vertical")
-		(property "Reference" "J12"
+		(property "Reference" "J13"
 			(at 3.75 -3.55 90)
 			(layer "F.SilkS")
 			(uuid "13f6710f-2c7d-4d6b-a1de-8266ce34df37")
@@ -9205,7 +9210,7 @@
 		(at 137.16 27.94 180)
 		(descr "Terminal Block Phoenix MKDS-1,5-4-5.08, 4 pins, pitch 5.08mm, size 20.3x9.8mm, drill diameter 1.3mm, pad diameter 2.6mm, http://www.farnell.com/datasheets/100425.pdf, script-generated using https://gitlab.com/kicad/libraries/kicad-footprint-generator/-/tree/master/scripts/TerminalBlock_Phoenix")
 		(tags "THT Terminal Block Phoenix MKDS-1,5-4-5.08 pitch 5.08mm size 20.3x9.8mm drill 1.3mm pad 2.6mm")
-		(property "Reference" "J13"
+		(property "Reference" "J1"
 			(at 7.62 -6.32 0)
 			(layer "F.SilkS")
 			(uuid "3d77ec33-7119-4999-8aa6-050d62095a75")
@@ -10055,7 +10060,7 @@
 		(at 136.025 45.25 -90)
 		(descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST XH vertical")
-		(property "Reference" "J2"
+		(property "Reference" "J3"
 			(at 3.75 -3.55 90)
 			(layer "F.SilkS")
 			(uuid "7d459aca-2921-4f37-8a63-91ea1a20ccdb")
@@ -10347,7 +10352,7 @@
 		(at 154 115.5)
 		(descr "CP, Radial series, Radial, pin pitch=2.50mm, diameter=8mm, height=10mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 2.50mm diameter 8mm height 10mm Electrolytic Capacitor")
-		(property "Reference" "C10"
+		(property "Reference" "C7"
 			(at 1.25 -5.25 0)
 			(layer "F.SilkS")
 			(uuid "1a44d6d5-b690-4055-8be3-d2d348f3fb15")
@@ -14227,7 +14232,7 @@
 		(at 154 149.12)
 		(descr "CP, Radial series, Radial, pin pitch=2.50mm, diameter=8mm, height=10mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 2.50mm diameter 8mm height 10mm Electrolytic Capacitor")
-		(property "Reference" "C14"
+		(property "Reference" "C11"
 			(at 1.25 -5.25 0)
 			(layer "F.SilkS")
 			(uuid "a9f4fb31-8171-4d05-9b20-caeae42e2bf4")
@@ -15952,7 +15957,7 @@
 		(at 136.5 95.25 -90)
 		(descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST XH vertical")
-		(property "Reference" "J6"
+		(property "Reference" "J7"
 			(at 3.75 -3.55 90)
 			(layer "F.SilkS")
 			(uuid "31e31e44-74f7-42ca-9ccb-af564b197ea5")
@@ -16245,7 +16250,7 @@
 		(at 154 165.62)
 		(descr "CP, Radial series, Radial, pin pitch=2.50mm, diameter=8mm, height=10mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 2.50mm diameter 8mm height 10mm Electrolytic Capacitor")
-		(property "Reference" "C12"
+		(property "Reference" "C9"
 			(at 1.25 -5.25 0)
 			(layer "F.SilkS")
 			(uuid "7438d532-29d4-4608-9f0f-8c36495eb937")
@@ -18439,7 +18444,7 @@
 		(at 154 124.12)
 		(descr "CP, Radial series, Radial, pin pitch=2.50mm, diameter=8mm, height=10mm, Electrolytic Capacitor")
 		(tags "CP Radial series Radial pin pitch 2.50mm diameter 8mm height 10mm Electrolytic Capacitor")
-		(property "Reference" "C13"
+		(property "Reference" "C10"
 			(at 1.25 -5.25 0)
 			(layer "F.SilkS")
 			(uuid "5469b496-a08f-44ad-bb87-4ee51b573425")
@@ -20164,7 +20169,7 @@
 		(at 110 95.18)
 		(descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x06 2.54mm single row")
-		(property "Reference" "J5"
+		(property "Reference" "J6"
 			(at 0 -2.38 0)
 			(layer "F.SilkS")
 			(uuid "68e18006-9827-421e-9681-f0b92a2389cf")
@@ -20433,7 +20438,7 @@
 		(at 110 70.18)
 		(descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x06 2.54mm single row")
-		(property "Reference" "J3"
+		(property "Reference" "J4"
 			(at 0 -2.38 0)
 			(layer "F.SilkS")
 			(uuid "e5b15c5a-8349-4cda-9a75-e11508427767")
@@ -20702,7 +20707,7 @@
 		(at 110 145.18)
 		(descr "Through hole straight pin header, 1x06, 2.54mm pitch, single row")
 		(tags "Through hole pin header THT 1x06 2.54mm single row")
-		(property "Reference" "J9"
+		(property "Reference" "J10"
 			(at 0 -2.38 0)
 			(layer "F.SilkS")
 			(uuid "9da5c849-b06d-4fd6-a67b-1177223ca553")
@@ -26537,7 +26542,7 @@
 		(at 136.5 145.283156 -90)
 		(descr "JST XH series connector, B4B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST XH vertical")
-		(property "Reference" "J10"
+		(property "Reference" "J11"
 			(at 3.75 -3.55 90)
 			(layer "F.SilkS")
 			(uuid "9dd1c738-1ecc-43d3-93f4-c489fbd5aa94")
