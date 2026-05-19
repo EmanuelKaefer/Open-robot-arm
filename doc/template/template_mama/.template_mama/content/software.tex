@@ -1,284 +1,66 @@
 % !TeX spellcheck = de_DE
 \chapter{Software}
 
-\section{Einleitung und Überblick}
-Die Softwareseite dieses Projekts umfasst das Programmieren eines Algorithmus in Matlab/Simulink, der für alle Berechnungen der Kinematik des 6-DOF-Roboterarms zuständig ist. Dieser Algorithmus wird mithilfe des Simulink Embedded Coders in C-Code generiert und danach auf einem STM32 Mikroprozessor ausgeführt. Die Datenübertragung vom Mikroprozessor zu den Motortreibern, die die Motoren betreiben, erfolgt über das Busprotokoll SPI. Encoder-Feedback wird zur Positionsregelung in die Regelschleife zurückgeführt.
+% --- START DES SOFTWARE-KAPITELS ---
 
-Die Struktur unserer Softwarelösung ist wievolgt:\par
-\par
+\section{Softwarearchitektur und Steuerung}
+\label{sec:software}
+% Kurze Einleitung: Zweck der Software, STM32F446 als Kern, Bare-Metal C, 
+% Schnittstelle zwischen Mechanik und Elektronik.
+Dieses Kapitel beschreibt die Implementierung der zentralen Robotersteuerung, welche das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe \ref{hardware}) und der elektrischen Leistungselektronik (siehe \ref{hardware}) bildet. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen. Im Folgenden werden die Hardware-Abstraktion, die SPI-Treiberkonfiguration, das Konzept des Zustandsautomaten sowie die algorithmische Umsetzung der kinematischen Referenzierung detailliert erläutert.
 
-\begin{figure}[h]
-	\centering
-	\vspace{-10pt}
-	\includegraphics[width=1\textwidth]{figures/allgemein/roboterarm_flowchart.png}
-	\caption{Struktur der Software}
-	\label{fig:Softwarestruktur}
-\end{figure}
-% TODO neues bild einfügen sobald die struktur Fertig ist.
+\subsection{Hardware Abstraction Layer (HAL) und Skalierbarkeit}
+\label{subsec:hal}
+% - Problembeschreibung: Direkter Hardware-Zugriff bei 6 Achsen fuehrt zu redundantem, fehleranfaelligem Code.
+% - Loesung: Implementierung von Arrays fuer Peripherie-Zuordnungen (TIM-Handle, PWM-Kanaele, GPIO-Ports fuer DIR und CS).
+% - Vorteil: Die eigentliche Logik benoetigt nur noch einen Achs-Index (0 bis 5). Das System ist extrem leicht skalierbar und unabhaengig von der physikalischen Verkabelung.
+% - Hier bietet sich ein kurzes Code-Snippet (Listing) des Timer- oder CS-Arrays an.
+Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelnde Variablen und die Statische Zuweisung von Peripherie-Registern schnell zu Eingeschränkten und fehleranfälligem Programmcode . Um dies zu vermeiden, wurde ein Hardware Abstraction Layer (HAL) in Form einer Array-basierten Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (TIM HandleTypeDef), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (DIR) und Chip-Select-Signale (CS) in globalen Arrays gekapselt. Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index  angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homen über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems massiv erhöht.
 
-%\subsection{Aufgabenstellung}
-%Da die Entwicklung unseres 6dof Roboterarms im Rahmen des Faches ASIT erfolgt und der Lernerfolg im Vordergrund steht konnten wir uns die Aufgabenstellung selbst Stellen und hatten dabei keine großen Einschränkungen.  Wir haben uns dazu entschieden das der Roboterarm als Mindestanforderung eine Pick and Place Operation, also ein Objekt aufheben und wo anders Platzieren können soll. Als Optionale weitere Herausforderung soll man über ein Graphical user Interface Koordinaten eingeben können zu denen sich der Arm dann bewegt.
+\subsection{Initialisierung und SPI-Kommunikation der Motortreiber}
+\label{subsec:spi_init}
+% - Beschreibung der Kommunikation zwischen STM32 und TMC5160 ueber den SPI-Bus.
+% - Das Konzept der Chip-Select (CS) Pins zur adressierten Kommunikation auf einem geteilten Bus.
+% - Der STATE_INIT Ablauf: Schreiben der Konfigurationsregister (Chopper, Haltestrom).
+% - Fehlererkennung und Robustheit: Ruecklesen des GSTAT-Registers und der CS-Actual-Werte. 
+% - Erwaehnung der Hardware-Herausforderungen (EMI, Signalintegritaet auf dem Prototypen-Board) und wie Software-Boot-Delays zur Stabilitaet beitragen.
+Die verwendeten Schrittmotortreiber vom Typ TMC5160 erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten Serial Peripheral Interface (SPI) Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (CS) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. Um die Robustheit des Systems zu gewährleisten, wurde eine Validierungsroutine in den Initialisierungsprozess integriert. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (GSTAT) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (z. B. GSTAT = 0) und keine Unterspannung detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch.
 
-\subsection{Toolchain}
-% - Matlab/Simulink Version
-% - Simulink Embedded Coder
-% - STM32CubeIDE oder Keil
-% - Workflow: Simulink → Code-Generierung → STM32
-Die Entwicklung der Software erfolgt modellbasiert, zuerst wird ein Algorithmus in Simulink realisiert und getestet und danach mithilfe des in Simulink integrierten Embedded coders auf reale Hardware gebracht. Die Struktur ist in Abbildung \ref{fig:Softwarestruktur} beschrieben.
+\subsection{Zustandsautomat (Finite State Machine)}
+\label{subsec:fsm}
+Um die komplexen und teils parallel ablaufenden Prozesse des Roboters nicht-blockierend zu steuern, basiert die Softwarearchitektur auf einer Finite State Machine (FSM). Der Programmfluss wird in der Hauptschleife über eine switch-case-Struktur verwaltet, die aktuell die Zustände STATE INIT, STATE HOMING, STATE HOMING OFFSET, STATE READY und STATE ERROR umfasst. Diese Architektur stellt sicher, dass der Mikrocontroller nie in Endlosschleifen ("Deadlocks") gefangen ist. Während beispielsweise auf das Beenden einer Motorbewegung gewartet wird, bleibt das System reaktionsfähig und kann weiterhin Sensordaten auswerten oder serielle Befehle verarbeiten.
+% - Warum eine State-Machine? (Nicht-blockierende Programmierung, Uebersichtlichkeit).
+% - Definition der Zustaende: STATE_INIT, STATE_HOMING, STATE_HOMING_OFFSET, STATE_READY, STATE_ERROR.
+% - Kurze Erklaerung, wie der Haupt-Loop (while(1)) durch diese Zustaende navigiert.
 
-\subsubsection{Matlab and Simulink}
-Matlab/Simulink r2025a dient als Grundlage für die Algorithmusentwicklung. Die Grafische auf Blöcken basierende Programmiersprache ermöglicht eine Intuitive Programmentwicklung, Kombiniert mit der Robotic systems Toolbox\cite{_2026_robotics} und Simscape\cite{a2026_simscape} ist ein sehr angenehmes Softwareentwickeln möglich.
+\subsection{Homing Prozess (Kinematische Referenzierung)}
+\label{subsec:homing}
+Da Schrittmotoren über keine absolute Positionscodierung verfügen, ist der Systemzustand nach jedem Neustart undefiniert. Um den kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
+% Einleitender Satz: Warum muss der Roboter referenziert werden? (Schrittmotoren haben keine absolute Positionserkennung).
 
-Vorteile der modellbasierten Entwicklung mit Simulink:
-\begin{itemize}
-	\item \textbf{Simulation vor Hardware-Test}: Algorithmen können ohne 
-	physische Hardware getestet werden
-	\item \textbf{Grafische Darstellung}: Blockdiagramme visualisieren 
-	Datenfluss und Abhängigkeiten und sind besser verständlich als Textbasiertes Programmieren
-	\item \textbf{Integrierte Testumgebung}: Simulink bietet umfangreiche 
-	Möglichkeiten für Unit-Tests und Verifikation
-	\item \textbf{Lernerfolg}: Simulink ist in der Industrie weit verbreitet und als Elektrotechniker wichtig zu können
-\end{itemize} 
+\subsubsection{Interrupt-Verarbeitung und Hardware-Entprellung}
+\label{subsubsec:interrupts}
+Die Erfassung der Endschalter erfolgt über externe Interrupts (EXTI), um eine sofortige und CPU-unabhängige Reaktionszeit zu garantieren. Ein bekanntes Problem mechanischer Mikroschalter ist das sogenannte Prellen (Bouncing), bei dem der Kontakt im Millisekundenbereich mehrfach schließt und öffnet. Zur softwareseitigen Entprellung wurde eine Zeitstempel-Überprüfung mittels HAL GetTick() implementiert, die aufeinanderfolgende Signale innerhalb von 30 Millisekunden ignoriert. Sobald ein valider Interrupt registriert wird, stoppt das System den entsprechenden Hardware-Timer der Achse ("Hard-Stop") und setzt ein asynchrones Flag (stoprequest), welches anschließend im Hauptkontext der State-Machine sicher weiterverarbeitet wird.
+% - Verwendung von externen Interrupts (EXTI) fuer die Endschalter.
+% - Das Problem des Schalter-Prellens (Bouncing) bei mechanischen Kontakten.
+% - Die Software-Loesung: HAL_GetTick() Zeitstempel zur Entprellung und das Setzen von asynchronen Stop-Requests (stoprequest-Array), um die Timer im Hauptkontext sicher abzuschalten.
 
-% TODO: Entwicklungsumgebung beschreiben cube ide sobald wir das haben
-% TODO: Etwas zu embedded coder einfügen sobald ich das habe
-\newpage
-\subsubsection{Workflow}
-
-Der typische Entwicklungs-Workflow sieht wie folgt aus:
-
-\begin{enumerate}
-	\item \textbf{Modellierung}: Algorithmus in Simulink entwickeln
-	\item \textbf{Simulation}: Funktionalität in Simulink via Simscape testen
-	\item \textbf{Verifikation}: Korrektes Verhalten testen
-	\item \textbf{Code-Generierung}: C-Code mit Embedded Coder erzeugen
-	\item \textbf{Integration}: Code in STM32CubeIDE-Projekt einbinden
-	\item \textbf{Kompilierung}: Projekt bauen und auf Fehler prüfen
-	\item \textbf{Deployment}: Firmware auf STM32 flashen
-	\item \textbf{Hardware-Test}: Funktionstest am realen Roboterarm
-	\item \textbf{Iteration}: Bei Bedarf zurück zu Schritt 1
-\end{enumerate}
-
-Dieser Prozess ermöglicht eine schnelle Fehlersuche, da Probleme 
-bereits in der Simulation erkannt werden können, bevor Hardware-Tests 
-durchgeführt werden.
-
-\subsection{Schnittstellen zur Hardware}
-% TODO: Kurze Übersicht über Hardware-Schnittstellen
-% - SPI-Kommunikation zu Motortreibern
-% - Encoder-Feedback (Protokoll/Interface)
-% - Signale für Motoransteuerung
-% - Verweis auf Hardware-Kapitel für Details
-\subsubsection{SPI-Bus}
+\subsubsection{Berechnung kinematischer Offsets}
+\label{subsubsec:offsets}
+% - Die Mathematik hinter der Bewegung: Umrechnung von mechanischen CAD/URDF-Winkeln in Bogenmass (Radiant) zu Motorschritten.
+% - Erklaerung der Getriebeuebersetzung (1:20) und des Microsteppings (16) am Beispiel: 64.000 Schritte = 360 Grad am Gelenk.
+% - Warum Offsets noetig sind: Der mechanische Endschalter (limit_rad) entspricht selten dem kinematischen Nullpunkt (home_rad) des Roboters.
+% - Beschreibung der dynamischen Differenzberechnung zur Laufzeit.
+Die physische Position der Endschalter stimmt konstruktionsbedingt selten mit der gewünschten kinematischen Nullstellung () des Robotermodells überein. Daher wurde eine dynamische
+Offset-Berechnung implementiert. Sobald ein Endschalter auslöst, berechnet die Software die Differenz zwischen dem aus dem CAD-Modell bekannten Schalterwinkel () und dem kinematischen Nullpunkt () im Bogenmaß (Radiant). Dieser Winkeldifferenzwert wird anschließend in diskrete Motorschritte umgerechnet. Die Formel berücksichtigt dabei die Motorauflösung (200 Schritte/Umdrehung), das eingestellte Microstepping (1/16) sowie die mechanische Getriebeübersetzung von 1:20.
 
 
-\subsubsection{Signale zu den Motoren}
+\subsubsection{Sequenzieller Homing-Ablauf}
+\label{subsubsec:homing_sequence}
+% - Das Zusammenspiel aller vorherigen Komponenten in der Praxis.
+% - Der Ablauf anhand einer Achse mit Offset: Starten in Richtung Schalter -> Interrupt loest aus -> Berechnung des Offsets -> Wechsel in STATE_HOMING_OFFSET -> Abfahren der genauen Schrittzahl -> Freigabe der naechsten Achse.
+% - Umgang mit Achsen ohne Anschlag (z.B. Endlosrotation der Base): Direkter Uebergang zur naechsten Achse, sobald der Sensor ausloest.
+% - Steuerung durch den globalen Index 'current_homingaxis', der das System schrittweise von der Base bis zum Endeffektor referenziert.
+Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, gesteuert durch eine globale Index-Variable (current homingaxis), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine Achse gliedert sich dabei in folgende Phasen: Zunächst verfährt die Achse im Zustand STATE HOMING mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das System den erforderlichen Offset, invertiert das Richtungssignal (DIR) und wechselt in den Zustand STATE HOMING OFFSET. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand STATE READY übergeht.
 
-%%\section{Kinematik-Algorithmen}
-%
-%\subsection{Vorwärtskinematik}
-%% TODO: Vorwärtskinematik beschreiben
-%% - Berechnung der End-Effektor-Position aus Gelenkwinkeln
-%% - Mathematische Grundlagen (DH-Parameter oder andere Methode)
-%% - Implementierung in Simulink
-%
-%Die Vorwärtskinematik berechnet die Position und Orientierung des End-Effektors aus den gegebenen Gelenkwinkeln $\theta_1, \theta_2, ..., \theta_6$.
-%
-%\subsection{Inverse Kinematik}
-%% TODO: Inverse Kinematik beschreiben
-%% - Berechnung der Gelenkwinkel aus Zielposition (x,y,z)
-%% - Lösungsansatz (analytisch/numerisch/geometrisch)
-%% - Herausforderungen (Mehrdeutigkeit, Singularitäten)
-%% - Implementierung in Simulink
-%
-%Die inverse Kinematik löst das Problem, aus einer gewünschten End-Effektor-Position die notwendigen Gelenkwinkel zu berechnen.
-%
-%\subsection{Transformationsmatrizen}
-%% TODO: Transformationen beschreiben
-%% - Koordinatensysteme und Frames
-%% - Homogene Transformationsmatrizen (4x4)
-%% - Umwandlung von 1x3 Positionsvektor zu 4x4 Matrix
-%% - Rotation und Translation
-%
-%Die Transformation von einem 1x3 Positionsvektor zu einer 4x4 homogenen Transformationsmatrix ermöglicht die einheitliche Behandlung von Rotation und Translation.
-%
-%\[
-%T = \begin{bmatrix}
-%	R_{3\times3} & p_{3\times1} \\
-%	0_{1\times3} & 1
-%\end{bmatrix}
-%\]
-%
-\section{Simulink-Modell}
-
-\subsection{Modellarchitektur}
-% TODO: Gesamtarchitektur des Simulink-Modells
-% - Blockdiagramm einfügen (Ihr Bild aus der Frage!)
-% - Übersicht über Hauptkomponenten
-% - Datenfluss von Input zu Output
-
-\begin{figure}[h]
-	\centering
-	% \includegraphics[width=\textwidth]{pfad/zu/ihrem/blockdiagramm.png}
-	\caption{Softwarearchitektur des 6-DOF-Roboterarms}
-	\label{fig:software_architektur}
-\end{figure}
-
-\subsection{Hauptblöcke und Subsysteme}
-
-\subsubsection{Eingabe: Zielposition}
-% TODO: Input-Schnittstelle beschreiben
-% - Format der Zielposition (1x3 Vektor)
-% - Koordinatensystem
-% - Sollwert-Generierung
-
-\subsubsection{Inverse Kinematik Block}
-% TODO: IK-Block in Simulink
-% - Implementierung des IK-Algorithmus
-% - Input/Output-Schnittstellen
-% - Embedded Matlab Function oder andere Blöcke
-
-\subsubsection{Winkelberechnung für Motoren}
-% TODO: Motorwinkel-Berechnung
-% - Umrechnung von Gelenkwinkeln zu Motoransteuerung
-% - Getriebe-Übersetzung (falls vorhanden)
-% - Winkel-Normalisierung
-
-\subsubsection{Feedback-Loop mit Encoder-Daten}
-% TODO: Regelkreis beschreiben
-% - Encoder-Feedback Integration
-% - Differenz Soll-/Ist-Position
-% - Regelungsalgorithmus (PID oder andere)
-% - Closed-Loop Struktur
-
-\subsection{Simulation und Validierung}
-% TODO: Simulationsergebnisse
-% - Test-Szenarien in Matlab
-% - Simulationsergebnisse (Grafiken einfügen!)
-% - Validierung der Kinematik
-% - Performance-Analyse
-
-\begin{figure}[h]
-	\centering
-	% \includegraphics[width=0.8\textwidth]{pfad/zu/simulation_ergebnis.png}
-	\caption{Simulationsergebnis: Gelenkwinkel über Zeit}
-	\label{fig:simulation}
-\end{figure}
-
-\section{Codegenerierung und STM32-Integration}
-
-\subsection{Embedded Coder Konfiguration}
-% TODO: Embedded Coder Setup
-% - Target Hardware: STM32 (spezifisches Modell)
-% - Compiler-Einstellungen
-% - Optimierungsoptionen (Speed vs. RAM)
-% - Code-Interface-Konfiguration
-\begin{comment}
-	Inhalt...
-
-\subsection{Generierter C-Code}
-% TODO: C-Code Analyse
-% - Struktur des generierten Codes
-% - Code-Beispiel (Ausschnitt 10-20 Zeilen)
-% - Lesbarkeit und Wartbarkeit
-% - Speicherbedarf
-
-\begin{lstlisting}[language=C, caption={Beispiel: Generierter C-Code für Kinematik-Berechnung}]
-	void inverse_kinematics_step(void) {
-		// Berechnung der inversen Kinematik
-		// Automatisch generiert aus Simulink-Modell
-		...
-	}
-\end{lstlisting}
-
-\subsection{Integration in STM32-Projekt}
-% TODO: Integration beschreiben
-% - Projektstruktur im STM32-Projekt
-% - Einbindung in main.c
-% - Initialisierung der generierten Funktionen
-% - Interface zu HAL-Bibliotheken
-
-\subsection{Haupt-Regelschleife und Timing}
-% TODO: Echtzeitaspekte
-% - Main-Loop Struktur
-% - Zykluszeit (z.B. 1ms, 10ms, ...)
-% - Timer-Konfiguration
-% - Task-Scheduling
-% - Interrupt-Handling
-
-\subsection{Speicher- und Performance-Optimierung}
-% TODO: Optimierungen
-% - RAM/Flash-Nutzung
-% - Berechnungszeit pro Zyklus
-% - Profiling-Ergebnisse
-% - Optimierungsmaßnahmen
-
-\section{Sicherheit und Fehlerbehandlung}
-
-\subsection{Software-Limitierung}
-% TODO: Software-Limits beschreiben
-% - Gelenkwinkel-Grenzen (min/max für jeden Joint)
-% - Geschwindigkeitsbegrenzung
-% - Beschleunigungslimits
-% - Workspace-Begrenzung
-
-\subsection{Fehlerbehandlung}
-% TODO: Error-Handling
-% - Unreachable Positions (IK hat keine Lösung)
-% - Singularitäten erkennen und vermeiden
-% - Numerische Stabilität
-% - Fehler-Rückgabewerte
-
-\subsection{Watchdog und Timeout}
-% TODO: System-Sicherheit
-% - Watchdog-Timer Konfiguration
-% - Timeout-Mechanismen
-% - Error-Recovery-Strategien
-% - Safe-State bei Fehler
-
-\section{Test und aktueller Stand}
-
-\subsection{Matlab-Simulation}
-% TODO: Simulations-Tests
-% - Test-Szenarien (verschiedene Zielpositionen)
-% - Ergebnisse (Grafiken einfügen!)
-% - Validierung der Algorithmen
-% - Performance in Simulation
-
-\subsection{Tests auf STM32}
-% TODO: Hardware-Tests (falls durchgeführt)
-% - Testaufbau
-% - Erste Tests auf echter Hardware
-% - Beobachtungen und Messungen
-% - Probleme und Lösungen
-
-\subsection{Offene Punkte und nächste Schritte}
-% TODO: Was fehlt noch?
-% - Integration mit kompletter Hardware
-% - Kalibrierung
-% - Feintuning der Parameter
-% - Optimierungen
-% - Geplante Erweiterungen
-
-\section{Fazit und Ausblick}
-
-\subsection{Erreichte Funktionalität}
-% TODO: Was funktioniert bereits?
-% - Kinematik-Algorithmen validiert
-% - Code-Generierung erfolgreich
-% - Simulation liefert plausible Ergebnisse
-% - Erste Tests auf STM32 (falls gemacht)
-
-\subsection{Herausforderungen und Lösungen}
-% TODO: Schwierigkeiten im Projekt
-% - Technische Herausforderungen
-% - Wie wurden sie gelöst?
-% - Lessons Learned
-
-\subsection{Ausblick}
-% TODO: Nächste Schritte bis Projektende
-% - Hardware-Software-Integration
-% - Systemtests
-% - Optimierungen
-% - Mögliche Erweiterungen (Bahnplanung, Kollisionsvermeidung, ...)
-\end{comment}
+% --- ENDE DES BEREICHS ---

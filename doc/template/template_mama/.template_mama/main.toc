@@ -3,24 +3,15 @@
 \contentsline {chapter}{\nonumberline Aufgabenstellung}{iii}{chapter*.2}%
 \contentsline {chapter}{\numberline {1}Einleitung}{1}{chapter.1}%
 \contentsline {chapter}{\numberline {2}Software}{2}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Einleitung und Überblick}{2}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Toolchain}{2}{subsection.2.1.1}%
-\contentsline {subsubsection}{\nonumberline Matlab and Simulink}{2}{subsubsection*.5}%
-\contentsline {subsubsection}{\nonumberline Workflow}{4}{subsubsection*.6}%
-\contentsline {subsection}{\numberline {2.1.2}Schnittstellen zur Hardware}{4}{subsection.2.1.2}%
-\contentsline {subsubsection}{\nonumberline SPI-Bus}{4}{subsubsection*.7}%
-\contentsline {subsubsection}{\nonumberline Signale zu den Motoren}{4}{subsubsection*.8}%
-\contentsline {section}{\numberline {2.2}Simulink-Modell}{4}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Modellarchitektur}{4}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Hauptblöcke und Subsysteme}{5}{subsection.2.2.2}%
-\contentsline {subsubsection}{\nonumberline Eingabe: Zielposition}{5}{subsubsection*.10}%
-\contentsline {subsubsection}{\nonumberline Inverse Kinematik Block}{5}{subsubsection*.11}%
-\contentsline {subsubsection}{\nonumberline Winkelberechnung für Motoren}{5}{subsubsection*.12}%
-\contentsline {subsubsection}{\nonumberline Feedback-Loop mit Encoder-Daten}{5}{subsubsection*.13}%
-\contentsline {subsection}{\numberline {2.2.3}Simulation und Validierung}{5}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3}Codegenerierung und STM32-Integration}{5}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Embedded Coder Konfiguration}{5}{subsection.2.3.1}%
+\contentsline {section}{\numberline {2.1}Softwarearchitektur und Steuerung}{2}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Hardware Abstraction Layer (HAL) und Skalierbarkeit}{2}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Initialisierung und SPI-Kommunikation der Motortreiber}{3}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Zustandsautomat (Finite State Machine)}{3}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Kinematische Referenzierung (Homing)}{3}{subsection.2.1.4}%
+\contentsline {subsubsection}{\nonumberline Interrupt-Verarbeitung und Hardware-Entprellung}{4}{subsubsection*.4}%
+\contentsline {subsubsection}{\nonumberline Berechnung kinematischer Offsets}{4}{subsubsection*.5}%
+\contentsline {subsubsection}{\nonumberline Sequenzieller Homing-Ablauf}{4}{subsubsection*.6}%
 \contentsline {chapter}{\numberline {3}Hardware}{6}{chapter.3}%
 \contentsline {chapter}{\numberline {4}Elektrisches}{7}{chapter.4}%
-\contentsline {chapter}{\nonumberline Quellenverzeichnis}{9}{chapter*.17}%
+\contentsline {chapter}{\nonumberline Quellenverzeichnis}{9}{chapter*.9}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

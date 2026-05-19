@@ -104,9 +104,10 @@ TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &ht
 uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
 
 // Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
-float home_rad[6]={ 0.0171f, -0.3470f, 0.3363f, -1.0126f, -0.0202f, 2.1291f};
+//-0.3470f
+float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 0.3363f, -1.0126f, -0.0202f, 2.1291f aber stimmt nicht deshalb herausgemessen
 //Limitangles from solidworks
-float limit_rad[6]={0.0171f, 1.7615f,  1.6177f, -1.0126f, 1.6481f, 2.1291f};
+float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
 
 //array for homing pins
 GPIO_TypeDef* DIR_PORTS[6] = {TMC2_DIR_GPIO_Port, TMC1_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
@@ -298,11 +299,12 @@ int main(void)
               printf("Starte Homing fuer Achse %d...\r\n", ax);
               // Richtung Schalter
               HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
-              Step_SetFreqHz(ax, 5000);
+              Step_SetFreqHz(ax, 1000);
               Step_Start(ax);
           }
           // Phase 2: Endschalter wurde getroffen
           else if (stoprequest[ax]) {
+        	  printf("Stoprequest erhalten");
               stoprequest[ax] = 0;
 
               // Schalter getroffen! Brauchen wir ein Offset?
@@ -315,9 +317,9 @@ int main(void)
 
                   HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_RESET);
                   HAL_Delay(5); // Kurze Setup-Time für DIR Pin geben!
-                  Step_SetFreqHz(ax, 5000);
+                  Step_SetFreqHz(ax, 1000);
                   Step_Start_Exact(ax, steps_to_move);
-
+                  printf("Fahre offset\r\n");
                   currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
               }
               else {
@@ -338,7 +340,7 @@ int main(void)
           if (is_moving_offset[current_homingaxis] == 0) {
               // Offset-Fahrt abgeschlossen!
               current_homingaxis++; // Nächste Achse an die Reihe lassen
-
+              	 printf("State homing offset \r\n");
               // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
               // Da 'started' dort statisch ist, haben wir es so gelöst:
               // Wir können den Block wieder betreten. Alternativ übergeben wir das Signal.
