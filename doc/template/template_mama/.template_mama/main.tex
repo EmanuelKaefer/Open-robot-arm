@@ -189,9 +189,25 @@
 %% ... it's OK to put here your own usepackage commands ...
 
 \usepackage{float}
+\usepackage{booktabs} %for tabels
 
+\usepackage{listings} %for code
+\usepackage{xcolor} % Für die Farben im Code
 
-
+% Definition des Designs für den Code
+\lstset{
+	backgroundcolor=\color{gray!5},   % Leichter grauer Hintergrund
+	basicstyle=\ttfamily\footnotesize, % Feste Schriftart (Monospace) und passende Größe
+	breaklines=true,                   % Automatische Zeilenumbrüche bei zu langen Zeilen
+	captionpos=b,                      % Code-Beschriftung UNTEN (Standard bei Code)
+	commentstyle=\color{green!60!black}, % Farbe für Kommentare
+	keywordstyle=\color{blue},         % Farbe für Befehle (if, while, etc.)
+	numbers=left,                      % Zeilennummern links
+	numberstyle=\tiny\color{gray},     % Stil der Zeilenummern
+	stringstyle=\color{purple},        % Farbe für Texte in Anführungszeichen
+	showstringspaces=false,            % Keine hässlichen Unterstriche bei Leerzeichen
+	frame=single,                      % Rahmen um den Code
+}
 %% ========================================================================
 %%%% MISC self-defined commands and settings
 %% ========================================================================

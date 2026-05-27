@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  12 MAY 2026 11:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  27 MAY 2026 20:35
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1624,6 +1624,26 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks58
 \@floatcapt=\box115
 )
+(C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen352
+\lightrulewidth=\dimen353
+\cmidrulewidth=\dimen354
+\belowrulesep=\dimen355
+\belowbottomsep=\dimen356
+\aboverulesep=\dimen357
+\abovetopsep=\dimen358
+\cmidrulesep=\dimen359
+\cmidrulekern=\dimen360
+\defaultaddspace=\dimen361
+\@cmidla=\count515
+\@cmidlb=\count516
+\@aboverulesep=\dimen362
+\@belowrulesep=\dimen363
+\@thisruleclass=\count517
+\@lastruleclass=\count518
+\@thisrulewidth=\dimen364
+)
 (template/pdf_settings.tex
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
@@ -1647,16 +1667,16 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 lestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count515
+\c@section@level=\count519
 )
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
 ty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen352
-\Hy@linkcounter=\count516
-\Hy@pagecounter=\count517
+\@linkdim=\dimen365
+\Hy@linkcounter=\count520
+\Hy@pagecounter=\count521
  (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
@@ -1664,7 +1684,7 @@ Now handling font encoding PD1 ...
 ) (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count518
+\Hy@SavedSpaceFactor=\count522
  (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
@@ -1688,9 +1708,9 @@ Package hyperref Info: Plain pages OFF on input line 4210.
 Package hyperref Info: Backreferencing OFF on input line 4215.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4462.
-\c@Hy@tempcnt=\count519
+\c@Hy@tempcnt=\count523
 LaTeX Info: Redefining \url on input line 4801.
-\XeTeXLinkMargin=\dimen353
+\XeTeXLinkMargin=\dimen366
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
@@ -1699,9 +1719,9 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count520
-\Field@Width=\dimen354
-\Fld@charsize=\dimen355
+\Fld@menulength=\count524
+\Field@Width=\dimen367
+\Fld@charsize=\dimen368
 Package hyperref Info: Hyper figures OFF on input line 6078.
 Package hyperref Info: Link nesting OFF on input line 6083.
 Package hyperref Info: Hyper index ON on input line 6086.
@@ -1709,16 +1729,16 @@ Package hyperref Info: backreferencing OFF on input line 6093.
 Package hyperref Info: Link coloring ON on input line 6096.
 Package hyperref Info: Link coloring with OCG OFF on input line 6103.
 Package hyperref Info: PDF/A mode OFF on input line 6108.
-\Hy@abspage=\count521
-\c@Item=\count522
-\c@Hfootnote=\count523
+\Hy@abspage=\count525
+\c@Item=\count526
+\c@Hfootnote=\count527
 )
 Package hyperref Info: Driver: hpdftex.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
 File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
-\Fld@listcount=\count524
-\c@bookmark@seq@number=\count525
+\Fld@listcount=\count528
+\c@bookmark@seq@number=\count529
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
 echeck.sty
@@ -1775,11 +1795,11 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 \tcb@upperbox=\box117
 \tcb@lowerbox=\box118
 \tcb@phantombox=\box119
-\c@tcbbreakpart=\count526
-\c@tcblayer=\count527
-\c@tcolorbox@number=\count528
+\c@tcbbreakpart=\count530
+\c@tcblayer=\count531
+\c@tcolorbox@number=\count532
 \l__tcobox_tmpa_box=\box120
-\l__tcobox_tmpa_dim=\dimen356
+\l__tcobox_tmpa_dim=\dimen369
 \tcb@temp=\box121
 \tcb@temp=\box122
 \tcb@temp=\box123
@@ -1789,24 +1809,24 @@ Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 Package: colortbl 2024/10/29 v1.0k Color table columns (DPC)
 \everycr=\toks61
 \minrowclearance=\skip105
-\rownum=\count529
+\rownum=\count533
 )
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/pdfpages\pdfpages.sty
 Package: pdfpages 2025/07/23 v0.6g Insert pages of external PDF documents (AM)
-\AM@pagewidth=\dimen357
-\AM@pageheight=\dimen358
-\AM@fboxrule=\dimen359
+\AM@pagewidth=\dimen370
+\AM@pageheight=\dimen371
+\AM@fboxrule=\dimen372
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/pdfpages\pppdftex.def
 File: pppdftex.def 2025/07/23 v0.6g Pdfpages driver for pdfTeX (AM)
 )
-\pdfpages@includegraphics@status=\count530
+\pdfpages@includegraphics@status=\count534
 \AM@pagebox=\box125
 \AM@global@opts=\toks62
-\AM@pagecnt=\count531
+\AM@pagecnt=\count535
 \AM@toc@title=\toks63
 \AM@lof@heading=\toks64
-\c@AM@survey=\count532
+\c@AM@survey=\count536
 \AM@templatesizebox=\box126
 )
 Package csquotes Info: Checking for multilingual support...
@@ -1818,17 +1838,17 @@ Class scrbook Info: loading recommended package `bookmark'.
 (scrbook)           `bookmarkpackage=false' before \begin{document} and
 (scrbook)           you can avoid this message adding:
 (scrbook)             \usepackage{bookmark}
-(scrbook)           before \begin{document} on input line 297.
+(scrbook)           before \begin{document} on input line 313.
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/bookmark\bookmark.sty
 Package: bookmark 2023-12-10 v1.31 PDF bookmarks (HO)
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/bookmark\bkm-pdftex.def
 File: bkm-pdftex.def 2023-12-10 v1.31 bookmark driver for pdfTeX and luaTeX (HO
 )
-\BKM@id=\count533
+\BKM@id=\count537
 ))
 LaTeX Font Info:    Trying to load font information for OT1+pplj on input line 
-297.
+313.
  (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pplj.fd
 File: ot1pplj.fd 2004/09/06 font definitions for OT1/pplj.
 )
@@ -1843,24 +1863,24 @@ Package babel Info: 'ngerman' activates 'ngerman' shorthands.
 t/elektrisches.aux))
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 297.
-LaTeX Font Info:    ... okay on input line 297.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 313.
+LaTeX Font Info:    ... okay on input line 313.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1941,22 +1961,22 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (main.bbl)
-Package biblatex Info: Reference section=0 on input line 297.
-Package biblatex Info: Reference segment=0 on input line 297.
+Package biblatex Info: Reference section=0 on input line 313.
+Package biblatex Info: Reference segment=0 on input line 313.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count534
-\scratchdimen=\dimen360
+\scratchcounter=\count538
+\scratchdimen=\dimen373
 \scratchbox=\box127
-\nofMPsegments=\count535
-\nofMParguments=\count536
+\nofMPsegments=\count539
+\nofMParguments=\count540
 \everyMPshowfont=\toks65
-\MPscratchCnt=\count537
-\MPscratchDim=\dimen361
-\MPnumerator=\count538
-\makeMPintoPDFobject=\count539
+\MPscratchCnt=\count541
+\MPscratchDim=\dimen374
+\MPnumerator=\count542
+\makeMPintoPDFobject=\count543
 \everyMPtoPDFconversion=\toks66
 )
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
@@ -1975,7 +1995,7 @@ File: translations-basic-dictionary-german.trsl (german translation file `trans
 lations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `german'. on input line 297.
+or `german'. on input line 313.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/translations/dicts\tran
 slations-basic-dictionary-english.trsl
@@ -1983,29 +2003,29 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 297.
+or `english'. on input line 313.
 
 
 Package pgfplots Warning: running in backwards compatibility mode (unsuitable t
 ick labels; missing features). Consider writing \pgfplotsset{compat=1.18} into 
 your preamble.
- on input line 297.
+ on input line 313.
 
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count540
-Package tocbasic Info: setting babel extension for `lol' on input line 297.
+\c@lstlisting=\count544
+Package tocbasic Info: setting babel extension for `lol' on input line 313.
 \scr@dte@lstlisting@maxnumwidth=\skip106
-LaTeX Info: Redefining \microtypecontext on input line 297.
-Package microtype Info: Applying patch `item' on input line 297.
-Package microtype Info: Applying patch `toc' on input line 297.
-Package microtype Info: Applying patch `eqnum' on input line 297.
-Package microtype Info: Applying patch `footnote' on input line 297.
-Package microtype Info: Applying patch `verbatim' on input line 297.
-LaTeX Info: Redefining \microtypesetup on input line 297.
+LaTeX Info: Redefining \microtypecontext on input line 313.
+Package microtype Info: Applying patch `item' on input line 313.
+Package microtype Info: Applying patch `toc' on input line 313.
+Package microtype Info: Applying patch `eqnum' on input line 313.
+Package microtype Info: Applying patch `footnote' on input line 313.
+Package microtype Info: Applying patch `verbatim' on input line 313.
+LaTeX Info: Redefining \microtypesetup on input line 313.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2),
 (microtype)             factor: 900.
@@ -2020,7 +2040,7 @@ Package microtype Info: No adjustment of character kerning.
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-ppl.cfg
 File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
 )
-Package hyperref Info: Link coloring ON on input line 297.
+Package hyperref Info: Link coloring ON on input line 313.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape.sty
 Package: pdflscape 2022-10-27 v0.13 Display of landscape pages in PDF
@@ -2131,8 +2151,8 @@ chapter without number
 ) [3
 
 ]
-Package tocbasic Info: character protrusion at toc deactivated on input line 31
-5.
+Package tocbasic Info: character protrusion at toc deactivated on input line 33
+1.
  (main.toc)
 \tf@toc=\write5
 \openout5 = `main.toc'.
@@ -2155,7 +2175,16 @@ chapter 1.
  (content/software.tex
 chapter 2.
 
-LaTeX Warning: Reference `hardware' on page 2 undefined on input line 10.
+LaTeX Warning: Reference `hardware' on page 2 undefined on input line 13.
+
+
+LaTeX Warning: Reference `hardware' on page 2 undefined on input line 13.
+
+
+Overfull \hbox (9.56352pt too wide) in paragraph at lines 21--22
+\OT1/pplj/m/n/12 (-20) Bei der An-steue-rung ei-nes 6-Achs-Roboterarms f[]uhrt 
+die Zu-wei-sung von Mikrocontroller-
+ []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -2166,19 +2195,29 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 ]
-Overfull \hbox (12.46066pt too wide) in paragraph at lines 31--35
-\OT1/pplj/m/n/12 (-20) Um die kom-ple-xen und teils par-al-lel ab-lau-fen-den P
-ro-zes-se des Ro-bo-ters nicht-blockierend
- []
+Package microtype Info: Character `013' is missing
+(microtype)             in font `OT1/pplj/m/sc/10'.
+(microtype)             Ignoring protrusion settings for this character.
 
-
-Underfull \vbox (badness 7576) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [3]
-Package babel Info: 'ngerman' activates 'ngerman' shorthands.
-(babel)             Reported on input line 65.
+LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
+66.
 
-[4]) [5]
+(C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pplj.fd
+File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
+)
+<figures/allgemein/State_maschin.png, id=70, 566.71725pt x 239.6955pt>
+File: figures/allgemein/State_maschin.png Graphic file (type png)
+<use figures/allgemein/State_maschin.png>
+Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
+e 77.
+(pdftex.def)             Requested size: 318.66948pt x 134.78815pt.
+Package babel Info: 'ngerman' activates 'ngerman' shorthands.
+(babel)             Reported on input line 118.
+
+[4 <./figures/allgemein/State_maschin.png>] [5]) [6]
 \openout2 = `content/hardware.aux'.
 
  (content/hardware.tex
@@ -2187,7 +2226,7 @@ File: figures/allgemein/abcdxyz.png Graphic file (type png)
 <use figures/allgemein/abcdxyz.png>
 Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 (pdftex.def)             Requested size: 318.66948pt x 191.40587pt.
-) [6
+) [7
 
 
 
@@ -2197,7 +2236,7 @@ Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 
  (content/elektrisches.tex
 chapter 4.
-) [7
+) [8
 
 
 
@@ -2238,8 +2277,8 @@ Package geometry Warning: `a4paper': not available in `\newgeometry'; skipped.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package tocbasic Info: character protrusion at lof deactivated on input line 33
-8.
+Package tocbasic Info: character protrusion at lof deactivated on input line 35
+4.
 (main.lof)
 \tf@lof=\write6
 \openout6 = `main.lof'.
@@ -2254,13 +2293,13 @@ Package scrlayer-scrpage Warning: \headheight to low.
 (scrlayer-scrpage)                e.g., setting geometry's option
 (scrlayer-scrpage)                `head=20.2999pt'.
 (scrlayer-scrpage)                I'll also decrease \topmargin on input line 3
-42.
+58.
 
 
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[8
+[9
 
 
 
@@ -2268,7 +2307,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [9
+(formal/Begleiterprotokoll.tex) [10
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2285,26 +2324,27 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 79810 strings out of 467871
- 2017864 string characters out of 5418377
- 3386193 words of memory out of 5000000
- 107370 multiletter control sequences out of 15000+600000
- 662924 words of font info for 266 fonts, out of 8000000 for 9000
+ 80393 strings out of 467871
+ 2024561 string characters out of 5418377
+ 3419358 words of memory out of 5000000
+ 107842 multiletter control sequences out of 15000+600000
+ 677298 words of font info for 348 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
  113i,20n,134p,11262b,2481s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmss12.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
 fonts/cm/cmssbx10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1
-/public/amsfonts/cm/cmtt12.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fo
-nts/type1/public/fpl/fplbj8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/fpl/fplrc8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTe
-X/fonts/type1/public/fpl/fplrij8a.pfb><C:/Users/matte/AppData/Local/Programs/Mi
-KTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/matte/AppData/Local/Programs
-/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/matte/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (13 pages, 1605512 bytes).
+/public/amsfonts/cm/cmtt10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmtt12.pfb><C:/Users/matte/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/fpl/fplbj8a.pfb><C:/Users/matte/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/fpl/fplrc8a.pfb><C:/Users/matte/AppData/Local/Progr
+ams/MiKTeX/fonts/type1/public/fpl/fplrij8a.pfb><C:/Users/matte/AppData/Local/Pr
+ograms/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/matte/AppData/Local
+/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/matte/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
+Output written on main.pdf (14 pages, 1669295 bytes).
 PDF statistics:
- 181 PDF objects out of 1000 (max. 8388607)
- 34 named destinations out of 1000 (max. 500000)
- 75351 words of extra memory for PDF output out of 89155 (max. 10000000)
+ 206 PDF objects out of 1000 (max. 8388607)
+ 44 named destinations out of 1000 (max. 500000)
+ 99420 words of extra memory for PDF output out of 106986 (max. 10000000)
 
