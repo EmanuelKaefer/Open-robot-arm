@@ -3,152 +3,140 @@
 
 % --- START DES SOFTWARE-KAPITELS ---
 
-\section{Softwarearchitektur und Steuerung}
+\section{Low Level Architektur und Steuerung}
 \label{sec:software}
-% Kurze Einleitung: Zweck der Software, STM32F446 als Kern, Bare-Metal C, 
-% Schnittstelle zwischen Mechanik und Elektronik.
 
+Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe Hardware) und der elektrischen Leistungselektronik (siehe Elektronik) dar. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
 
-
-Dieses Kapitel beschreibt die Implementierung der zentralen Robotersteuerung, welche das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe \ref{hardware}) und der elektrischen Leistungselektronik (siehe \ref{hardware}) bildet. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen. Im Folgenden werden die Hardware-Abstraktion, die SPI-Treiberkonfiguration, das Konzept des Zustandsautomaten sowie die algorithmische Umsetzung der kinematischen Referenzierung detailliert erläutert.
-
-\subsection{Implementierung der 6 achsen und Skalierbarkeit}
+\subsection{Implementierung der 6 Achsen und Skalierbarkeit}
 \label{subsec:hal}
-% - Problembeschreibung: Direkter Hardware-Zugriff bei 6 Achsen fuehrt zu redundantem, fehleranfaelligem Code.
-% - Loesung: Implementierung von Arrays fuer Peripherie-Zuordnungen (TIM-Handle, PWM-Kanaele, GPIO-Ports fuer DIR und CS).
-% - Vorteil: Die eigentliche Logik benoetigt nur noch einen Achs-Index (0 bis 5). Das System ist extrem leicht skalierbar und unabhaengig von der physikalischen Verkabelung.
-% - Hier bietet sich ein kurzes Code-Snippet (Listing) des Timer- oder CS-Arrays an.
-Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelnde Variablen und die Statische Zuweisung von Peripherie-Registern schnell zu Eingeschränkten und fehleranfälligem Programmcode . Um dies zu vermeiden, wurde eine Array-basierten Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (TIM HandleTypeDef), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (DIR) und Chip-Select-Signale (CS) in globalen Arrays gekapselt. Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index  angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homen über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems massiv erhöht.
+
+Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelvariablen und die statische Zuweisung von Peripherie-Registern schnell zu eingeschränktem und fehleranfälligem Programmcode. Um dies zu vermeiden, wurde eine Array-basierte Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (\texttt{TIM\_HandleTypeDef}), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (\texttt{DIR}) und Chip-Select-Signale (\texttt{CS}) in globalen Arrays gekapselt. 
+
+Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homen über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems massiv erhöht.
 
 \subsection{Initialisierung und SPI-Kommunikation der Motortreiber}
 \label{subsec:spi_init}
-% - Beschreibung der Kommunikation zwischen STM32 und TMC5160 ueber den SPI-Bus.
-% - Das Konzept der Chip-Select (CS) Pins zur adressierten Kommunikation auf einem geteilten Bus.
-% - Der STATE_INIT Ablauf: Schreiben der Konfigurationsregister (Chopper, Haltestrom).
-% - Fehlererkennung und Robustheit: Ruecklesen des GSTAT-Registers und der CS-Actual-Werte. 
-% - Erwaehnung der Hardware-Herausforderungen (EMI, Signalintegritaet auf dem Prototypen-Board) und wie Software-Boot-Delays zur Stabilitaet beitragen.
-Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mir NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten Serial Peripheral Interface (SPI) Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (CS) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. Um fehler direkt beim Initialisieren der Treiber zu erkennen und nicht erst später wurde eine Validierung eingebaut ohne die der nächste Schritt nicht erreicht werden kann. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (GSTAT) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (GSTAT = 0) detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch. 
+
+Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten Serial Peripheral Interface (SPI) Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. 
+
+Um Fehler direkt beim Initialisieren der Treiber zu erkennen, wurde eine Validierung eingebaut, ohne die der nächste Schritt nicht erreicht werden kann. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (\texttt{GSTAT}) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (\texttt{GSTAT} = 0) detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch. 
 
 Die gewählte Konfiguration der Motortreiber ist wie folgt:
+
 \begin{table}[htbp]
-	\footnotesize % IEEE-Standard für Tabellenschriftgröße
+	\footnotesize 
 	\centering
-	
-	% 1. Caption über der Tabelle in Kapitälchen (\textsc)
 	\caption[Konfiguration der TMC5160T Register via SPI]{\textsc{Konfiguration der TMC5160T Register via SPI}}
 	\label{tab:tmc5160_config}
 	
-	% 2. tabularx sorgt dafür, dass die Tabelle exakt die Spaltenbreite ausnutzt
-	\begin{tabularx}{\linewidth}{l l X}
+	\begin{tabularx}{\linewidth}{l X} % Korrigiert auf 2 Spalten passend zum Inhalt
 		\toprule
-		\textbf{Register} & \textbf{Wert} & \textbf{Funktion} \\
+		\textbf{Register (Wert)} & \textbf{Funktion} \\
 		\midrule
-		\texttt{GSTAT} (0x01) & \texttt{0x00000007} & Setzt das globale Statusregister zurück. Löscht Fehlerspeicher für Reset, Unterspannung der Charge-Pump und Driver-Shutdown vor dem Testlauf. \\
+		\texttt{GSTAT} (0x01) = \texttt{0x00000007} & Setzt das globale Statusregister zurück. Löscht Fehlerspeicher für Reset, Unterspannung der Charge-Pump und Driver-Shutdown vor dem Testlauf. \\
 		\addlinespace
-		\texttt{GCONF} (0x00) & \texttt{0x00000004} & Aktiviert das Bit \texttt{pdn\_disable}. Schaltet den Treiber in den internen Sensing-Modus um und erzwingt die Kommunikation rein über die SPI-Schnittstelle. \\
+		\texttt{GCONF} (0x00) = \texttt{0x00000004} & Aktiviert das Bit \texttt{pdn\_disable}. Schaltet den Treiber in den internen Sensing-Modus um und erzwingt die Kommunikation rein über die SPI-Schnittstelle. \\
 		\addlinespace
-		\texttt{IHOLD\_IRUN} (0x10) & \texttt{0x00061008} & Konfiguriert den Motorstrom: Setzt den Fahrstrom (\texttt{IRUN}) auf ca. 50\,\%, den Haltestrom im Stillstand (\texttt{IHOLD}) auf ca. 25\,\% sowie eine Verzögerung (\texttt{IHOLDDELAY}) für die Stromabsenkung. \\
+		\texttt{IHOLD\_IRUN} (0x10) = \texttt{0x00061008} & Konfiguriert den Motorstrom: Setzt den Fahrstrom (\texttt{IRUN}) auf ca. 50\,\%, den Haltestrom im Stillstand (\texttt{IHOLD}) auf ca. 25\,\% sowie eine Verzögerung (\texttt{IHOLDDELAY}) für die Stromabsenkung. \\
 		\addlinespace
-		\texttt{CHOPCONF} (0x6C) & \texttt{0x14010053} & Konfiguration des Chopper-Verfahrens. Aktiviert den kraftvollen \mbox{\textit{SpreadCycle}-Modus}, stellt die Schrittauflösung auf 16 Mikroschritte (mit automatischer Interpolation auf 256 Schritte) und definiert das Signal-Timing (\textit{TOFF}, \textit{TBL}). \\
+		\texttt{CHOPCONF} (0x6C) = \texttt{0x14010053} & Konfiguration des Chopper-Verfahrens. Aktiviert den kraftvollen \textit{SpreadCycle}-Modus, stellt die Schrittauflösung auf 16 Mikroschritte (mit automatischer Interpolation auf 256 Schritte) und definiert das Signal-Timing (\textit{TOFF}, \textit{TBL}). \\
 		\addlinespace
-		\texttt{PWMCONF} (0x70) & \texttt{0xC10D0024} & Hinterlegt die Parameter für den flüsterleisen \textit{StealthChop2}-Modus (Spannungsamplitude, Frequenz, Gradienten) für einen potenziellen, geschwindigkeitsabhängigen Moduswechsel. \\
+		\texttt{PWMCONF} (0x70) = \texttt{0xC10D0024} & Hinterlegt die Parameter für den flüsterleisen \textit{StealthChop2}-Modus (Spannungsamplitude, Frequenz, Gradienten) für einen potenziellen, geschwindigkeitsabhängigen Moduswechsel. \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
 
-\subsection{Finite State Machine(Endlicher Zustandsautomat)}
+\subsection{Finite State Machine (Endlicher Zustandsautomat)}
 \label{subsec:fsm}
-% - Warum eine State-Machine? (Nicht-blockierende Programmierung, Uebersichtlichkeit).
-% - Definition der Zustaende: STATE_INIT, STATE_HOMING, STATE_HOMING_OFFSET, STATE_READY, STATE_ERROR.
-% - Kurze Erklaerung, wie der Haupt-Loop (while(1)) durch diese Zustaende navigiert.
- Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein sich selbst blockieren der Software zu verhindern kommt eine Finite State Machine zum Einsatz. Eine Finite State Machine ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine Finite State Machine besteht immer aus den Folgenden Komponenten: 
-\begin{itemize}
-	\item Zustände (States): Die verschiedenen Phasen des Systems
-	\item Startzustand (initial State): Der Zustand in dem die FSM beginnt
-	\item Übergänge (Transitions): Die Bedingungen für den Wechsel von Zuständen
-	\item Ereignis (Inputs): Die Ereignisse die einen Wechsel bewirken
-	\item Aktionen (Outputs): Die Ausgaben der FSM
-\end{itemize}
-%TODO: citing the thing with FSM
 
- \subsubsection{Zustände}
- \begin{figure}[h]
- 	\centering
- 	\includegraphics[width=0.7\textwidth]{figures/allgemein/State_maschin.png}
- 	\caption{Diagramm der Finite State Maschine}
- 	\label{fig:Finite State Maschine}
- \end{figure}
- 
- Für unseren Roboterarm haben wir die Zustände STATE INIT, STATE HOMING, STATE HOMING OFFSET, STATE READY und STATE ERROR gewählt. Als Startzustand ist STATE INIT definiert da am Anfang bevor irgendetwas anderes passiert die Treiber initialisiert werden müssen.%TODO mehr ausführen wie unsere Finite State Machine die Komponenten macht
- 
- Die Funktionen der Zustände gestaltet sich wie folgt:
- 
-\begin{table}[htbp]
-	\footnotesize % IEEE-Standard für Tabellenschriftgröße
+Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein Selbstblockieren der Software zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht immer aus den folgenden Komponenten: 
+\begin{itemize}
+	\item Zustände (States): Die verschiedenen Phasen des Systems.
+	\item Startzustand (Initial State): Der Zustand, in dem die FSM beginnt.
+	\item Übergänge (Transitions): Die Bedingungen für den Wechsel von Zuständen.
+	\item Ereignisse (Inputs): Die Ereignisse, die einen Wechsel bewirken.
+	\item Aktionen (Outputs): Die Ausgaben der FSM.
+\end{itemize}
+
+\subsubsection{Zustände}
+
+\begin{figure}[htbp]
 	\centering
-	
-	% 1. Caption über der Tabelle in Kapitälchen (\textsc)
+	\includegraphics[width=0.7\textwidth]{figures/allgemein/State_maschin.png}
+	\caption{Diagramm der Finite State Machine}
+	\label{fig:Finite_State_Maschine}
+\end{figure}
+
+Für unseren Roboterarm wurden die Zustände \texttt{STATE\_INIT}, \texttt{STATE\_HOMING}, \texttt{STATE\_HOMING\_OFFSET}, \texttt{STATE\_READY} und \texttt{STATE\_ERROR} gewählt. Als Startzustand ist \texttt{STATE\_INIT} definiert, da vor jedem Betrieb die Treiber initialisiert werden müssen.
+
+Die Funktionen der Zustände gestalten sich wie folgt:
+
+\begin{table}[htbp]
+	\footnotesize 
+	\centering
 	\caption[Funktionen der Zustände der Finite State Machine]{\textsc{Funktionen der Zustände der Finite State Machine}}
 	\label{tab:fsm_states}
 	
-	% 2. tabularx sorgt dafür, dass die Tabelle exakt die Spaltenbreite ausnutzt
-	% 'l' für die Zustände (so breit wie nötig), 'X' für die Beschreibung (nutzt den Rest und bricht um)
 	\begin{tabularx}{\linewidth}{l X}
 		\toprule
-		\textbf{Zustände} & \textbf{Funktion} \\
+		\textbf{Zustand} & \textbf{Funktion} \\
 		\midrule
-		STATE INIT          & Initialisiert die Motortreiber über SPI, um die nötigen Parameter zu konfigurieren. \\
-		\addlinespace % Optionaler kleiner Abstand für bessere Lesbarkeit bei langen Texten
-		STATE HOMING        & Hier passiert der erste Teil der kinematischen Referenzfahrt, die den Roboter in die Home-Position bringt. Er fährt dabei den Endschalter der jeweiligen Achse an. \\
+		\texttt{STATE\_INIT}          & Initialisiert die Motortreiber über SPI, um die nötigen Parameter zu konfigurieren. \\
+		\addlinespace 
+		\texttt{STATE\_HOMING}        & Hier passiert der erste Teil der kinematischen Referenzfahrt, die den Roboter in die Home-Position bringt. Er fährt dabei den Endschalter der jeweiligen Achse an. \\
 		\addlinespace
-		STATE HOMING OFFSET & Hier passiert der zweite Teil der kinematischen Referenzfahrt. Der Roboter fährt vom Endschalter in die vordefinierte Home-Position. \\
+		\texttt{STATE\_HOMING\_OFFSET} & Hier passiert der zweite Teil der kinematischen Referenzfahrt. Der Roboter fährt vom Endschalter in die vordefinierte Home-Position. \\
 		\addlinespace
-		STATE READY         & Hier passiert der eigentliche Betrieb des Roboters. Der Mikrocontroller empfängt Befehle und führt diese aus, um den Roboter wie gewünscht zu bewegen. \\
+		\texttt{STATE\_READY}         & Hier erfolgt der eigentliche Betrieb des Roboters. Der Mikrocontroller empfängt Befehle und führt diese aus, um den Roboter wie gewünscht zu bewegen. \\
 		\addlinespace
-		STATE ERROR         & In diesen Zustand gelangt man nur im Fehlerfall. Es werden alle Motoren gestoppt und eine Fehlermeldung ausgegeben. \\
+		\texttt{STATE\_ERROR}         & In diesen Zustand gelangt man nur im Fehlerfall. Es werden alle Motoren gestoppt und eine Fehlermeldung ausgegeben. \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
 
-
-\subsection{Kinimatische Referenzierungsfahrt (Homing)}
+\subsection{Kinematische Referenzierungsfahrt (Homing)}
 \label{subsec:homing}
-Da Schrittmotoren über keine absolute Positionscodierung verfügen und wir uns aus Preisgründen gegen ein Positionscodierung entschieden haben, ist der Systemzustand nach jedem Neustart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
-% Einleitender Satz: Warum muss der Roboter referenziert werden? (Schrittmotoren haben keine absolute Positionserkennung).
+
+Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kostengründen auf absolute Encoder verzichtet wurde, ist der Systemzustand nach jedem Neustart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
 
 \subsubsection{Interrupt-Verarbeitung und Hardware-Entprellung}
 \label{subsubsec:interrupts}
-Für die Erfassung der Endschalter kommen Externe Interrupts (EXTIS) zum einsatz. EXTIS sparen sehr viel Rechenaufwand und Energie da der Prozessor nicht permanent einen Pin überwachen muss, sondern sobald eine Flanke erkannt wird(Rising edge von 0 auf 3.3V oder Falling edge von 3.3V auf 0) wird ein Interrupt request ausgelöst der das Hauptprogramm pausiert und eine Spezielle Funktion aufruft. Diese Funktion setzt eine Flag um dem Hauptprogramm das der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.
 
-Um das mehrfache auslösen des interrupt zu verhinder das durch sogenantes Bouncen bei Mechanischen Schaltern auftreten kann ist in der Interrupt Funktion ein debouncing eingebettet das nach einem Interrupt alle weiteren für 30ns ignoriert. 
+Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.
+
+Um das mehrfache Auslösen des Interrupts zu verhindern, das durch sogenanntes Bouncen bei mechanischen Schaltern auftreten kann, ist in der Interrupt-Funktion eine Software-Entprellung eingebettet, die nach einem registrierten Interrupt alle weiteren Signale für 30\,ms ignoriert. 
+
 Der Code dafür sieht wie folgt aus:
 
-\begin{lstlisting}[language=C, caption={Debouncing für Interrupt}, label={lst:IQR_debounce}]
-    static uint32_t last = 0;
-uint32_t now = HAL_GetTick();
-if (now - last < 30) return;
-last = now;
+\begin{lstlisting}[language=C, caption={Debouncing für Interrupt-Verarbeitung}, label={lst:IQR_debounce}]
+	static uint32_t last = 0;
+	uint32_t now = HAL_GetTick();
+	if (now - last < 30) return;
+	last = now;
 \end{lstlisting}
-% - Verwendung von externen Interrupts (EXTI) fuer die Endschalter.
-% - Das Problem des Schalter-Prellens (Bouncing) bei mechanischen Kontakten.
-% - Die Software-Loesung: HAL_GetTick() Zeitstempel zur Entprellung und das Setzen von asynchronen Stop-Requests (stoprequest-Array), um die Timer im Hauptkontext sicher abzuschalten.
 
 \subsubsection{Berechnung kinematischer Offsets}
 \label{subsubsec:offsets}
-% - Die Mathematik hinter der Bewegung: Umrechnung von mechanischen CAD/URDF-Winkeln in Bogenmass (Radiant) zu Motorschritten.
-% - Erklaerung der Getriebeuebersetzung (1:20) und des Microsteppings (16) am Beispiel: 64.000 Schritte = 360 Grad am Gelenk.
-% - Warum Offsets noetig sind: Der mechanische Endschalter (limit_rad) entspricht selten dem kinematischen Nullpunkt (home_rad) des Roboters.
-% - Beschreibung der dynamischen Differenzberechnung zur Laufzeit.
-Der Mechanische Nullpunkt an dem sich die Endschalter befinden ist selten der kinematische Nullpunkt. Das führt zu einem Offset das es auszugleichen gilt. Die Mechanischen Nullpunkte des Roboterarm sind:  0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f und die Kinematischen sind  0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f%TODO listen updaten wenns funktioniert
-das ergibt an manchen Achsen die nicht durchdrehen den bennanten Offset. Um diesen auszugleichen muss man die Differenz in Schritte umrechnen. 
 
+Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meist nicht dem exakten kinematischen Nullpunkt des Roboters. Dies führt zu einem mathematischen Offset, den es auszugleichen gilt. Um diesen auszugleichen, muss die Winkeldifferenz in die entsprechende Schrittanzahl für die Motoren umgerechnet werden. Die Formel hierfür lautet:
 
-\subsubsection{Sequenzieller Homing-Ablauf}
-\label{subsubsec:homing_sequence}
-% - Das Zusammenspiel aller vorherigen Komponenten in der Praxis.
-% - Der Ablauf anhand einer Achse mit Offset: Starten in Richtung Schalter -> Interrupt loest aus -> Berechnung des Offsets -> Wechsel in STATE_HOMING_OFFSET -> Abfahren der genauen Schrittzahl -> Freigabe der naechsten Achse.
-% - Umgang mit Achsen ohne Anschlag (z.B. Endlosrotation der Base): Direkter Uebergang zur naechsten Achse, sobald der Sensor ausloest.
-% - Steuerung durch den globalen Index 'current_homingaxis', der das System schrittweise von der Base bis zum Endeffektor referenziert.
-Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, gesteuert durch eine globale Index-Variable (current homingaxis), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine Achse gliedert sich dabei in folgende Phasen: Zunächst verfährt die Achse im Zustand STATE HOMING mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das System den erforderlichen Offset, invertiert das Richtungssignal (DIR) und wechselt in den Zustand STATE HOMING OFFSET. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand STATE READY übergeht.
+\begin{equation}
+	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot 256 \cdot 16 \cdot 20
+\end{equation}
 
-% --- ENDE DES BEREICHS ---
+\begin{itemize}
+	\item $\Delta\text{rad}$: Die Differenz des Offsets und der Home-Position in Radiant.
+	\item $256$: Die Vollschritte, die ein Schrittmotor pro Umdrehung besitzt.
+	\item $16$: Die eingestellte Mikroschritt-Auflösung pro Vollschritt.
+	\item $20$: Die mechanische Getriebeübersetzung (1:20) bei allen Achsen.
+\end{itemize}>
+	
+	\subsubsection{Sequenzieller Homing-Ablauf}
+	\label{subsubsec:homing_sequence}
+	
+	Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, gesteuert durch eine globale Index-Variable (\texttt{current\_homingaxis}), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine einzelne Achse gliedert sich dabei in folgende Phasen: 
+	
+	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das System den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
+	
+	% --- ENDE DES BEREICHS ---
