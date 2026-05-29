@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  28 MAY 2026 11:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  28 MAY 2026 14:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2176,8 +2176,8 @@ chapter 1.
 chapter 2.
 
 Overfull \hbox (15.691pt too wide) in paragraph at lines 9--10
-\OT1/pplj/m/n/12 (-20) Dieses Ka-pi-tel be-schreibt die Im-ple-men-tie-rung der
- zen-tra-len Low-Level-Robotersteuerung,
+[]\OT1/pplj/m/n/12 (-20) Dieses Ka-pi-tel be-schreibt die Im-ple-men-tie-rung d
+er zen-tra-len Low-Level-Robotersteuerung,
  []
 
 
@@ -2203,19 +2203,19 @@ Package microtype Info: Character `013' is missing
 (microtype)             Ignoring protrusion settings for this character.
  [3]
 LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
-55.
+57.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pplj.fd
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
-<figures/allgemein/State_maschin.png, id=72, 566.71725pt x 239.6955pt>
+<figures/allgemein/State_maschin.png, id=77, 566.71725pt x 239.6955pt>
 File: figures/allgemein/State_maschin.png Graphic file (type png)
 <use figures/allgemein/State_maschin.png>
 Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
-e 66.
+e 68.
 (pdftex.def)             Requested size: 318.66948pt x 134.78815pt.
 
-Overfull \hbox (48.59116pt too wide) in paragraph at lines 71--72
+Overfull \hbox (48.59116pt too wide) in paragraph at lines 73--76
 []\OT1/pplj/m/n/12 (-20) F[]ur un-se-ren Ro-bo-ter-arm wur-den die Zust[]ande \
 OT1/cmtt/m/n/12 STATE[]INIT\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOM
 ING\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOMING[]OFFSET\OT1/pplj/m/n
@@ -2223,17 +2223,25 @@ ING\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOMING[]OFFSET\OT1/pplj/m/n
  []
 
 Package babel Info: 'ngerman' activates 'ngerman' shorthands.
-(babel)             Reported on input line 107.
-[4 <./figures/allgemein/State_maschin.png>] [5]) [6]
+(babel)             Reported on input line 109.
+[4 <./figures/allgemein/State_maschin.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5]
+[6]
+chapter 3.
+) [7
+
+]
 \openout2 = `content/hardware.aux'.
 
  (content/hardware.tex
-chapter 3.
+chapter 4.
 File: figures/allgemein/abcdxyz.png Graphic file (type png)
 <use figures/allgemein/abcdxyz.png>
 Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 (pdftex.def)             Requested size: 318.66948pt x 191.40587pt.
-) [7
+) [8
 
 
 
@@ -2242,8 +2250,8 @@ Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 \openout2 = `content/elektrisches.aux'.
 
  (content/elektrisches.tex
-chapter 4.
-) [8
+chapter 5.
+) [9
 
 
 
@@ -2306,7 +2314,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[9
+[10
 
 
 
@@ -2314,7 +2322,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [10
+(formal/Begleiterprotokoll.tex) [11
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2327,10 +2335,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 80408 strings out of 467871
- 2024749 string characters out of 5418377
- 3419373 words of memory out of 5000000
- 107845 multiletter control sequences out of 15000+600000
+ 80402 strings out of 467871
+ 2024307 string characters out of 5418377
+ 3419282 words of memory out of 5000000
+ 107838 multiletter control sequences out of 15000+600000
  678411 words of font info for 359 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
  113i,20n,134p,11262b,2481s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2350,9 +2358,9 @@ Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><
 C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pf
 b><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8
 a.pfb>
-Output written on main.pdf (14 pages, 1697188 bytes).
+Output written on main.pdf (15 pages, 1701796 bytes).
 PDF statistics:
- 227 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 500000)
- 95324 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 247 PDF objects out of 1000 (max. 8388607)
+ 46 named destinations out of 1000 (max. 500000)
+ 95356 words of extra memory for PDF output out of 106986 (max. 10000000)
 

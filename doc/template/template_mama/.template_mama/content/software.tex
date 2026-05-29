@@ -1,21 +1,21 @@
 % !TeX spellcheck = de_DE
-\chapter{Software}
+\chapter{Low Level Architektur und Steuerung}
 
 % --- START DES SOFTWARE-KAPITELS ---
 
-\section{Low Level Architektur und Steuerung}
-\label{sec:software}
+%\section{Low Level Architektur und Steuerung}
+%\label{sec:software}
 
 Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe Hardware) und der elektrischen Leistungselektronik (siehe Elektronik) dar. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
 
-\subsection{Implementierung der 6 Achsen und Skalierbarkeit}
+\section{Implementierung der 6 Achsen und Skalierbarkeit}
 \label{subsec:hal}
 
 Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelvariablen und die statische Zuweisung von Peripherie-Registern schnell zu eingeschränktem und fehleranfälligem Programmcode. Um dies zu vermeiden, wurde eine Array-basierte Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (\texttt{TIM\_HandleTypeDef}), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (\texttt{DIR}) und Chip-Select-Signale (\texttt{CS}) in globalen Arrays gekapselt. 
 
 Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homen über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems massiv erhöht.
 
-\subsection{Initialisierung und SPI-Kommunikation der Motortreiber}
+\section{Initialisierung und SPI-Kommunikation der Motortreiber}
 \label{subsec:spi_init}
 
 Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten Serial Peripheral Interface (SPI) Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. 
@@ -47,10 +47,12 @@ Die gewählte Konfiguration der Motortreiber ist wie folgt:
 	\end{tabularx}
 \end{table}
 
-\subsection{Finite State Machine (Endlicher Zustandsautomat)}
+\section{Finite State Machine (Endlicher Zustandsautomat)}
 \label{subsec:fsm}
 
 Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein Selbstblockieren der Software zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht immer aus den folgenden Komponenten: 
+%TODO Zitieren von FSM, quelle schon in mybib
+
 \begin{itemize}
 	\item Zustände (States): Die verschiedenen Phasen des Systems.
 	\item Startzustand (Initial State): Der Zustand, in dem die FSM beginnt.
@@ -59,7 +61,7 @@ Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und
 	\item Aktionen (Outputs): Die Ausgaben der FSM.
 \end{itemize}
 
-\subsubsection{Zustände}
+\subsection{Zustände}
 
 \begin{figure}[htbp]
 	\centering
@@ -69,7 +71,7 @@ Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und
 \end{figure}
 
 Für unseren Roboterarm wurden die Zustände \texttt{STATE\_INIT}, \texttt{STATE\_HOMING}, \texttt{STATE\_HOMING\_OFFSET}, \texttt{STATE\_READY} und \texttt{STATE\_ERROR} gewählt. Als Startzustand ist \texttt{STATE\_INIT} definiert, da vor jedem Betrieb die Treiber initialisiert werden müssen.
-
+%TODO mehr ausführen wie unsere Finite State Machine die Komponenten macht
 Die Funktionen der Zustände gestalten sich wie folgt:
 
 \begin{table}[htbp]
@@ -95,15 +97,15 @@ Die Funktionen der Zustände gestalten sich wie folgt:
 	\end{tabularx}
 \end{table}
 
-\subsection{Kinematische Referenzierungsfahrt (Homing)}
+\section{Kinematische Referenzierungsfahrt (Homing)}
 \label{subsec:homing}
 
 Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kostengründen auf absolute Encoder verzichtet wurde, ist der Systemzustand nach jedem Neustart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
 
-\subsubsection{Interrupt-Verarbeitung und Hardware-Entprellung}
+\subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
 \label{subsubsec:interrupts}
 
-Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.
+Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.%TODO zitieren extis noch nicht in mybib
 
 Um das mehrfache Auslösen des Interrupts zu verhindern, das durch sogenanntes Bouncen bei mechanischen Schaltern auftreten kann, ist in der Interrupt-Funktion eine Software-Entprellung eingebettet, die nach einem registrierten Interrupt alle weiteren Signale für 30\,ms ignoriert. 
 
@@ -116,7 +118,7 @@ Der Code dafür sieht wie folgt aus:
 	last = now;
 \end{lstlisting}
 
-\subsubsection{Berechnung kinematischer Offsets}
+\subsection{Berechnung kinematischer Offsets}
 \label{subsubsec:offsets}
 
 Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meist nicht dem exakten kinematischen Nullpunkt des Roboters. Dies führt zu einem mathematischen Offset, den es auszugleichen gilt. Um diesen auszugleichen, muss die Winkeldifferenz in die entsprechende Schrittanzahl für die Motoren umgerechnet werden. Die Formel hierfür lautet:
@@ -127,12 +129,12 @@ Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meis
 
 \begin{itemize}
 	\item $\Delta\text{rad}$: Die Differenz des Offsets und der Home-Position in Radiant.
-	\item $256$: Die Vollschritte, die ein Schrittmotor pro Umdrehung besitzt.
-	\item $16$: Die eingestellte Mikroschritt-Auflösung pro Vollschritt.
-	\item $20$: Die mechanische Getriebeübersetzung (1:20) bei allen Achsen.
-\end{itemize}>
+	\item 256: Die Vollschritte, die ein Schrittmotor pro Umdrehung besitzt.
+	\item 16: Die eingestellte Mikroschritt-Auflösung pro Vollschritt.
+	\item 20: Die mechanische Getriebeübersetzung (1:20) bei allen Achsen.
+\end{itemize}
 	
-	\subsubsection{Sequenzieller Homing-Ablauf}
+\subsection{Sequenzieller Homing-Ablauf}
 	\label{subsubsec:homing_sequence}
 	
 	Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, gesteuert durch eine globale Index-Variable (\texttt{current\_homingaxis}), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine einzelne Achse gliedert sich dabei in folgende Phasen: 
@@ -140,3 +142,4 @@ Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meis
 	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das System den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
 	
 	% --- ENDE DES BEREICHS ---
+\chapter{High Level Software}
