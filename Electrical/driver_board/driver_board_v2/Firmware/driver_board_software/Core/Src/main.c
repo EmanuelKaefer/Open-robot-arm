@@ -255,7 +255,7 @@ int main(void)
                   uint8_t all_drivers_ok = 1;
 
                   // Hier wird 'ax' deklariert! Die Schleife läuft von 1 bis kleiner 2 , 2 mit 6 auswechseln für alle achsen
-                  for (uint8_t ax = 1; ax < 2; ax++) {
+                  for (uint8_t ax = 1; ax < 6; ax++) {
                       printf("Konfiguriere Achse %d... ", ax);
 
                       TMC_WriteReg(ax, 0x01, 0x00000007);
@@ -341,15 +341,19 @@ int main(void)
               // Offset-Fahrt abgeschlossen!
               current_homingaxis++; // Nächste Achse an die Reihe lassen
               	 printf("State homing offset \r\n");
+              	currentState = STATE_HOMING;
               // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
               // Da 'started' dort statisch ist, haben wir es so gelöst:
               // Wir können den Block wieder betreten. Alternativ übergeben wir das Signal.
-              currentState = STATE_HOMING;
+          if (current_homingaxis >= 6) {
+              printf("Homing komplett abgeschlossen!\r\n");
+              currentState = STATE_READY;
+           } else{
+        	   currentState = STATE_HOMING;
+           }
 
-              if (current_homingaxis >= 6) {
-                  printf("Homing komplett abgeschlossen!\r\n");
-                  currentState = STATE_READY;
-              }
+
+
           }
           break;
 
@@ -358,6 +362,7 @@ int main(void)
           break;
 
       case STATE_ERROR:
+    	  printf("BAD");
           break;
 
     }

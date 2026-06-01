@@ -6,34 +6,40 @@
 \@writefile{lol}{\addvspace {10\p@ }}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Implementierung der 6 Achsen und Skalierbarkeit}{2}{section.2.1}\protected@file@percent }
 \newlabel{subsec:hal}{{2.1}{2}{Implementierung der 6 Achsen und Skalierbarkeit}{section.2.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Initialisierung und SPI-Kommunikation der Motortreiber}{2}{section.2.2}\protected@file@percent }
-\newlabel{subsec:spi_init}{{2.2}{2}{Initialisierung und SPI-Kommunikation der Motortreiber}{section.2.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Konfiguration der TMC5160T Register via SPI}}{3}{table.caption.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Initialisierung und SPI-Kommunikation der Motortreiber}{3}{section.2.2}\protected@file@percent }
+\newlabel{subsec:spi_init}{{2.2}{3}{Initialisierung und SPI-Kommunikation der Motortreiber}{section.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}SPI Protokoll}{3}{subsection.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline SPI-Mode}{3}{subsubsection*.4}\protected@file@percent }
+\newlabel{subsubsec:SPIMODE}{{2.2.1}{3}{SPI-Mode}{subsubsection*.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Diagramm der SPI Modi}}{4}{figure.caption.5}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:tmc5160_config}{{2.1}{3}{Konfiguration der TMC5160T Register via SPI}{table.caption.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Finite State Machine (Endlicher Zustandsautomat)}{3}{section.2.3}\protected@file@percent }
-\newlabel{subsec:fsm}{{2.3}{3}{Finite State Machine (Endlicher Zustandsautomat)}{section.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Zustände}{4}{subsection.2.3.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Diagramm der Finite State Machine}}{4}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:Finite_State_Maschine}{{2.1}{4}{Diagramm der Finite State Machine}{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Kinematische Referenzierungsfahrt (Homing)}{4}{section.2.4}\protected@file@percent }
-\newlabel{subsec:homing}{{2.4}{4}{Kinematische Referenzierungsfahrt (Homing)}{section.2.4}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Funktionen der Zustände der Finite State Machine}}{5}{table.caption.6}\protected@file@percent }
-\newlabel{tab:fsm_states}{{2.2}{5}{Funktionen der Zustände der Finite State Machine}{table.caption.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Interrupt-Verarbeitung und Hardware-Entprellung}{5}{subsection.2.4.1}\protected@file@percent }
-\newlabel{subsubsec:interrupts}{{2.4.1}{5}{Interrupt-Verarbeitung und Hardware-Entprellung}{subsection.2.4.1}{}}
-\newlabel{lst:IQR_debounce}{{2.1}{5}{Debouncing für Interrupt-Verarbeitung}{lstlisting.2.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}{\ignorespaces Debouncing für Interrupt-Verarbeitung}}{5}{lstlisting.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Berechnung kinematischer Offsets}{6}{subsection.2.4.2}\protected@file@percent }
-\newlabel{subsubsec:offsets}{{2.4.2}{6}{Berechnung kinematischer Offsets}{subsection.2.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Sequenzieller Homing-Ablauf}{6}{subsection.2.4.3}\protected@file@percent }
-\newlabel{subsubsec:homing_sequence}{{2.4.3}{6}{Sequenzieller Homing-Ablauf}{subsection.2.4.3}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}High Level Software}{7}{chapter.3}\protected@file@percent }
+\newlabel{fig:SPIMode}{{2.1}{4}{Diagramm der SPI Modi}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Initialisierung der Motortreiber}{4}{subsection.2.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Konfiguration der TMC5160T Register via SPI}}{5}{table.caption.6}\protected@file@percent }
+\newlabel{tab:tmc5160_config}{{2.1}{5}{Konfiguration der TMC5160T Register via SPI}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Finite State Machine (Endlicher Zustandsautomat)}{5}{section.2.3}\protected@file@percent }
+\newlabel{subsec:fsm}{{2.3}{5}{Finite State Machine (Endlicher Zustandsautomat)}{section.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Zustände}{5}{subsection.2.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Diagramm der Finite State Machine}}{6}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:Finite_State_Maschine}{{2.2}{6}{Diagramm der Finite State Machine}{figure.caption.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Funktionen der Zustände der Finite State Machine}}{6}{table.caption.8}\protected@file@percent }
+\newlabel{tab:fsm_states}{{2.2}{6}{Funktionen der Zustände der Finite State Machine}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Kinematische Referenzierungsfahrt (Homing)}{7}{section.2.4}\protected@file@percent }
+\newlabel{subsec:homing}{{2.4}{7}{Kinematische Referenzierungsfahrt (Homing)}{section.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Interrupt-Verarbeitung und Hardware-Entprellung}{7}{subsection.2.4.1}\protected@file@percent }
+\newlabel{subsubsec:interrupts}{{2.4.1}{7}{Interrupt-Verarbeitung und Hardware-Entprellung}{subsection.2.4.1}{}}
+\newlabel{lst:IQR_debounce}{{2.1}{7}{Debouncing für Interrupt-Verarbeitung}{lstlisting.2.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.1}{\ignorespaces Debouncing für Interrupt-Verarbeitung}}{7}{lstlisting.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Berechnung kinematischer Offsets}{7}{subsection.2.4.2}\protected@file@percent }
+\newlabel{subsubsec:offsets}{{2.4.2}{7}{Berechnung kinematischer Offsets}{subsection.2.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Sequenzieller Homing-Ablauf}{8}{subsection.2.4.3}\protected@file@percent }
+\newlabel{subsubsec:homing_sequence}{{2.4.3}{8}{Sequenzieller Homing-Ablauf}{subsection.2.4.3}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}High Level Software}{9}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
 \@setckpt{content/software}{
-\setcounter{page}{8}
+\setcounter{page}{10}
 \setcounter{equation}{0}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}

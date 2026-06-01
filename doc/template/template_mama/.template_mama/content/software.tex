@@ -6,7 +6,7 @@
 %\section{Low Level Architektur und Steuerung}
 %\label{sec:software}
 
-Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe Hardware) und der elektrischen Leistungselektronik (siehe Elektronik) dar. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
+Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe \ref{sec:hardware}) und der elektrischen Leistungselektronik (siehe \ref{sec:elektrisches}) dar. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller in der Entwicklungsumgebung STM32CubeIDE entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
 
 \section{Implementierung der 6 Achsen und Skalierbarkeit}
 \label{subsec:hal}
@@ -17,10 +17,39 @@ Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jed
 
 \section{Initialisierung und SPI-Kommunikation der Motortreiber}
 \label{subsec:spi_init}
+\subsection{SPI Protokoll}
+Das Seriel Peripheral Interface (SPI) ist ein Serielles Hochgeschwindigkeit Bussystem das vorwiegend zur Kommunikation von Mikrocontrollern mit Peripheriegeräten auf Platinen dient. SPI ist full duplex fähig, das heißt das bei jedem Takt 1 Bit vom Master an den Slave und zurück gesendet wird. Es besteht aus 3 Leitungen MOSI (Master Out $\longrightarrow$ Slave In), MISO (Master In $\longleftarrow$ Slave Out) und SCK (Serial Clock). Dazu kommt eine CS (Chip Select) Leitung die vom Master zu jeden Slave einzeln gehen muss. Nur wenn diese CS Leitung LOW ist sendet/empfängt der Slave Daten. Die Kommunikation erfolgt meist so das 2 Übertragungen nötig sind. In der ersten Übertragung sendet der Master ein Kommando an den Slave danach, da der Slave aber noch nicht bereit für eine Sinnvolle Rückmeldung ist sendet er nur Datenmüll. In der 2 Übertragung sendet der Master einen beliebigen Datensatz an den Slave, dieser hat inzwischen zeit gehabt seine Antwort auf das Kommando des Masters bereitzustellen und sendet diese zum Master. Die Übertragungen sind jeweils synchron, heißt der Master und der Slave senden/empfangen synchron Daten.
 
-Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten Serial Peripheral Interface (SPI) Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. 
+\subsubsection{SPI-Mode}
+\label{subsubsec:SPIMODE}
+Es gibt 4 SPI Modis Mode 0-3. Diese Beschreiben sich wiefolgt:
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.7\textwidth]{figures/allgemein/SPIMode.png}
+	\caption{Diagramm der SPI Modi}
+	\label{fig:SPIMode}
+\end{figure}
+
+CPOL (Clock Polarity):
+\begin{itemize}
+	\item 0: Takt ist in Ruhe LOW, ein Wechsel auf HIGH zählt als steigende Taktflanke
+	\item 1: Takt ist invertiert: in Ruhe HIGH, ein Wechsel auf LOW zählt als steigende Taktflanke
+\end{itemize}
+
+CPHA (Clock Phase):
+\begin{itemize}
+	\item 0: Daten werden bei steigender Taktflanke (=abh. von CPOL) eingelesen, bei fallender ausgegeben
+	\item 1: Daten werden bei fallender Taktflanke eingelesen, bei steigender ausgegeben
+\end{itemize}
+%TODO SPI oft zitieren
+
+\subsection{Initialisierung der Motortreiber}
+Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten SPI Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. Die TMC5160 erfordern den Betrieb in SPI Mode 3 (siehe \ref{fig:SPIMode})
+%TODO Ausführen wie SPI bei unseren Treibern funktionert
 
 Um Fehler direkt beim Initialisieren der Treiber zu erkennen, wurde eine Validierung eingebaut, ohne die der nächste Schritt nicht erreicht werden kann. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (\texttt{GSTAT}) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (\texttt{GSTAT} = 0) detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch. 
+%TODO Datasheet von TMC zitieren
 
 Die gewählte Konfiguration der Motortreiber ist wie folgt:
 
@@ -51,7 +80,7 @@ Die gewählte Konfiguration der Motortreiber ist wie folgt:
 \label{subsec:fsm}
 
 Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein Selbstblockieren der Software zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht immer aus den folgenden Komponenten: 
-%TODO Zitieren von FSM, quelle schon in mybib
+%TODO Zitieren von FSM
 
 \begin{itemize}
 	\item Zustände (States): Die verschiedenen Phasen des Systems.
@@ -105,7 +134,7 @@ Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kost
 \subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
 \label{subsubsec:interrupts}
 
-Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.%TODO zitieren extis noch nicht in mybib
+Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.%TODO zitieren extis aus STM Datasheet
 
 Um das mehrfache Auslösen des Interrupts zu verhindern, das durch sogenanntes Bouncen bei mechanischen Schaltern auftreten kann, ist in der Interrupt-Funktion eine Software-Entprellung eingebettet, die nach einem registrierten Interrupt alle weiteren Signale für 30\,ms ignoriert. 
 
