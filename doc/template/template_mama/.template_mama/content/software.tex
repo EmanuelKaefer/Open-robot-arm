@@ -153,12 +153,12 @@ Der Code dafür sieht wie folgt aus:
 Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meist nicht dem exakten kinematischen Nullpunkt des Roboters. Dies führt zu einem mathematischen Offset, den es auszugleichen gilt. Um diesen auszugleichen, muss die Winkeldifferenz in die entsprechende Schrittanzahl für die Motoren umgerechnet werden. Die Formel hierfür lautet:
 
 \begin{equation}
-	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot 256 \cdot 16 \cdot 20
+	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot 200 \cdot 16 \cdot 20
 \end{equation}
 
 \begin{itemize}
 	\item $\Delta\text{rad}$: Die Differenz des Offsets und der Home-Position in Radiant.
-	\item 256: Die Vollschritte, die ein Schrittmotor pro Umdrehung besitzt.
+	\item 200: Die Vollschritte, die ein Schrittmotor pro Umdrehung besitzt.
 	\item 16: Die eingestellte Mikroschritt-Auflösung pro Vollschritt.
 	\item 20: Die mechanische Getriebeübersetzung (1:20) bei allen Achsen.
 \end{itemize}
@@ -170,5 +170,9 @@ Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meis
 	
 	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das System den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
 	
-	% --- ENDE DES BEREICHS ---
+\section{Verbindung mir Raspberry Pi und normaler Betrieb}
+\label{sec:normalerBetrieb}
+Nach dem ausführen der Kinematischen Referenzfahrt und dem erfolgreichen erreichen der Home Position jeder Achse erreicht der Roboterarm den Zustand \texttt{STATE\_READY}. Das ist der Zustand in dem der Normale Betrieb stattfindet. Der STM bekommt über UART Befehle von einem Raspberry PI der die High Level Software wie z.B Berechnung der Kinematik übernimmt. Der Raspberry PI sendet die geforderte Position des Arm als Array der 6 zu erreichenden Joint Winkel. Der STM errechnet dann aus diesen Daten die Schritte und Richtung die Jeder Motor fahren muss. Sobald die gewünschte Position erreicht ist sendet der STM eine Rückmeldung das die Position erreicht ist. So werden Aufträge mit mehreren zu erreichenden Wegpunkten sequentiell abgearbeitet.
+	
+	
 \chapter{High Level Software}
