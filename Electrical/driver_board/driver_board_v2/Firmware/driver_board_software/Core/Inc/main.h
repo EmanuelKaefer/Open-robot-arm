@@ -109,8 +109,8 @@ void Error_Handler(void);
 #define TMC4_DIR_GPIO_Port GPIOA
 #define LimitSwitch_1_Pin GPIO_PIN_10
 #define LimitSwitch_1_GPIO_Port GPIOC
-#define LimitSwitch_base_Pin GPIO_PIN_11
-#define LimitSwitch_base_GPIO_Port GPIOC
+#define LimitSwitch_2_Pin GPIO_PIN_11
+#define LimitSwitch_2_GPIO_Port GPIOC
 #define LimitSwitch_6_Pin GPIO_PIN_2
 #define LimitSwitch_6_GPIO_Port GPIOD
 #define TMC3_STEP_Pin GPIO_PIN_4

@@ -110,13 +110,13 @@ float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 
 float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
 
 //array for homing pins
-GPIO_TypeDef* DIR_PORTS[6] = {TMC2_DIR_GPIO_Port, TMC1_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
-uint16_t      DIR_PINS[6]  = {TMC2_DIR_Pin, TMC1_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
+GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
+uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 
 // Status-Variables
 volatile uint8_t stoprequest[6] = {0};
 volatile uint8_t is_moving_offset[6] = {0};
-uint8_t current_homingaxis = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+uint8_t current_homingaxis = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
 
 
@@ -131,13 +131,9 @@ typedef enum {
 
 SystemState currentState = STATE_INIT;
 
-static void Step_Start_Exact(uint8_t ax, uint32_t steps)
+static void Step_Start_Exact(uint8_t ax, uint32_t steps)//fährt die exakten schritte von endschalter zu home position
 {
     if (steps == 0) return;
-
-    // HINWEIS: Wenn du später 6 Treiber hast, muss hier eventuell auch das CS-Pin Handling
-    // für die jeweilige Achse rein! Aktuell globaler Broadcast/Standard.
-    TMC_WriteReg(ax, 0x10, 0x00061008);
 
     step_counter[ax] = 0;
     target_steps[ax] = steps;
@@ -249,7 +245,7 @@ int main(void)
     switch (currentState)
     {
       case STATE_INIT:
-        HAL_Delay(500); // Wichtiges Boot-Delay für die TMC Treiber!
+        HAL_Delay(500); //Boot-Delay für die TMC Treiber!
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
 
                   uint8_t all_drivers_ok = 1;
@@ -290,7 +286,7 @@ int main(void)
         break;
 
       case STATE_HOMING:
-          static uint8_t started = 0;
+          uint8_t started = 0;
           uint8_t ax = current_homingaxis;
 
           // Phase 1: Fahre Richtung Endschalter
@@ -341,24 +337,20 @@ int main(void)
               // Offset-Fahrt abgeschlossen!
               current_homingaxis++; // Nächste Achse an die Reihe lassen
               	 printf("State homing offset \r\n");
-              	currentState = STATE_HOMING;
               // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
-              // Da 'started' dort statisch ist, haben wir es so gelöst:
-              // Wir können den Block wieder betreten. Alternativ übergeben wir das Signal.
+
           if (current_homingaxis >= 6) {
               printf("Homing komplett abgeschlossen!\r\n");
               currentState = STATE_READY;
            } else{
+        	   started = 0;
         	   currentState = STATE_HOMING;
            }
-
-
-
           }
           break;
 
       case STATE_READY:
-          // printf("State Ready erreicht\n"); // Auskommentiert, damit es nicht spammt
+          printf("State Ready erreicht\n"); // Auskommentiert, damit es nicht spammt
           break;
 
       case STATE_ERROR:
@@ -839,9 +831,9 @@ static void MX_TIM10_Init(void)
 
   /* USER CODE END TIM10_Init 1 */
   htim10.Instance = TIM10;
-  htim10.Init.Prescaler = 0;
+  htim10.Init.Prescaler = 15;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 65535;
+  htim10.Init.Period = 999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
@@ -1004,8 +996,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_base_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_base_Pin;
+  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_2_Pin */
+  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
@@ -1061,12 +1053,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
     if (currentState == STATE_HOMING) {
         switch (GPIO_Pin) {
-            case LimitSwitch_base_Pin:  Step_Stop(0); stoprequest[0] = 1; break;
-            case LimitSwitch_1_Pin:     Step_Stop(1); stoprequest[1] = 1; break;
-            case LimitSwitch_3_Pin:     Step_Stop(3); stoprequest[3] = 1; break;
-            case LimitSwitch_4_Pin:     Step_Stop(4); stoprequest[4] = 1; break;
-            case LimitSwitch_5_Pin:     Step_Stop(5); stoprequest[5] = 1; break;
-            case LimitSwitch_6_Pin:     Step_Stop(5); stoprequest[5] = 1; break; // Anpassen auf deine Pin-Map!
+            case LimitSwitch_1_Pin:  Step_Stop(0); stoprequest[0] = 1; break;//achse base
+            case LimitSwitch_2_Pin:     Step_Stop(1); stoprequest[1] = 1; break;//achse 2
+            case LimitSwitch_3_Pin:     Step_Stop(2); stoprequest[3] = 1; break;//achse 3
+            case LimitSwitch_4_Pin:     Step_Stop(3); stoprequest[4] = 1; break;//achse 4
+            case LimitSwitch_5_Pin:     Step_Stop(4); stoprequest[5] = 1; break;//achse 5
+            case LimitSwitch_6_Pin:     Step_Stop(5); stoprequest[5] = 1; break; //achse 6
         }
     }
 }

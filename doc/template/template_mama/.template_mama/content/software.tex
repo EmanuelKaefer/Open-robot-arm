@@ -11,18 +11,72 @@ Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Roboterste
 \section{Implementierung der 6 Achsen und Skalierbarkeit}
 \label{subsec:hal}
 
-Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelvariablen und die statische Zuweisung von Peripherie-Registern schnell zu eingeschränktem und fehleranfälligem Programmcode. Um dies zu vermeiden, wurde eine Array-basierte Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (\texttt{TIM\_HandleTypeDef}), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (\texttt{DIR}) und Chip-Select-Signale (\texttt{CS}) in globalen Arrays gekapselt. 
+Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelvariablen und die statische Zuweisung von Peripherie-Registern schnell zu eingeschränktem und fehleranfälligem Programmcode. Um dies zu vermeiden, wurde eine Pointer-Array-basierte Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (\texttt{TIM\_HandleTypeDef}), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (\texttt{DIR}) und Chip-Select-Signale (\texttt{CS}) in globalen Arrays gekapselt. 
 
 Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homen über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems massiv erhöht.
+
+\subsection{Richtungssignale (DIR Pins)}
+\label{subsec:hal_DIR}
+Um die Richtung der Motoren zu bestimmen benötigt jeder Schrittmotortreiber einen DIR (Direction) Pin der entweder auf 1 um im Uhrzeigersinn zu drehen oder auf 0 um gegen der Uhrzeiger Sinn zu drehen. Um dies für alle 6 Motoren komfortabel und skalierbar zu lösen wurden Arrays implementiert. 
+
+\begin{lstlisting}[language=C, caption={Arrays für DIR Pins/Ports}, label={lst:ARRAY_DIR}]
+	GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
+	uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
+\end{lstlisting}
+%TODO erklären was mit Port Pins und warum pointer
+
+\subsection{Geschwindigkeitsregelung (STEP Pins)}
+\label{subsec:hal_STEP}
+Die Geschwindigkeitsregelung über der STEP Pins wird mittels Hardware Puls Weiten Modulation(PWM) Timern implementiert. Die Motortreiber brauchen zur Setzung der Geschwindigkeit eine Frequenz am STEP Eingang. Auch das ist durch Arrays realisiert um für Skalierbarkeit zu sorgen.
+\begin{lstlisting}[language=C, caption={Arrays für STEP Timer/Channels}, label={lst:ARRAY_STEP}]
+	TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &htim10};
+	uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
+\end{lstlisting}
+
+\subsection{Vergleich: Mit und ohne Array-Abstraktion}
+\label{subsubsec:hal_comparison}
+
+Ohne Array-Abstraktion würde die Motor-Ansteuerung mehrere if-else-Blöcke 
+erfordern. Als Beispiel wird die Funktion zum Stoppen einer Motor-PWM von 3 Achsen gezeigt.
+
+\subsubsection{Anti-Pattern: Hard-codierte Hardware-Zuordnung}
+
+\begin{lstlisting}[language=C, caption={Motor-Stopp ohne Array-Abstraktion (Anti-Pattern)}, 
+	label={lst:hal_no_array}]
+	void Step_Stop_HardCoded(uint8_t ax) {
+		if (ax == 0) {
+			HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_1);
+			HAL_TIM_Base_Stop_IT(&htim2);
+		}
+		else if (ax == 1) {
+			HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+			HAL_TIM_Base_Stop_IT(&htim1);
+		}
+		else if (ax == 2) {
+			HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+			HAL_TIM_Base_Stop_IT(&htim3);
+		}
+		
+	}
+\end{lstlisting}
+
+Dieses Anti-Pattern führt zu mehreren Problemen:
+\begin{itemize}
+	\item \textbf{Code-Duplikation}: Die gleiche Logik wird 6-mal wiederholt.
+	\item \textbf{Wartbarkeit}: Änderungen müssen 6 mal vorgenommen werden.
+	\item \textbf{Fehleranfälligkeit}: Leicht, einen Achsen-Fall zu vergessen oder falsch zu zuordnen.
+	\item \textbf{Skalierbarkeit}: Das Hinzufügen/Entfernen einer  Achse erfordert große Codeänderungen.
+\end{itemize}
+
 
 \section{Initialisierung und SPI-Kommunikation der Motortreiber}
 \label{subsec:spi_init}
 \subsection{SPI Protokoll}
 Das Seriel Peripheral Interface (SPI) ist ein Serielles Hochgeschwindigkeit Bussystem das vorwiegend zur Kommunikation von Mikrocontrollern mit Peripheriegeräten auf Platinen dient. SPI ist full duplex fähig, das heißt das bei jedem Takt 1 Bit vom Master an den Slave und zurück gesendet wird. Es besteht aus 3 Leitungen MOSI (Master Out $\longrightarrow$ Slave In), MISO (Master In $\longleftarrow$ Slave Out) und SCK (Serial Clock). Dazu kommt eine CS (Chip Select) Leitung die vom Master zu jeden Slave einzeln gehen muss. Nur wenn diese CS Leitung LOW ist sendet/empfängt der Slave Daten. Die Kommunikation erfolgt meist so das 2 Übertragungen nötig sind. In der ersten Übertragung sendet der Master ein Kommando an den Slave danach, da der Slave aber noch nicht bereit für eine Sinnvolle Rückmeldung ist sendet er nur Datenmüll. In der 2 Übertragung sendet der Master einen beliebigen Datensatz an den Slave, dieser hat inzwischen zeit gehabt seine Antwort auf das Kommando des Masters bereitzustellen und sendet diese zum Master. Die Übertragungen sind jeweils synchron, heißt der Master und der Slave senden/empfangen synchron Daten.
 
-\subsubsection{SPI-Mode}
+\subsubsection{SPI-Modis}
 \label{subsubsec:SPIMODE}
-Es gibt 4 SPI Modis Mode 0-3. Diese Beschreiben sich wiefolgt:
+Es gibt 4 SPI Mode 0-3. Diese Beschreiben sich wiefolgt:
 
 \begin{figure}[htbp]
 	\centering
@@ -134,7 +188,7 @@ Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kost
 \subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
 \label{subsubsec:interrupts}
 
-Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.%TODO zitieren extis aus STM Datasheet
+Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) wird aufgerufen. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.%TODO zitieren extis aus STM Datasheet
 
 Um das mehrfache Auslösen des Interrupts zu verhindern, das durch sogenanntes Bouncen bei mechanischen Schaltern auftreten kann, ist in der Interrupt-Funktion eine Software-Entprellung eingebettet, die nach einem registrierten Interrupt alle weiteren Signale für 30\,ms ignoriert. 
 
@@ -150,7 +204,13 @@ Der Code dafür sieht wie folgt aus:
 \subsection{Berechnung kinematischer Offsets}
 \label{subsubsec:offsets}
 
-Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meist nicht dem exakten kinematischen Nullpunkt des Roboters. Dies führt zu einem mathematischen Offset, den es auszugleichen gilt. Um diesen auszugleichen, muss die Winkeldifferenz in die entsprechende Schrittanzahl für die Motoren umgerechnet werden. Die Formel hierfür lautet:
+Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht nicht dem kinematischen Nullpunkt des Roboters. Dies führt zu einem mathematischen Offset, das es auszugleichen gilt. Um dieses auszugleichen, muss die Winkeldifferenz in die entsprechende Schrittanzahl für die Motoren umgerechnet werden. Die Formel hierfür lautet:
+
+\begin{equation}
+	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot Schritte pro Umdrehung \cdot Mikroschritte \cdot Getriebe ratio
+\end{equation}
+
+Mit den Konkreten eingesetzten Werten ergibt sich die Formel:
 
 \begin{equation}
 	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot 200 \cdot 16 \cdot 20
@@ -166,13 +226,11 @@ Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht meis
 \subsection{Sequenzieller Homing-Ablauf}
 	\label{subsubsec:homing_sequence}
 	
-	Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, gesteuert durch eine globale Index-Variable (\texttt{current\_homingaxis}), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine einzelne Achse gliedert sich dabei in folgende Phasen: 
+	Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, dadurch werden mögliche Fehler wie eine Überschreitung des Mechanischen Limits durch mehrere gleichzeitig bis zum Anschlag fahrende Achsen grundsätzlich ausgeschlossen. Das Sequenzielle Homig hat auch den voreilt das es visuell auf korrektheit geprüft werden kann da man immer auf eine Achse nach der anderen Schauen kann. Der Ablauf erfolgt gesteuert durch eine globale Index-Variable (\texttt{current\_homingaxis}), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine einzelne Achse gliedert sich dabei in folgende Phasen: 
 	
-	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das System den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
+	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das Programm den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
 	
 \section{Verbindung mir Raspberry Pi und normaler Betrieb}
 \label{sec:normalerBetrieb}
-Nach dem ausführen der Kinematischen Referenzfahrt und dem erfolgreichen erreichen der Home Position jeder Achse erreicht der Roboterarm den Zustand \texttt{STATE\_READY}. Das ist der Zustand in dem der Normale Betrieb stattfindet. Der STM bekommt über UART Befehle von einem Raspberry PI der die High Level Software wie z.B Berechnung der Kinematik übernimmt. Der Raspberry PI sendet die geforderte Position des Arm als Array der 6 zu erreichenden Joint Winkel. Der STM errechnet dann aus diesen Daten die Schritte und Richtung die Jeder Motor fahren muss. Sobald die gewünschte Position erreicht ist sendet der STM eine Rückmeldung das die Position erreicht ist. So werden Aufträge mit mehreren zu erreichenden Wegpunkten sequentiell abgearbeitet.
-	
-	
+
 \chapter{High Level Software}
