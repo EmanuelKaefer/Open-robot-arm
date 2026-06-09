@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  8 JUN 2026 22:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  9 JUN 2026 11:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2211,7 +2211,7 @@ LaTeX Font Info:    Trying to load font information for TS1+pplj on input line
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
 [5]
-<figures/allgemein/SPIMode.png, id=130, 138.5175pt x 99.9735pt>
+<figures/allgemein/SPIMode.png, id=136, 138.5175pt x 99.9735pt>
 File: figures/allgemein/SPIMode.png Graphic file (type png)
 <use figures/allgemein/SPIMode.png>
 Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 83.
@@ -2221,7 +2221,7 @@ Package microtype Info: Character `013' is missing
 (microtype)             in font `OT1/pplj/m/sc/10'.
 (microtype)             Ignoring protrusion settings for this character.
  [7]
-<figures/allgemein/State_maschin.png, id=148, 566.71725pt x 239.6955pt>
+<figures/allgemein/State_maschin.png, id=154, 566.71725pt x 239.6955pt>
 File: figures/allgemein/State_maschin.png Graphic file (type png)
 <use figures/allgemein/State_maschin.png>
 Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
@@ -2241,9 +2241,24 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [9]
 [10] [11]
 chapter 4.
-) [12
 
-]
+Overfull \hbox (3.45815pt too wide) in paragraph at lines 246--251
+\OT1/pplj/m/n/12 (-20) gun-gen star-rer K[]orper be-fasst, oh-ne da-bei die ver
+-ur-sa-chen-den Kr[]afte zu ber[]ucksichtigen.
+ []
+
+[12
+
+] [13]
+
+LaTeX Warning: Citation 'byrd1995limited' on page 14 undefined on input line 32
+4.
+
+)
+Underfull \vbox (badness 1571) has occurred while \output is active []
+
+ [14]
+[15]
 \openout2 = `content/hardware.aux'.
 
  (content/hardware.tex
@@ -2252,7 +2267,7 @@ File: figures/allgemein/abcdxyz.png Graphic file (type png)
 <use figures/allgemein/abcdxyz.png>
 Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 (pdftex.def)             Requested size: 318.66948pt x 191.40587pt.
-) [13
+) [16
 
 
 
@@ -2262,7 +2277,7 @@ Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 
  (content/elektrisches.tex
 chapter 6.
-) [14
+) [17
 
 
 
@@ -2325,7 +2340,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[15
+[18
 
 
 
@@ -2333,7 +2348,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [16
+(formal/Begleiterprotokoll.tex) [19
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2341,6 +2356,15 @@ chapter without number
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                main
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
@@ -2350,11 +2374,11 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 ### simple group (level 1) entered at line 4 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 80621 strings out of 467871
- 2027535 string characters out of 5418377
- 3529931 words of memory out of 5000000
- 107936 multiletter control sequences out of 15000+600000
- 683517 words of font info for 418 fonts, out of 8000000 for 9000
+ 80732 strings out of 467871
+ 2028768 string characters out of 5418377
+ 3528963 words of memory out of 5000000
+ 107963 multiletter control sequences out of 15000+600000
+ 696983 words of font info for 484 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
  113i,20n,134p,11262b,3091s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/publi
@@ -2365,17 +2389,18 @@ ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/matte/AppData/Lo
 cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/matte/A
 ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/User
 s/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplbj8a.pfb><C:/Us
-ers/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmr.pfb><
-C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmri
-.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplrc
-8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fpl
-rij8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatin
-o/uplb8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/pala
-tino/uplr8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/p
-alatino/uplri8a.pfb>
-Output written on main.pdf (22 pages, 1731478 bytes).
+ers/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmbi.pfb>
+<C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmr
+.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/
+fplmri.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl
+/fplrc8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/f
+pl/fplrij8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/p
+alatino/uplb8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/ur
+w/palatino/uplr8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1
+/urw/palatino/uplri8a.pfb>
+Output written on main.pdf (25 pages, 1755728 bytes).
 PDF statistics:
- 347 PDF objects out of 1000 (max. 8388607)
- 90 named destinations out of 1000 (max. 500000)
- 103593 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 394 PDF objects out of 1000 (max. 8388607)
+ 107 named destinations out of 1000 (max. 500000)
+ 106689 words of extra memory for PDF output out of 106986 (max. 10000000)
 

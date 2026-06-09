@@ -2376,8 +2376,9 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">references-biber-Dic.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1" intorder="1">ws2812b</bcf:citekey>
-    <bcf:citekey order="2" intorder="1">ws2812</bcf:citekey>
+    <bcf:citekey order="1" intorder="1">byrd1995limited</bcf:citekey>
+    <bcf:citekey order="2" intorder="1">ws2812b</bcf:citekey>
+    <bcf:citekey order="3" intorder="1">ws2812</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
