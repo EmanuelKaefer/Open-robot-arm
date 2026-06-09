@@ -232,5 +232,25 @@ Mit den Konkreten eingesetzten Werten ergibt sich die Formel:
 	
 \section{Verbindung mir Raspberry Pi und normaler Betrieb}
 \label{sec:normalerBetrieb}
+	Im normalen Betrieb erhält der STM über UART Befehle von einem Raspberry pi 4b, der Raspberry sendet die Zielposition zu der sich der Endeffektor des Roboterarms bewegen soll in Radianten, also einen Array von 6 joint Winkeln und die Ausrichtung des Greifers. Außerdem noch eine Maximale Geschwindigkeit auf die die Motoren beschleunigen sollen
+\subsection{UART-Protokoll}
+	  
 
 \chapter{High Level Software}
+Die High Level Logik Software auf dem Raspberry Pi dient um über eine GUI(Grafical User Interface) kartesische Koordinaten einzugeben zu dem ich der Endeffektor der Roboterarms bewegen soll. Diese x,y,z Koordinaten werden mithilfe von Inverser Kinematik mit der Python library IKpy zu 6 Jointwinkel in Radianten transformiert. Über die GUI kann man auch eine maximale Geschwindigkeit festlegen auf die die Motoren beschleunigen.
+
+\section{Inverse Kinematik und IKpy}
+
+\subsection{Universal Robot Description File - URDF}
+
+\section{Hypertext Markup Language-HTML}
+
+
+\section{FastAPI}
+
+
+
+
+
+
+
