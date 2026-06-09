@@ -239,9 +239,126 @@ Mit den Konkreten eingesetzten Werten ergibt sich die Formel:
 \chapter{High Level Software}
 Die High Level Logik Software auf dem Raspberry Pi dient um über eine GUI(Grafical User Interface) kartesische Koordinaten einzugeben zu dem ich der Endeffektor der Roboterarms bewegen soll. Diese x,y,z Koordinaten werden mithilfe von Inverser Kinematik mit der Python library IKpy zu 6 Jointwinkel in Radianten transformiert. Über die GUI kann man auch eine maximale Geschwindigkeit festlegen auf die die Motoren beschleunigen.
 
-\section{Inverse Kinematik und IKpy}
+\section{Inverse Kinematik}
 
-\subsection{Universal Robot Description File - URDF}
+\subsection{Grundlagen der Kinematik}
+
+Die Kinematik ist ein Teilgebiet der Mechanik, das sich mit der Beschreibung von Bewegungen 
+starrer Körper befasst, ohne dabei die verursachenden Kräfte zu berücksichtigen. Im Kontext 
+der Robotik wird zwischen zwei grundlegenden Problemstellungen unterschieden: der 
+\textit{Vorwärtskinematik} (engl. \textit{Forward Kinematics}) und der \textit{Inversen 
+	Kinematik} (engl. \textit{Inverse Kinematics}, kurz IK).
+
+Bei der \textbf{Vorwärtskinematik} werden aus gegebenen Gelenkwinkeln $\theta_1, \theta_2, 
+\ldots, \theta_n$ eines kinematischen Systems die resultierende Position und Orientierung 
+des Endeffektors im kartesischen Raum berechnet. Diese Transformation ist eindeutig und 
+lässt sich durch eine geschlossene mathematische Abbildung beschreiben:
+
+\begin{equation}
+	\mathbf{T} = f(\theta_1, \theta_2, \ldots, \theta_n)
+\end{equation}
+
+\noindent wobei $\mathbf{T} \in SE(3)$ die homogene Transformationsmatrix darstellt, die 
+sowohl die Rotation als auch die Translation des Endeffektors im Weltkoordinatensystem 
+kodiert.
+
+\subsection{Definition der Inversen Kinematik}
+
+Die \textbf{Inverse Kinematik} stellt das inverse Problem dar: Gegeben eine gewünschte 
+Position und Orientierung $\mathbf{T}^* \in SE(3)$ des Endeffektors, gesucht ist der 
+Vektor der Gelenkwinkel $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)^T$, der 
+diese Zielkonfiguration realisiert:
+
+\begin{equation}
+	\boldsymbol{\theta} = f^{-1}(\mathbf{T}^*)
+\end{equation}
+
+Im Gegensatz zur Vorwärtskinematik ist dieses Problem im Allgemeinen weder trivial noch 
+eindeutig lösbar. Abhängig von der Struktur des Roboters und der gewünschten Zielposition 
+können mehrere, unendlich viele oder keine Lösungen existieren.
+
+\subsection{Mathematische Herausforderungen}
+
+Die Inverse Kinematik ist mit einer Reihe grundlegender mathematischer Herausforderungen 
+verbunden:
+
+\begin{itemize}
+	\item \textbf{Nichtlinearität:} Die kinematischen Gleichungen beinhalten trigonometrische 
+	Funktionen, was das System nichtlinear und damit analytisch schwer lösbar macht.
+	
+	\item \textbf{Mehrdeutigkeit:} Ein und dieselbe Endeffektorposition kann durch 
+	unterschiedliche Gelenkkonfigurationen erreicht werden (z.\,B. Ellbogen oben vs. 
+	Ellbogen unten bei einem menschlichen Arm).
+	
+	\item \textbf{Redundanz:} Besitzt ein Roboterarm mehr Freiheitsgrade (DOF, 
+	\textit{Degrees of Freedom}) als zur Erfüllung der Aufgabe notwendig, spricht man von 
+	einem redundanten System. In diesem Fall existiert ein kontinuierlicher Lösungsraum.
+	
+	\item \textbf{Erreichbarkeit:} Nicht jede beliebige Pose im Raum liegt im 
+	Arbeitsraum (engl. \textit{Workspace}) des Roboters. Außerhalb des Arbeitsraums 
+	existiert keine Lösung.
+	
+	\item \textbf{Singularitäten:} Bestimmte Konfigurationen führen zu sogenannten 
+	kinematischen Singularitäten, in denen die Jacobi-Matrix ihren vollen Rang verliert 
+	und das System seine Manövrierfähigkeit in bestimmten Richtungen einbüßt.
+\end{itemize}
+
+\subsection{Lösungsverfahren der Inversen Kinematik}
+
+Die Inverse Kinematik lässt sich grundsätzlich durch verschiedene Ansätze lösen. Die
+Bibliothek IKpy, die in dieser Arbeit eingesetzt wird, verwendet ein
+\textbf{optimierungsbasiertes numerisches Verfahren}. Dabei wird die Inverse Kinematik
+als nichtlineares Minimierungsproblem formuliert: Gesucht ist derjenige
+Gelenkwinkelvektor $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)^T$, der den
+Fehler zwischen der tatsächlich erreichten Pose des Endeffektors
+$f(\boldsymbol{\theta})$ und der gewünschten Zielppose $\mathbf{T}^*$ minimiert:
+
+\begin{equation}
+	\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}}
+	\left\| f(\boldsymbol{\theta}) - \mathbf{T}^* \right\|^2
+\end{equation}
+
+\noindent Zur Lösung dieses Optimierungsproblems greift IKpy auf Algorithmen aus der
+Bibliothek \texttt{scipy.optimize} zurück, standardmäßig auf die Methode
+\textit{L-BFGS-B} (\textit{Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds})
+\cite{byrd1995limited}. Dabei handelt es sich um ein quasi-Newton-Verfahren, das speziell
+für hochdimensionale Probleme mit Variablenbeschränkungen entwickelt wurde. Es approximiert
+die Hesse-Matrix der Kostenfunktion durch eine kompakte Darstellung der vergangenen
+Gradienten, ohne diese vollständig zu berechnen oder zu speichern. Dies macht das
+Verfahren sowohl speicher- als auch recheneffizient.
+
+Der Gradient der Kostenfunktion wird dabei numerisch über finite Differenzen approximiert.
+Für jeden Iterationsschritt $k$ wird der Gelenkwinkelvektor in Richtung des negativen
+Gradienten aktualisiert, bis ein Konvergenzkriterium erfüllt ist:
+
+\begin{equation}
+	\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k -
+	\alpha_k \, \mathbf{H}_k^{-1} \, \nabla_{\boldsymbol{\theta}} \,
+	\mathcal{L}(\boldsymbol{\theta}_k)
+\end{equation}
+
+\noindent wobei $\alpha_k$ die Schrittweite, $\mathbf{H}_k^{-1}$ die approximierte
+inverse Hesse-Matrix und $\mathcal{L}(\boldsymbol{\theta})$ die Kostenfunktion bezeichnet.
+Gelenklimitierungen $\theta_i \in [\theta_i^{\min},\, \theta_i^{\max}]$ werden direkt
+als Variablenbeschränkungen (Bounds) in das Optimierungsproblem integriert und vom
+L-BFGS-B-Algorithmus nativ berücksichtigt, ohne dass Strafterme erforderlich sind.
+%TODO irgendwie Zitieren und AI auch Zitieren
+\subsection{Implementierung mit IKpy}
+
+
+\subsubsection{Universal Robot Description File - URDF}
+% -------------------------------------------------------------------
+% HIER: Beschreibung der Bibliothek IKpy und deines eigenen Programms
+% -------------------------------------------------------------------
+
+\subsection{Zusammenfassung}
+
+Die Inverse Kinematik stellt eine zentrale Aufgabe in der Robotik dar, die die Brücke 
+zwischen der aufgabenorientierten Beschreibung von Bewegungen im kartesischen Raum und 
+der gelenk\-winkel\-basierten Steuerung realer Robotersysteme schlägt. Die Wahl des 
+geeigneten Lösungsverfahrens hängt dabei stets von der konkreten Roboterstruktur, den 
+Echtzeitanforderungen sowie den gewünschten Nebenbedingungen ab.
+
 
 \section{Hypertext Markup Language-HTML}
 
