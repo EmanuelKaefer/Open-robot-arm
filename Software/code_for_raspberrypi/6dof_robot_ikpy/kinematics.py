@@ -86,3 +86,7 @@ while True:
         print("Eingabe ungültig — Format: x y z (z.B. 0.3 0.1 0.4)\n")
     except KeyboardInterrupt:
         break
+
+
+
+
