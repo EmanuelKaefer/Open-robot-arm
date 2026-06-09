@@ -25,7 +25,30 @@
 \contentsline {section}{\numberline {3.5}Verbindung mir Raspberry Pi und normaler Betrieb}{11}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}UART-Protokoll}{11}{subsection.3.5.1}%
 \contentsline {chapter}{\numberline {4}High Level Software}{12}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Inverse Kinematik und IKpy}{12}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Universal Robot Description File - URDF}{12}{subsection.4.1.1}%
+\contentsline {section}{\numberline {4.2}Hypertext Markup Language-HTML}{12}{section.4.2}%
+\contentsline {section}{\numberline {4.3}FastAPI}{12}{section.4.3}%
 \contentsline {chapter}{\numberline {5}Hardware}{13}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Elektrisches}{14}{chapter.6}%
-\contentsline {chapter}{\nonumberline Quellenverzeichnis}{16}{chapter*.13}%
+\contentsline {chapter}{\numberline {6}Elektronikdesign und Hardware-Architektur}{14}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Systemarchitektur und Signalfluss}{14}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Komponentenauswahl und Begründung}{14}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Zentraler Mikrocontroller (STM32F446RET6)}{14}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Schrittmotortreiber (TMC5160T Pro v1.0)}{15}{subsection.6.2.2}%
+\contentsline {section}{\numberline {6.3}Mikrocontroller-Infrastruktur und Peripherie}{15}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Taktversorgung (HSE) und Reset-Schaltung}{15}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.2}Programmierschnittstelle (SWD) und USB-C-Interface}{15}{subsection.6.3.2}%
+\contentsline {section}{\numberline {6.4}Schnittstellen und Bus-Topologie}{16}{section.6.4}%
+\contentsline {subsection}{\numberline {6.4.1}UART-Interface zum Raspberry Pi}{16}{subsection.6.4.1}%
+\contentsline {subsection}{\numberline {6.4.2}SPI-Bus und Chip-Select-Logik}{16}{subsection.6.4.2}%
+\contentsline {subsection}{\numberline {6.4.3}STEP/DIR-Leitungen und Signalintegrität}{16}{subsection.6.4.3}%
+\contentsline {section}{\numberline {6.5}Spannungsversorgung und Power-Management}{16}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Prototyping und Hardware-Verifikation}{17}{section.6.6}%
+\contentsline {subsection}{\numberline {6.6.1}Architektur der Testplatine}{17}{subsection.6.6.1}%
+\contentsline {subsection}{\numberline {6.6.2}Maßnahmen zur Signalintegrität und EMV}{17}{subsection.6.6.2}%
+\contentsline {section}{\numberline {6.7}Schaltplan und PCB-Layout (Integriertes Design)}{18}{section.6.7}%
+\contentsline {subsection}{\numberline {6.7.1}Leiterbahndimensionierung und Stromtragfähigkeit}{18}{subsection.6.7.1}%
+\contentsline {subsection}{\numberline {6.7.2}Layer-Stackup und EMV-Konzept}{18}{subsection.6.7.2}%
+\contentsline {subsection}{\numberline {6.7.3}Thermisches Management}{18}{subsection.6.7.3}%
+\contentsline {chapter}{\nonumberline Quellenverzeichnis}{20}{chapter*.14}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
