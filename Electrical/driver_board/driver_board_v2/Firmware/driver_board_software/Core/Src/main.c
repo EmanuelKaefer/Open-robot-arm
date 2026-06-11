@@ -51,6 +51,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
+
 SPI_HandleTypeDef hspi1;
 
 TIM_HandleTypeDef htim1;
@@ -65,10 +68,9 @@ UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
-
+//adc value array
+uint32_t value_adc[6];
 // Arrays for counting steps for all 6 axes
-volatile uint32_t target_steps[6] = {0};
-volatile uint32_t step_counter[6] = {0};
 
 #define PI 3.14159265359f //PI
 #define MOTOR_STEPS 200.0f //steps/revolution
@@ -80,6 +82,7 @@ volatile uint32_t step_counter[6] = {0};
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
@@ -90,6 +93,7 @@ static void MX_TIM4_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
 // Deklaration der TMC Funktion, falls nicht über Header verfügbar
 //extern void TMC_WriteReg(uint8_t addr, uint32_t value);
@@ -102,20 +106,18 @@ static void MX_TIM10_Init(void);
 // Arrays für die Hardware-Timer
 TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &htim10};
 uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
-
+//EIGENTLICH NICHT MEHR RELEVANT ABER VLLT IWAN NWIEDER
 // Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
 //-0.3470f
-float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 0.3363f, -1.0126f, -0.0202f, 2.1291f aber stimmt nicht deshalb herausgemessen
+//float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 0.3363f, -1.0126f, -0.0202f, 2.1291f aber stimmt nicht deshalb herausgemessen
 //Limitangles from solidworks
-float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
+//float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
 
 //array for homing pins
 GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
 uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 
 // Status-Variables
-volatile uint8_t stoprequest[6] = {0};
-volatile uint8_t is_moving_offset[6] = {0};
 uint8_t current_homingaxis = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
 
@@ -131,24 +133,6 @@ typedef enum {
 
 SystemState currentState = STATE_INIT;
 
-static void Step_Start_Exact(uint8_t ax, uint32_t steps)//fährt die exakten schritte von endschalter zu home position
-{
-    if (steps == 0) return;
-
-    step_counter[ax] = 0;
-    target_steps[ax] = steps;
-    is_moving_offset[ax] = 1;
-
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    uint32_t channel = AXIS_CHANNELS[ax];
-
-    // Interrupt-Flag löschen
-    __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
-
-    // Timer Base Interrupt UND PWM starten
-    HAL_TIM_Base_Start_IT(htim);
-    HAL_TIM_PWM_Start(htim, channel);
-}
 
 //Stop/Start/Speed for driver dynamically
 static void Step_Start(uint8_t ax)
@@ -221,6 +205,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_SPI1_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
@@ -231,8 +216,10 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM8_Init();
   MX_TIM10_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-
+  //start ADC DMY
+  HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,6);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -282,71 +269,19 @@ int main(void)
                       printf("  >>> INITIALISIERUNG ABGEBROCHEN - Verdrahtung prüfen! <<<\r\n");
                       currentState = STATE_ERROR;
                   }
+
                   break;
-        break;
+
+       // break;
 
       case STATE_HOMING:
-          uint8_t started = 0;
-          uint8_t ax = current_homingaxis;
-
-          // Phase 1: Fahre Richtung Endschalter
-          if (!started) {
-              started = 1;
-              printf("Starte Homing fuer Achse %d...\r\n", ax);
-              // Richtung Schalter
-              HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
-              Step_SetFreqHz(ax, 1000);
-              Step_Start(ax);
-          }
-          // Phase 2: Endschalter wurde getroffen
-          else if (stoprequest[ax]) {
-        	  printf("Stoprequest erhalten");
-              stoprequest[ax] = 0;
-
-              // Schalter getroffen! Brauchen wir ein Offset?
-              float delta_rad = limit_rad[ax] - home_rad[ax];
-              if (delta_rad < 0) delta_rad = -delta_rad;
-
-              if (delta_rad > 0.001f) {
-                  // Achse BRAUCHT Offset
-                  uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * MOTOR_STEPS * MICROSTEPS * GEAR_RATIO);
-
-                  HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_RESET);
-                  HAL_Delay(5); // Kurze Setup-Time für DIR Pin geben!
-                  Step_SetFreqHz(ax, 1000);
-                  Step_Start_Exact(ax, steps_to_move);
-                  printf("Fahre offset\r\n");
-                  currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
-              }
-              else {
-                  // Achse dreht endlos, BRAUCHT KEIN Offset
-                  current_homingaxis++;
-                  started = 0; // Reset für die nächste Achse
-
-                  if (current_homingaxis >= 6) {
-                      printf("Homing komplett abgeschlossen!\r\n");
-                      currentState = STATE_READY;
-                  }
-              }
+          for (int i=0; i<=6; i++){
+        	  printf("%lu\n", value_adc[i]);
           }
           break;
 
-      case STATE_HOMING_OFFSET:
-          // Warten, bis der Timer-Callback der aktuellen Achse fertig ist
-          if (is_moving_offset[current_homingaxis] == 0) {
-              // Offset-Fahrt abgeschlossen!
-              current_homingaxis++; // Nächste Achse an die Reihe lassen
-              	 printf("State homing offset \r\n");
-              // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
+      	  case STATE_HOMING_OFFSET:
 
-          if (current_homingaxis >= 6) {
-              printf("Homing komplett abgeschlossen!\r\n");
-              currentState = STATE_READY;
-           } else{
-        	   started = 0;
-        	   currentState = STATE_HOMING;
-           }
-          }
           break;
 
       case STATE_READY:
@@ -401,6 +336,58 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
 }
 
 /**
@@ -926,6 +913,22 @@ static void MX_USART3_UART_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -944,19 +947,25 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC5_CS_Pin
-                          |TMC2_DIR_Pin|TMC3_DIR_Pin|TMC6_DIR_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOC, TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC2_DIR_Pin
+                          |TMC3_DIR_Pin|TMC6_DIR_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, TMC4_CS_Pin|TMC5_DIR_Pin|TMC4_DIR_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_4, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, TMC6_CS_Pin|TMC1_DIR_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pins : TMC1_CS_Pin TMC2_CS_Pin TMC3_CS_Pin TMC2_DIR_Pin
-                           TMC3_DIR_Pin TMC6_DIR_Pin */
-  GPIO_InitStruct.Pin = TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC2_DIR_Pin
-                          |TMC3_DIR_Pin|TMC6_DIR_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(TMC5_CS_GPIO_Port, TMC5_CS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : TMC1_CS_Pin TMC2_CS_Pin TMC3_CS_Pin PC4
+                           TMC2_DIR_Pin TMC3_DIR_Pin TMC6_DIR_Pin */
+  GPIO_InitStruct.Pin = TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|GPIO_PIN_4
+                          |TMC2_DIR_Pin|TMC3_DIR_Pin|TMC6_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -969,24 +978,11 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(TMC4_CS_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : TMC5_CS_Pin */
-  GPIO_InitStruct.Pin = TMC5_CS_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-  HAL_GPIO_Init(TMC5_CS_GPIO_Port, &GPIO_InitStruct);
-
   /*Configure GPIO pins : TMC6_CS_Pin TMC1_DIR_Pin */
   GPIO_InitStruct.Pin = TMC6_CS_Pin|TMC1_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : LimitSwitch_3_Pin LimitSwitch_4_Pin LimitSwitch_5_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_3_Pin|LimitSwitch_4_Pin|LimitSwitch_5_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : TMC5_DIR_Pin TMC4_DIR_Pin */
@@ -996,17 +992,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_2_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LimitSwitch_6_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_6_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(LimitSwitch_6_GPIO_Port, &GPIO_InitStruct);
+  /*Configure GPIO pin : TMC5_CS_Pin */
+  GPIO_InitStruct.Pin = TMC5_CS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(TMC5_CS_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -1024,43 +1015,13 @@ static void MX_GPIO_Init(void)
 // Callback für Timer Interrupts aller Achsen (zählt Schritte)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    // Durch alle 6 Achsen loopen, um den auslösenden Timer zu finden
-    for (uint8_t ax = 0; ax < 6; ax++) {
-        if (htim->Instance == AXIS_TIMERS[ax]->Instance) {
 
-            // Wenn diese Achse gerade in Offset-Fahrt ist
-            if (is_moving_offset[ax]) {
-                step_counter[ax]++;
-
-                if (step_counter[ax] >= target_steps[ax]) {
-                    // Ziel erreicht! Motor stoppen
-                    Step_Stop(ax);
-                    is_moving_offset[ax] = 0;
-                }
-            }
-            break; // Timer gefunden, Schleife abbrechen
-        }
-    }
 }
 
 // EXTI15_10 callback for homing switches
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    static uint32_t last = 0;
-    uint32_t now = HAL_GetTick();
-    if (now - last < 30) return;
-    last = now;
 
-    if (currentState == STATE_HOMING) {
-        switch (GPIO_Pin) {
-            case LimitSwitch_1_Pin:  Step_Stop(0); stoprequest[0] = 1; break;//achse base
-            case LimitSwitch_2_Pin:     Step_Stop(1); stoprequest[1] = 1; break;//achse 2
-            case LimitSwitch_3_Pin:     Step_Stop(2); stoprequest[3] = 1; break;//achse 3
-            case LimitSwitch_4_Pin:     Step_Stop(3); stoprequest[4] = 1; break;//achse 4
-            case LimitSwitch_5_Pin:     Step_Stop(4); stoprequest[5] = 1; break;//achse 5
-            case LimitSwitch_6_Pin:     Step_Stop(5); stoprequest[5] = 1; break; //achse 6
-        }
-    }
 }
 
 
