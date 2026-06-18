@@ -4,29 +4,29 @@
 %\section{Low Level Architektur und Steuerung}
 \label{sec:software}
 
-Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe \ref{sec:hardware}) und der elektrischen Leistungselektronik (siehe \ref{sec:elektrisches}) dar. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller in der Entwicklungsumgebung STM32CubeIDE entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
+Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe \ref{sec:hardware}) und der elektrischen Leistungselektronik (siehe \ref{sec:elektrisches}) dar. Die Firmware wurde auf Hardwareabstraktionsebene (STM32CubeHAL) basierendem C für einen STM32F446-Mikrocontroller in der Entwicklungsumgebung STM32CubeIDE entwickelt \cite{a2021_this}. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
 
 \section{Implementierung der 6 Achsen und Skalierbarkeit}
 \label{subsec:hal}
 
 Bei der Ansteuerung eines 6-Achs-Roboterarms führt die Zuweisung von Mikrocontroller-Pins als Einzelvariablen und die statische Zuweisung von Peripherie-Registern schnell zu eingeschränktem und fehleranfälligem Programmcode. Um dies zu vermeiden, wurde eine Pointer-Array-basierte Datenstruktur implementiert. Anstatt jede Achse separat zu adressieren, werden Pointer auf die entsprechenden Hardware-Timer (\texttt{TIM\_HandleTypeDef}), PWM-Kanäle sowie die GPIO-Ports für Richtungs- (\texttt{DIR}) und Chip-Select-Signale (\texttt{CS}) in globalen Arrays gekapselt. 
 
-Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homen über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems massiv erhöht.
+Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jede Achse über einen simplen Index angesprochen werden. Dies ermöglicht es, Kernfunktionen wie das Starten und Stoppen der Motoren oder das Homing über alle Treiber mittels einfacher Schleifenkonstrukte umzusetzen, was die Skalierbarkeit und Wartbarkeit des Systems maßgeblich erhöht.
 
-\subsection{Richtungssignale (DIR Pins)}
+\subsection{Richtungssignale (DIR-Pins)}
 \label{subsec:hal_DIR}
-Um die Richtung der Motoren zu bestimmen benötigt jeder Schrittmotortreiber einen DIR (Direction) Pin der entweder auf 1 um im Uhrzeigersinn zu drehen oder auf 0 um gegen den Uhrzeiger Sinn zu drehen. Um dies für alle 6 Motoren komfortabel und skalierbar zu lösen wurden Arrays implementiert. 
+Zur Bestimmung der Drehrichtung benötigt jeder Schrittmotortreiber einen DIR-Pin (Direction). Ein High-Pegel (1) bewirkt eine Drehung im Uhrzeigersinn, ein Low-Pegel (0) eine Drehung gegen den Uhrzeigersinn. Um dies für alle sechs Motoren effizient und skalierbar umzusetzen, wurden Arrays eingesetzt. 
 
-\begin{lstlisting}[language=C, caption={Arrays für DIR Pins/Ports}, label={lst:ARRAY_DIR}]
+\begin{lstlisting}[language=C, caption={Arrays für DIR-Pins/Ports}, label={lst:ARRAY_DIR}]
 	GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
 	uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 \end{lstlisting}
 %TODO erklären was mit Port Pins und warum pointer
 
-\subsection{Geschwindigkeitsregelung (STEP Pins)}
+\subsection{Geschwindigkeitsregelung (STEP-Pins)}
 \label{subsec:hal_STEP}
-Die Geschwindigkeitsregelung über der STEP Pins wird mittels Hardware Puls Weiten Modulation(PWM) Timern implementiert. Die Motortreiber brauchen zur Setzung der Geschwindigkeit eine Frequenz am STEP Eingang. Auch das ist durch Arrays realisiert um für Skalierbarkeit zu sorgen.
-\begin{lstlisting}[language=C, caption={Arrays für STEP Timer/Channels}, label={lst:ARRAY_STEP}]
+Die Geschwindigkeitsregelung über die STEP-Pins wird mittels Hardware-Pulsweitenmodulation (PWM) durch Timer implementiert. Die Motortreiber benötigen zur Vorgabe der Geschwindigkeit ein Frequenzsignal am STEP-Eingang. Dies ist ebenfalls durch Arrays realisiert.
+\begin{lstlisting}[language=C, caption={Arrays für STEP-Timer/Channels}, label={lst:ARRAY_STEP}]
 	TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &htim10};
 	uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
 \end{lstlisting}
@@ -34,10 +34,10 @@ Die Geschwindigkeitsregelung über der STEP Pins wird mittels Hardware Puls Weit
 \subsection{Vergleich: Mit und ohne Array-Abstraktion}
 \label{subsubsec:hal_comparison}
 
-Ohne Array-Abstraktion würde die Motor-Ansteuerung mehrere if-else-Blöcke 
-erfordern. Als Beispiel wird die Funktion zum Stoppen einer Motor-PWM von 3 Achsen gezeigt.
+Ohne Array-Abstraktion würde die Motoransteuerung mehrere if-else-Blöcke 
+erfordern. Als Beispiel wird die Funktion zum Stoppen einer Motor-PWM von drei Achsen gezeigt.
 
-\subsubsection{Anti-Pattern: Hard-codierte Hardware-Zuordnung}
+\subsubsection{Hardcodierte Hardware-Zuordnung}
 
 \begin{lstlisting}[language=C, caption={Motor-Stopp ohne Array-Abstraktion (Anti-Pattern)}, 
 	label={lst:hal_no_array}]
@@ -58,89 +58,85 @@ erfordern. Als Beispiel wird die Funktion zum Stoppen einer Motor-PWM von 3 Achs
 	}
 \end{lstlisting}
 
-Dieses Anti-Pattern führt zu mehreren Problemen:
+Das führt zu mehreren Problemen:
 \begin{itemize}
-	\item \textbf{Code-Duplikation}: Die gleiche Logik wird 6-mal wiederholt.
-	\item \textbf{Wartbarkeit}: Änderungen müssen 6 mal vorgenommen werden.
-	\item \textbf{Fehleranfälligkeit}: Leicht, einen Achsen-Fall zu vergessen oder falsch zu zuordnen.
-	\item \textbf{Skalierbarkeit}: Das Hinzufügen/Entfernen einer  Achse erfordert große Codeänderungen.
+	\item \textbf{Code-Duplikation}: Die gleiche Logik wird sechsmal wiederholt.
+	\item \textbf{Wartbarkeit}: Änderungen müssen sechsmal vorgenommen werden.
+	\item \textbf{Fehleranfälligkeit}: Es ist leicht, einen Achsen-Fall zu vergessen oder falsch zuzuordnen.
+	\item \textbf{Skalierbarkeit}: Das Hinzufügen oder Entfernen einer Achse erfordert massive Codeänderungen.
 \end{itemize}
 
 
 \section{Initialisierung und SPI-Kommunikation der Motortreiber}
 \label{subsec:spi_init}
-\subsection{SPI Protokoll}
-Das Seriel Peripheral Interface (SPI) ist ein Serielles Hochgeschwindigkeit Bussystem das vorwiegend zur Kommunikation von Mikrocontrollern mit Peripheriegeräten auf Platinen dient. SPI ist full duplex fähig, das heißt das bei jedem Takt 1 Bit vom Master an den Slave und zurück gesendet wird. Es besteht aus 3 Leitungen MOSI (Master Out $\longrightarrow$ Slave In), MISO (Master In $\longleftarrow$ Slave Out) und SCK (Serial Clock). Dazu kommt eine CS (Chip Select) Leitung die vom Master zu jeden Slave einzeln gehen muss. Nur wenn diese CS Leitung LOW ist sendet/empfängt der Slave Daten. Die Kommunikation erfolgt meist so das 2 Übertragungen nötig sind. In der ersten Übertragung sendet der Master ein Kommando an den Slave, da der Slave aber noch nicht bereit für eine Sinnvolle Rückmeldung ist sendet er nicht relevante Daten. In der 2 Übertragung sendet der Master einen beliebigen Datensatz an den Slave, dieser hat inzwischen Zeit gehabt seine Antwort auf das Kommando des Masters bereitzustellen und sendet diese zum Master. Die Übertragungen sind jeweils synchron.\cite{a2025_serial}%TODO SPI oft zitieren
+\subsection{SPI-Protokoll}
+Das Serial Peripheral Interface (SPI) ist ein serielles Hochgeschwindigkeits-Bussystem, das vorwiegend zur Kommunikation von Mikrocontrollern mit Peripheriegeräten auf Platinen dient. SPI ist vollduplexfähig, das heißt, dass bei jedem Takt ein Bit vom Master an den Slave und umgekehrt gesendet wird. Es besteht aus drei Leitungen: MOSI (Master Out $\longrightarrow$ Slave In), MISO (Master In $\longleftarrow$ Slave Out) und SCK (Serial Clock). Hinzu kommt eine CS-Leitung (Chip Select), die vom Master separat zu jedem Slave geführt werden muss. Nur wenn diese CS-Leitung auf LOW gezogen wird, sendet oder empfängt der Slave Daten. Die Kommunikation erfordert in der Regel zwei Übertragungszyklen. Im ersten Zyklus sendet der Master ein Kommando an den Slave. Da der Slave zu diesem Zeitpunkt die Antwort noch nicht vorbereitet hat, sendet er irrelevante Dummy-Daten zurück. In der zweiten Übertragung sendet der Master einen leeren Datensatz, um das Taktsignal aufrechtzuerhalten, woraufhin der Slave die bereitgestellte Antwort übermittelt. Die Übertragungen erfolgen jeweils synchron \cite{a2025_serial}.
 
-\subsubsection{SPI-Modis}
+\subsubsection{SPI-Modi}
 \label{subsubsec:SPIMODE}
-Es gibt 4 SPI Mode 0-3. Diese Beschreiben sich wiefolgt:
+Es existieren vier SPI-Modi (0-3). Diese definieren sich wie folgt:
 
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=0.7\textwidth]{figures/allgemein/SPIMode.png}
-	\caption{Diagramm der SPI Modi}
+	\caption{Diagramm der SPI-Modi}
 	\label{fig:SPIMode}
 \end{figure}
 
 CPOL (Clock Polarity):
 \begin{itemize}
-	\item 0: Takt ist in Ruhe LOW, ein Wechsel auf HIGH zählt als steigende Taktflanke
-	\item 1: Takt ist invertiert: in Ruhe HIGH, ein Wechsel auf LOW zählt als steigende Taktflanke
+	\item 0: Takt ist im Ruhezustand LOW, ein Wechsel auf HIGH zählt als steigende Taktflanke.
+	\item 1: Takt ist invertiert (im Ruhezustand HIGH), ein Wechsel auf LOW zählt als steigende Taktflanke.
 \end{itemize}
 
 CPHA (Clock Phase):
 \begin{itemize}
-	\item 0: Daten werden bei steigender Taktflanke (=abh. von CPOL) eingelesen, bei fallender ausgegeben
-	\item 1: Daten werden bei fallender Taktflanke eingelesen, bei steigender ausgegeben
+	\item 0: Daten werden bei der ersten Taktflanke (abhängig von CPOL) eingelesen und bei der darauffolgenden ausgegeben.
+	\item 1: Daten werden bei der zweiten Taktflanke eingelesen und bei der ersten ausgegeben.
 \end{itemize}
 
 
 \subsection{Initialisierung der Motortreiber}
-Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten SPI Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. Die TMC5160 erfordern den Betrieb in SPI Mode 3 (siehe \ref{fig:SPIMode})\cite{power}
-%TODO Datasheet von TMC zitieren
+Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17-Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie Haltestrom, Betriebsstrom (Run-Current) und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten SPI-Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select-Pin (\texttt{CS}) der Zielachse auf ein niedriges Potential (LOW) gezogen. Die TMC5160 erfordern den Betrieb im SPI-Modus 3 (siehe \ref{fig:SPIMode}) \cite{power}.
 
+Um Fehler direkt bei der Initialisierung der Treiber zu erkennen, wurde eine Validierung implementiert, die zwingend erfolgreich durchlaufen werden muss. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (\texttt{GSTAT}) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (\texttt{GSTAT} = 0) detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch. 
 
-Um Fehler direkt beim Initialisieren der Treiber zu erkennen, wurde eine Validierung eingebaut, ohne die der nächste Schritt nicht erreicht werden kann. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (\texttt{GSTAT}) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (\texttt{GSTAT} = 0) detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch. 
-
-
-Die gewählte Konfiguration der Motortreiber ist wie folgt:
+Die gewählte Konfiguration der Motortreiber stellt sich wie folgt dar:
 
 \begin{table}[htbp]
 	\footnotesize 
 	\centering
-	\caption[Konfiguration der TMC5160T Register via SPI]{\textsc{Konfiguration der TMC5160T Register via SPI}}
+	\caption[Konfiguration der TMC5160T-Register via SPI]{\textsc{Konfiguration der TMC5160T-Register via SPI}}
 	\label{tab:tmc5160_config}
 	
-	\begin{tabularx}{\linewidth}{l X} % Korrigiert auf 2 Spalten passend zum Inhalt
+	\begin{tabularx}{\linewidth}{l X}
 		\toprule
 		\textbf{Register (Wert)} & \textbf{Funktion} \\
 		\midrule
-		\texttt{GSTAT} (0x01) = \texttt{0x00000007} & Setzt das globale Statusregister zurück. Löscht Fehlerspeicher für Reset, Unterspannung der Charge-Pump und Driver-Shutdown vor dem Testlauf. \\
+		\texttt{GSTAT} (0x01) = \texttt{0x00000007} & Setzt das globale Statusregister zurück. Löscht den Fehlerspeicher für Reset, Unterspannung der Charge-Pump und Driver-Shutdown vor dem Testlauf. \\
 		\addlinespace
 		\texttt{GCONF} (0x00) = \texttt{0x00000004} & Aktiviert das Bit \texttt{pdn\_disable}. Schaltet den Treiber in den internen Sensing-Modus um und erzwingt die Kommunikation rein über die SPI-Schnittstelle. \\
 		\addlinespace
 		\texttt{IHOLD\_IRUN} (0x10) = \texttt{0x00061008} & Konfiguriert den Motorstrom: Setzt den Fahrstrom (\texttt{IRUN}) auf ca. 50\,\%, den Haltestrom im Stillstand (\texttt{IHOLD}) auf ca. 25\,\% sowie eine Verzögerung (\texttt{IHOLDDELAY}) für die Stromabsenkung. \\
 		\addlinespace
-		\texttt{CHOPCONF} (0x6C) = \texttt{0x14010053} & Konfiguration des Chopper-Verfahrens. Aktiviert den kraftvollen \textit{SpreadCycle}-Modus, stellt die Schrittauflösung auf 16 Mikroschritte (mit automatischer Interpolation auf 256 Schritte) und definiert das Signal-Timing (\textit{TOFF}, \textit{TBL}). \\
+		\texttt{CHOPCONF} (0x6C) = \texttt{0x14010053} & Konfiguration des Chopper-Verfahrens. Aktiviert den \textit{SpreadCycle}-Modus, stellt die Schrittauflösung auf 16 Mikroschritte (mit automatischer Interpolation auf 256 Schritte) und definiert das Signal-Timing (\textit{TOFF}, \textit{TBL}). \\
 		\addlinespace
-		\texttt{PWMCONF} (0x70) = \texttt{0xC10D0024} & Hinterlegt die Parameter für den flüsterleisen \textit{StealthChop2}-Modus (Spannungsamplitude, Frequenz, Gradienten) für einen potenziellen, geschwindigkeitsabhängigen Moduswechsel. \\
-		\bottomrule
+		\texttt{PWMCONF} (0x70) = \texttt{0xC10D0024} & Hinterlegt die Parameter für den \textit{StealthChop2}-Modus (Spannungsamplitude, Frequenz, Gradienten) für einen potenziellen, geschwindigkeitsabhängigen Moduswechsel. \\
+		\bottomrule \cite{power}
 	\end{tabularx}
 \end{table}
 
 \section{Finite State Machine (Endlicher Zustandsautomat)}
 \label{subsec:fsm}
 
-Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein Selbstblockieren der Software zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht immer aus den folgenden Komponenten: \cite{a2026_statemachine}
-
+Um die auf dem Mikrocontroller laufende Software deterministisch zu gestalten und Deadlocks zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht strukturell aus den folgenden Komponenten \cite{a2026_statemachine}:
 
 \begin{itemize}
-	\item Zustände (States): Die verschiedenen Phasen des Systems.
-	\item Startzustand (Initial State): Der Zustand, in dem die FSM beginnt.
-	\item Übergänge (Transitions): Die Bedingungen für den Wechsel von Zuständen.
-	\item Ereignisse (Inputs): Die Ereignisse, die einen Wechsel bewirken.
-	\item Aktionen (Outputs): Die Ausgaben der FSM.
+	\item Zustände (States): Die verschiedenen operativen Phasen des Systems.
+	\item Startzustand (Initial State): Der Zustand, in dem die FSM initialisiert wird.
+	\item Übergänge (Transitions): Die definierten Bedingungen für den Wechsel zwischen Zuständen.
+	\item Ereignisse (Inputs): Die Trigger, die einen Zustandswechsel bewirken.
+	\item Aktionen (Outputs): Die ausführenden Operationen der FSM.
 \end{itemize}
 
 \subsection{Zustände}
@@ -152,50 +148,48 @@ Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und
 	\label{fig:Finite_State_Maschine}
 \end{figure}
 
-Für unseren Roboterarm wurden die Zustände \texttt{STATE\_INIT}, \texttt{STATE\_HOMING}, \texttt{STATE\_HOMING\_OFFSET}, \texttt{STATE\_READY} und \texttt{STATE\_ERROR} gewählt. Als Startzustand ist \texttt{STATE\_INIT} definiert, da vor jedem Betrieb die Treiber initialisiert werden müssen.
+Für den entwickelten Roboterarm wurden die Zustände \texttt{STATE\_INIT}, \texttt{STATE\_HOMING}, \texttt{STATE\_HOMING\_OFFSET}, \texttt{STATE\_READY} und \texttt{STATE\_ERROR} definiert. Als Startzustand dient \texttt{STATE\_INIT}, da vor dem regulären Betrieb eine Treiberinitialisierung zwingend erforderlich ist.
 %TODO mehr ausführen wie unsere Finite State Machine die Komponenten macht
-Die Funktionen der Zustände gestalten sich wie folgt:
+Die Spezifikationen der Zustände gestalten sich wie folgt:
 
 \begin{table}[htbp]
 	\footnotesize 
 	\centering
-	\caption[Funktionen der Zustände der Finite State Machine]{\textsc{Funktionen der Zustände der Finite State Machine}}
+	\caption[Zustände der Finite State Machine]{\textsc{Zustände der Finite State Machine}}
 	\label{tab:fsm_states}
 	
 	\begin{tabularx}{\linewidth}{l X}
 		\toprule
 		\textbf{Zustand} & \textbf{Funktion} \\
 		\midrule
-		\texttt{STATE\_INIT}          & Initialisiert die Motortreiber über SPI, um die nötigen Parameter zu konfigurieren. \\
+		\texttt{STATE\_INIT}          & Initialisiert die Motortreiber über den SPI-Bus und konfiguriert die Registerparameter. \\
 		\addlinespace 
-		\texttt{STATE\_HOMING}        & Hier passiert der erste Teil der kinematischen Referenzfahrt, die den Roboter in die Home-Position bringt. Er fährt dabei den Endschalter der jeweiligen Achse an. \\
+		\texttt{STATE\_HOMING}        & Führt den ersten Teil der kinematischen Referenzfahrt durch, bei der die Achse bis zur Auslösung des Endschalters verfahren wird. \\
 		\addlinespace
-		\texttt{STATE\_HOMING\_OFFSET} & Hier passiert der zweite Teil der kinematischen Referenzfahrt. Der Roboter fährt vom Endschalter in die vordefinierte Home-Position. \\
+		\texttt{STATE\_HOMING\_OFFSET} & Führt den zweiten Teil der kinematischen Referenzfahrt durch. Die Achse verfährt vom Endschalter um einen definierten Offset auf die finale Home-Position. \\
 		\addlinespace
-		\texttt{STATE\_READY}         & Hier erfolgt der eigentliche Betrieb des Roboters. Der Mikrocontroller empfängt Befehle und führt diese aus, um den Roboter wie gewünscht zu bewegen. \\
+		\texttt{STATE\_READY}         & Der reguläre Betriebszustand. Der Mikrocontroller verarbeitet eingehende Befehle und setzt diese in Trajektorien um. \\
 		\addlinespace
-		\texttt{STATE\_ERROR}         & In diesen Zustand gelangt man nur im Fehlerfall. Es werden alle Motoren gestoppt und eine Fehlermeldung ausgegeben. \\
+		\texttt{STATE\_ERROR}         & Fehlerzustand. Alle Motoren werden umgehend gestoppt und ein Fehlercode wird ausgegeben. Ein manueller Reset ist erforderlich. \\
 		\bottomrule
 	\end{tabularx}
 \end{table}
-
+\newpage
 \section{Kinematische Referenzierungsfahrt (Homing)}
 \label{subsec:homing}
 
-Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kostengründen auf absolute Encoder verzichtet wurde, ist der Systemzustand nach jedem Neustart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
+Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kostengründen auf absolute Encoder verzichtet wurde, ist der Systemzustand nach jedem Kaltstart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
 
 \subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
 \label{subsubsec:interrupts}
 
-Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) wird aufgerufen. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.\cite{a2021_this}
+Für die Erfassung der Endschaltersignale kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. Die Verwendung von Interrupts reduziert die Prozessorauslastung signifikant, da aktives Polling (permanentes Abfragen der Pins) entfällt. Sobald eine Signalflanke detektiert wird, löst der Hardware-Controller einen Interrupt-Request aus, der den regulären Programmablauf unterbricht und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Routine setzt ein Flag, das dem Hauptprogramm signalisiert, dass der Endschalter erreicht wurde, der Positions-Offset berechnet und die Drehrichtung umgekehrt werden muss \cite{a2021_this}.
 
-%TODO zitieren extis aus STM Datasheet
+Um mehrfache Interrupt-Auslösungen durch mechanisches Schalterprellen (Bouncing) zu verhindern, ist in der Interrupt-Routine eine softwareseitige Entprellung (Debouncing) integriert. Diese blockiert nach der ersten Flankenerkennung alle weiteren Signale desselben Pins für ein Zeitfenster von 30\,ms. 
 
-Um das mehrfache Auslösen des Interrupts zu verhindern, das durch sogenanntes Bouncen bei mechanischen Schaltern auftreten kann, ist in der Interrupt-Funktion eine Software-Entprellung eingebettet, die nach einem registrierten Interrupt alle weiteren Signale für 30\,ms ignoriert. 
-
-Der Code dafür sieht wie folgt aus:
-
-\begin{lstlisting}[language=C, caption={Debouncing für Interrupt-Verarbeitung}, label={lst:IQR_debounce}]
+Die Implementierung in C ist wie folgt realisiert:
+\newpage
+\begin{lstlisting}[language=C, caption={Software-Entprellung (Debouncing) innerhalb der ISR}, label={lst:IQR_debounce}]
 	static uint32_t last = 0;
 	uint32_t now = HAL_GetTick();
 	if (now - last < 30) return;
@@ -205,32 +199,28 @@ Der Code dafür sieht wie folgt aus:
 \subsection{Berechnung kinematischer Offsets}
 \label{subsubsec:offsets}
 
-Der mechanische Nullpunkt, an dem sich die Endschalter befinden, entspricht nicht dem kinematischen Nullpunkt des Roboters. Dies führt zu einem mathematischen Offset, das es auszugleichen gilt. Um dieses auszugleichen, muss die Winkeldifferenz in die entsprechende Schrittanzahl für die Motoren umgerechnet werden. Die Formel hierfür lautet:
+Der mechanische Nullpunkt an der Position der Endschalter entspricht in der Regel nicht dem kinematischen Nullpunkt des Robotermodells. Diese Diskrepanz erfordert die Berechnung eines Ausgleichsoffsets. Die zu kompensierende Winkeldifferenz muss dazu in die entsprechende Schrittanzahl der Motoren umgerechnet werden. Die allgemeine Gleichung lautet:
 
-\begin{equation}
-	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot Schritte pro Umdrehung \cdot Mikroschritte \cdot Getriebe ratio
-\end{equation}
+$$ \text{Steps} = \frac{\Delta\text{rad}}{2\cdot\pi} \cdot \text{Vollschritte} \cdot \text{Mikroschritte} \cdot \text{Getriebeübersetzung} $$
 
-Mit den Konkreten eingesetzten Werten ergibt sich die Formel:
+Mit den konkret eingesetzten Hardwareparametern ergibt sich folgende Berechnung:
 
-\begin{equation}
-	\text{steps to move} = \frac{\Delta\text{rad}}{2\cdot\pi}\cdot 200 \cdot 16 \cdot 20
-\end{equation}
+$$ \text{Steps} = \frac{\Delta\text{rad}}{2\cdot\pi} \cdot 200 \cdot 16 \cdot 20 $$
 
 \begin{itemize}
-	\item $\Delta\text{rad}$: Die Differenz des Offsets und der Home-Position in Radiant.
-	\item 200: Die Vollschritte, die ein Schrittmotor pro Umdrehung besitzt.
-	\item 16: Die eingestellte Mikroschritt-Auflösung pro Vollschritt.
-	\item 20: Die mechanische Getriebeübersetzung (1:20) bei allen Achsen.
+	\item $\Delta\text{rad}$: Die berechnete Winkeldifferenz zwischen Endschalter und kinematischer Home-Position (in Radiant).
+	\item $200$: Die Anzahl der physikalischen Vollschritte des Motors pro Umdrehung ($1,8^\circ$ Schrittwinkel).
+	\item $16$: Die konfigurierte Mikroschritt-Auflösung pro Vollschritt.
+	\item $20$: Das mechanische Untersetzungsverhältnis des Getriebes (1:20) für alle Achsen.
 \end{itemize}
-	
+
 \subsection{Sequenzieller Homing-Ablauf}
-	\label{subsubsec:homing_sequence}
-	
-	Die Referenzierung des 6-Achs-Systems erfolgt sequenziell, dadurch werden mögliche Fehler wie eine Überschreitung des Mechanischen Limits durch mehrere gleichzeitig bis zum Anschlag fahrende Achsen grundsätzlich ausgeschlossen. Das Sequenzielle Homig hat auch den voreilt das es visuell auf korrektheit geprüft werden kann da man immer auf eine Achse nach der anderen Schauen kann. Der Ablauf erfolgt gesteuert durch eine globale Index-Variable (\texttt{current\_homingaxis}), beginnend bei der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Ablauf für eine einzelne Achse gliedert sich dabei in folgende Phasen: 
-	
-	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das Programm den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
-	
+\label{subsubsec:homing_sequence}
+
+Die Referenzierung des 6-Achs-Systems erfolgt aus Sicherheitsgründen sequenziell. Dadurch werden mechanische Kollisionen oder kritische Fehler – wie das gleichzeitige Auffahren mehrerer Achsen auf die Endanschläge – konstruktiv ausgeschlossen. Ein weiterer Vorteil des sequenziellen Homings ist die Möglichkeit der isolierten visuellen Überprüfung der Korrektheit jeder einzelnen Achsbewegung. Der Ablauf wird durch eine globale Index-Variable (\texttt{current\_homingaxis}) gesteuert und verläuft hierarchisch von der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Vorgang pro Achse gliedert sich in folgende Phasen: 
+
+Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit in Richtung des Endschalters. Nach Auslösen des Interrupts berechnet der Algorithmus den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und leitet den Zustandswechsel zu \texttt{STATE\_HOMING\_OFFSET} ein. Die Achse gilt erst dann als referenziert, wenn die berechnete Schrittzahl für den Offset über den Timer-Interrupt exakt abgefahren wurde. Anschließend wird der Achsindex inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das Gesamtsystem kalibriert ist und in den regulären Betriebszustand \texttt{STATE\_READY} übergeht.
+
 %\section{Verbindung mir Raspberry Pi und normaler Betrieb}
 %\label{sec:normalerBetrieb}
 %	Im normalen Betrieb erhält der STM über UART Befehle von einem Raspberry pi 4b, der Raspberry sendet die Zielposition zu der sich der Endeffektor des Roboterarms bewegen soll in Radianten, also einen Array von 6 joint Winkeln und die Ausrichtung des Greifers. Außerdem noch eine Maximale Geschwindigkeit auf die die Motoren beschleunigen sollen
@@ -239,12 +229,11 @@ Mit den Konkreten eingesetzten Werten ergibt sich die Formel:
 
 
 \section{Ausblick}
-Die nächsten Schritte zur Weiterentwicklung der Low Level Logik ist die Änderung des Homingprozesses von Sequenziellem Homing mit Endschaltern auf dauerhafte Winkelerkennung mittels Encodern. Weiteres muss eine Kommunikationsbrüke zwischen dem Raspberry Pi der die High level berechnungen übernimmt und dem STM hergestellt werden. Der letzte Schritt zur funktionierenden Low level Logik ist die Implementierung eines Trapazoidal velocity Profils um flüssiges Beschleunigen/Bremsen zu gewährleisten.
+Die nächsten Evaluierungsschritte für die Low-Level-Logik umfassen die Umstellung des Homing-Prozesses von Endschaltern auf eine kontinuierliche Winkelerfassung mittels Encodern. Des Weiteren muss eine robuste Kommunikationsschnittstelle zwischen dem Raspberry Pi, der die High-Level-Trajektorien berechnet, und dem Mikrocontroller etabliert werden. Der finale Meilenstein zur Fertigstellung der Low-Level-Steuerung ist die Integration eines trapezförmigen Geschwindigkeitsprofils, um ein ruckfreies Beschleunigen und Abbremsen der Gelenke sicherzustellen.
 
 \chapter{High Level Software}
 \section{Ausblick}
-Die High Level Logik Software auf dem Raspberry Pi dient um über eine GUI(Grafical User Interface) kartesische Koordinaten einzugeben zu dem ich der Endeffektor der Roboterarms bewegen soll. Diese x,y,z Koordinaten werden mithilfe von Inverser Kinematik mit der Python library IKpy zu 6 Jointwinkel in Radianten transformiert. Über die GUI kann man auch eine maximale Geschwindigkeit festlegen auf die die Motoren beschleunigen. In diesem Bereich ist noch nicht viel passiert da die Low level Software bis jetzt die Hauptpriorität war.
-
+Die High-Level-Software auf dem Raspberry Pi ermöglicht die Eingabe kartesischer Zielkoordinaten für den Endeffektor über ein Graphical User Interface (GUI). Diese kartesischen Koordinaten (x, y, z) werden mithilfe der Python-Bibliothek IKpy über inverse Kinematik in sechs Gelenkwinkel in Radiant transformiert. Zudem lässt sich über die GUI die maximale Geschwindigkeit definieren, auf welche die Motoren beschleunigen dürfen. Da der Fokus der bisherigen Entwicklung primär auf der Low-Level-Software lag, befindet sich die High-Level-Implementierung noch in einer frühen Projektphase.
 %\section{Inverse Kinematik}
 %
 %\subsection{Grundlagen der Kinematik}

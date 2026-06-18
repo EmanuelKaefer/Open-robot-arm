@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  17 JUN 2026 16:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  18 JUN 2026 11:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2082,40 +2082,42 @@ nput line 41.
 {C:/Users/matte/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/matt
 e/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc} <./figures/allgeme
 in/abcdxyz.png> <./figures/allgemein/HTBLA_Saalfelden_Logo.png>]) (formal/diplo
-marbeit-doku.tex) (content/vorwort.tex
-chapter without number
+marbeit-doku.tex) (content/vorwort.tex)
+(content/Aufgabenstellung.tex) (content/abstract.tex)
+(content/abtract_englisch.tex) (content/danksagung.tex)
 Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-) (content/Aufgabenstellung.tex) (content/abstract.tex)
-(content/abtract_englisch.tex) (content/danksagung.tex)
+Package tocbasic Info: character protrusion at toc deactivated on input line 33
+1.
+ (main.toc
 LaTeX Font Info:    Trying to load font information for OT1+pplx on input line 
-331.
+3.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pplx.fd
 File: ot1pplx.fd 2004/09/06 font definitions for OT1/pplx.
 )
 LaTeX Font Info:    Trying to load font information for OML+zplm on input line 
-331.
+3.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 
-331.
+3.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 
-331.
+3.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 
-331.
+3.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
@@ -2124,6 +2126,10 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zplm' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
+)
+\tf@toc=\write5
+\openout5 = `main.toc'.
+
 
 
 Package scrlayer-scrpage Warning: \headheight to low.
@@ -2134,7 +2140,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 (scrlayer-scrpage)                e.g., setting geometry's option
 (scrlayer-scrpage)                `head=20.2999pt'.
 (scrlayer-scrpage)                I'll also decrease \topmargin on input line 3
-31.
+40.
 
 
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
@@ -2149,40 +2155,26 @@ Package scrlayer-scrpage Warning: \footheight to low.
 (scrlayer-scrpage)                e.g., using
 (scrlayer-scrpage)                  \setlength{\footheight}{20.2999pt}
 (scrlayer-scrpage)                in your preamble.
-(scrlayer-scrpage)                I'll also increase \footskip on input line 33
-1.
+(scrlayer-scrpage)                I'll also increase \footskip on input line 34
+0.
 
 [2
-
-]
-Package tocbasic Info: character protrusion at toc deactivated on input line 33
-1.
- (main.toc)
-\tf@toc=\write5
-\openout5 = `main.toc'.
-
- [3
-
-] [4
-
 
 ] (content/chapters.tex
 \openout2 = `content/einleitung.aux'.
 
  (content/einleitung.tex
 chapter 1.
-[1
+) [1
 
 
-]
-chapter 2.
-) [2
+
 
 ]
 \openout2 = `content/software.aux'.
 
  (content/software.tex
-chapter 3.
+chapter 2.
 
 Overfull \hbox (15.691pt too wide) in paragraph at lines 7--8
 []\OT1/pplj/m/n/12 (-20) Dieses Ka-pi-tel be-schreibt die Im-ple-men-tie-rung d
@@ -2195,64 +2187,61 @@ Overfull \hbox (9.56352pt too wide) in paragraph at lines 12--13
 die Zu-wei-sung von Mikrocontroller-
  []
 
-[3
+[2
 
 
 
 
 ]
-Package babel Info: 'ngerman' activates 'ngerman' shorthands.
-(babel)             Reported on input line 54.
- [4]
+Overfull \hbox (50.46272pt too wide) in paragraph at lines 28--29
+\OT1/pplj/m/n/12 (-20) Die Ge-schwin-dig-keits-re-ge-lung []uber die STEP-Pins 
+wird mit-tels Hardware-Pulsweitenmodulation
+ []
+
+[3]
 LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
 63.
-
-(C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pplj.fd
+ (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pplj.fd
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
-[5]
-<figures/allgemein/SPIMode.png, id=121, 138.5175pt x 99.9735pt>
+Package babel Info: 'ngerman' activates 'ngerman' shorthands.
+(babel)             Reported on input line 74.
+
+[4]
+<figures/allgemein/SPIMode.png, id=108, 138.5175pt x 99.9735pt>
 File: figures/allgemein/SPIMode.png Graphic file (type png)
 <use figures/allgemein/SPIMode.png>
 Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 81.
 (pdftex.def)             Requested size: 318.66948pt x 230.02417pt.
- [6 <./figures/allgemein/SPIMode.png>]
+ [5 <./figures/allgemein/SPIMode.png>]
 Package microtype Info: Character `013' is missing
 (microtype)             in font `OT1/pplj/m/sc/10'.
 (microtype)             Ignoring protrusion settings for this character.
- [7]
-<figures/allgemein/State_maschin.png, id=142, 566.71725pt x 239.6955pt>
+
+Underfull \vbox (badness 5446) has occurred while \output is active []
+
+ [6]
+<figures/allgemein/State_maschin.png, id=133, 566.71725pt x 239.6955pt>
 File: figures/allgemein/State_maschin.png Graphic file (type png)
 <use figures/allgemein/State_maschin.png>
 Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
-e 150.
+e 146.
 (pdftex.def)             Requested size: 318.66948pt x 134.78815pt.
 
-Overfull \hbox (48.59116pt too wide) in paragraph at lines 155--158
-[]\OT1/pplj/m/n/12 (-20) F[]ur un-se-ren Ro-bo-ter-arm wur-den die Zust[]ande \
-OT1/cmtt/m/n/12 STATE[]INIT\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOM
-ING\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOMING[]OFFSET\OT1/pplj/m/n
-/12 (-20) ,
- []
-
-[8 <./figures/allgemein/State_maschin.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [9]
-[10] [11]
-chapter 4.
-) [12
+[7 <./figures/allgemein/State_maschin.png>] [8] [9] [10]
+chapter 3.
+) [11
 
 ]
 \openout2 = `content/hardware.aux'.
 
  (content/hardware.tex
-chapter 5.
+chapter 4.
 File: figures/allgemein/abcdxyz.png Graphic file (type png)
 <use figures/allgemein/abcdxyz.png>
 Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 (pdftex.def)             Requested size: 318.66948pt x 191.40587pt.
-) [13
+) [12
 
 
 
@@ -2261,11 +2250,11 @@ Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 \openout2 = `content/elektrisches.aux'.
 
  (content/elektrisches.tex
-chapter 6.
+chapter 5.
 
-LaTeX Warning: Citation 'ws2812' on page 14 undefined on input line 4.
+LaTeX Warning: Citation 'ws2812' on page 13 undefined on input line 4.
 
-) [14
+) [13
 
 
 
@@ -2328,7 +2317,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[15
+[14
 
 
 
@@ -2336,7 +2325,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [16
+(formal/Begleiterprotokoll.tex) [15
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2344,18 +2333,27 @@ chapter without number
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
+
+Package biblatex Warning: Please (re)run Biber on the file:
+(biblatex)                main
+(biblatex)                and rerun LaTeX afterwards.
+
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 80653 strings out of 467871
- 2028249 string characters out of 5418377
- 3530114 words of memory out of 5000000
- 107948 multiletter control sequences out of 15000+600000
- 684834 words of font info for 435 fonts, out of 8000000 for 9000
+ 80625 strings out of 467871
+ 2027977 string characters out of 5418377
+ 3522164 words of memory out of 5000000
+ 107943 multiletter control sequences out of 15000+600000
+ 684975 words of font info for 422 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
- 113i,20n,134p,11262b,2818s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 113i,20n,134p,11262b,2760s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmr10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
 onts/cm/cmss12.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/pu
@@ -2372,9 +2370,9 @@ Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><
 C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pf
 b><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8
 a.pfb>
-Output written on main.pdf (20 pages, 1749340 bytes).
+Output written on main.pdf (17 pages, 1747128 bytes).
 PDF statistics:
- 343 PDF objects out of 1000 (max. 8388607)
- 89 named destinations out of 1000 (max. 500000)
- 105633 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 326 PDF objects out of 1000 (max. 8388607)
+ 83 named destinations out of 1000 (max. 500000)
+ 105625 words of extra memory for PDF output out of 106986 (max. 10000000)
 
