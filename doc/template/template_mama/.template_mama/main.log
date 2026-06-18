@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  9 JUN 2026 12:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  17 JUN 2026 16:04
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1964,7 +1964,7 @@ Package biblatex Info: ... file 'main.bbl' found.
 
 Package biblatex Warning: The following entry could not be found
 (biblatex)                in the database:
-(biblatex)                byrd1995limited
+(biblatex)                ws2812
 (biblatex)                Please verify the spelling and rerun
 (biblatex)                LaTeX afterwards.
 
@@ -2088,33 +2088,34 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `cmss' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-) (content/Aufgabenstellung.tex) (content/abstract.tex
+) (content/Aufgabenstellung.tex) (content/abstract.tex)
+(content/abtract_englisch.tex) (content/danksagung.tex)
 LaTeX Font Info:    Trying to load font information for OT1+pplx on input line 
-3.
+331.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pplx.fd
 File: ot1pplx.fd 2004/09/06 font definitions for OT1/pplx.
 )
 LaTeX Font Info:    Trying to load font information for OML+zplm on input line 
-3.
+331.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 
-3.
+331.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 
-3.
+331.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 
-3.
+331.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
@@ -2133,7 +2134,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 (scrlayer-scrpage)                e.g., setting geometry's option
 (scrlayer-scrpage)                `head=20.2999pt'.
 (scrlayer-scrpage)                I'll also decrease \topmargin on input line 3
-.
+31.
 
 
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
@@ -2148,18 +2149,10 @@ Package scrlayer-scrpage Warning: \footheight to low.
 (scrlayer-scrpage)                e.g., using
 (scrlayer-scrpage)                  \setlength{\footheight}{20.2999pt}
 (scrlayer-scrpage)                in your preamble.
-(scrlayer-scrpage)                I'll also increase \footskip on input line 3.
-
+(scrlayer-scrpage)                I'll also increase \footskip on input line 33
+1.
 
 [2
-
-]
-chapter without number
-) (content/abtract_englisch.tex [3
-
-]
-chapter without number
-) (content/danksagung.tex) [4
 
 ]
 Package tocbasic Info: character protrusion at toc deactivated on input line 33
@@ -2168,16 +2161,15 @@ Package tocbasic Info: character protrusion at toc deactivated on input line 33
 \tf@toc=\write5
 \openout5 = `main.toc'.
 
- [5
+ [3
 
-] [6
+] [4
 
 
 ] (content/chapters.tex
 \openout2 = `content/einleitung.aux'.
 
-
-(content/einleitung.tex
+ (content/einleitung.tex
 chapter 1.
 [1
 
@@ -2192,13 +2184,13 @@ chapter 2.
  (content/software.tex
 chapter 3.
 
-Overfull \hbox (15.691pt too wide) in paragraph at lines 9--10
+Overfull \hbox (15.691pt too wide) in paragraph at lines 7--8
 []\OT1/pplj/m/n/12 (-20) Dieses Ka-pi-tel be-schreibt die Im-ple-men-tie-rung d
 er zen-tra-len Low-Level-Robotersteuerung,
  []
 
 
-Overfull \hbox (9.56352pt too wide) in paragraph at lines 14--15
+Overfull \hbox (9.56352pt too wide) in paragraph at lines 12--13
 \OT1/pplj/m/n/12 (-20) Bei der An-steue-rung ei-nes 6-Achs-Roboterarms f[]uhrt 
 die Zu-wei-sung von Mikrocontroller-
  []
@@ -2210,33 +2202,33 @@ die Zu-wei-sung von Mikrocontroller-
 
 ]
 Package babel Info: 'ngerman' activates 'ngerman' shorthands.
-(babel)             Reported on input line 56.
+(babel)             Reported on input line 54.
  [4]
 LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
-65.
+63.
 
 (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pplj.fd
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
 [5]
-<figures/allgemein/SPIMode.png, id=136, 138.5175pt x 99.9735pt>
+<figures/allgemein/SPIMode.png, id=121, 138.5175pt x 99.9735pt>
 File: figures/allgemein/SPIMode.png Graphic file (type png)
 <use figures/allgemein/SPIMode.png>
-Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 83.
+Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 81.
 (pdftex.def)             Requested size: 318.66948pt x 230.02417pt.
  [6 <./figures/allgemein/SPIMode.png>]
 Package microtype Info: Character `013' is missing
 (microtype)             in font `OT1/pplj/m/sc/10'.
 (microtype)             Ignoring protrusion settings for this character.
  [7]
-<figures/allgemein/State_maschin.png, id=154, 566.71725pt x 239.6955pt>
+<figures/allgemein/State_maschin.png, id=142, 566.71725pt x 239.6955pt>
 File: figures/allgemein/State_maschin.png Graphic file (type png)
 <use figures/allgemein/State_maschin.png>
 Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
-e 151.
+e 150.
 (pdftex.def)             Requested size: 318.66948pt x 134.78815pt.
 
-Overfull \hbox (48.59116pt too wide) in paragraph at lines 156--159
+Overfull \hbox (48.59116pt too wide) in paragraph at lines 155--158
 []\OT1/pplj/m/n/12 (-20) F[]ur un-se-ren Ro-bo-ter-arm wur-den die Zust[]ande \
 OT1/cmtt/m/n/12 STATE[]INIT\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOM
 ING\OT1/pplj/m/n/12 (-20) , \OT1/cmtt/m/n/12 STATE[]HOMING[]OFFSET\OT1/pplj/m/n
@@ -2249,24 +2241,9 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
  [9]
 [10] [11]
 chapter 4.
+) [12
 
-Overfull \hbox (3.45815pt too wide) in paragraph at lines 246--251
-\OT1/pplj/m/n/12 (-20) gun-gen star-rer K[]orper be-fasst, oh-ne da-bei die ver
--ur-sa-chen-den Kr[]afte zu ber[]ucksichtigen.
- []
-
-[12
-
-] [13]
-
-LaTeX Warning: Citation 'byrd1995limited' on page 14 undefined on input line 32
-4.
-
-)
-Underfull \vbox (badness 1571) has occurred while \output is active []
-
- [14]
-[15]
+]
 \openout2 = `content/hardware.aux'.
 
  (content/hardware.tex
@@ -2275,7 +2252,7 @@ File: figures/allgemein/abcdxyz.png Graphic file (type png)
 <use figures/allgemein/abcdxyz.png>
 Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 (pdftex.def)             Requested size: 318.66948pt x 191.40587pt.
-) [16
+) [13
 
 
 
@@ -2285,7 +2262,10 @@ Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 5.
 
  (content/elektrisches.tex
 chapter 6.
-) [17
+
+LaTeX Warning: Citation 'ws2812' on page 14 undefined on input line 4.
+
+) [14
 
 
 
@@ -2348,7 +2328,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[18
+[15
 
 
 
@@ -2356,7 +2336,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [19
+(formal/Begleiterprotokoll.tex) [16
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2367,39 +2347,34 @@ L3 programming layer <2025-12-24>
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
- )
-(\end occurred inside a group at level 1)
-
-### simple group (level 1) entered at line 4 ({)
-### bottom level 
+ ) 
 Here is how much of TeX's memory you used:
- 80733 strings out of 467871
- 2028778 string characters out of 5418377
- 3528963 words of memory out of 5000000
- 107964 multiletter control sequences out of 15000+600000
- 696983 words of font info for 484 fonts, out of 8000000 for 9000
+ 80653 strings out of 467871
+ 2028249 string characters out of 5418377
+ 3530114 words of memory out of 5000000
+ 107948 multiletter control sequences out of 15000+600000
+ 684834 words of font info for 435 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
- 113i,20n,134p,11262b,3091s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmr10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/typ
-e1/public/amsfonts/cm/cmss12.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/
-fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/matte/AppData/Local/Progr
-ams/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/matte/AppData/Lo
-cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/matte/A
-ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/User
-s/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplbj8a.pfb><C:/Us
-ers/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmbi.pfb>
-<C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmr
-.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/
-fplmri.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl
-/fplrc8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/f
-pl/fplrij8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/p
-alatino/uplb8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/ur
-w/palatino/uplr8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1
-/urw/palatino/uplri8a.pfb>
-Output written on main.pdf (25 pages, 1755728 bytes).
+ 113i,20n,134p,11262b,2818s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
+cmr10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
+onts/cm/cmss12.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmssbx10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/matte/AppData/Local/Programs/M
+iKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/matte/AppData/Local/P
+rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/Users/matte/AppDat
+a/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplbj8a.pfb><C:/Users/matte/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmr.pfb><C:/Users/matte
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmri.pfb><C:/Users
+/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplrc8a.pfb><C:/Use
+rs/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplrij8a.pfb><C:/
+Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><
+C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pf
+b><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8
+a.pfb>
+Output written on main.pdf (20 pages, 1749340 bytes).
 PDF statistics:
- 394 PDF objects out of 1000 (max. 8388607)
- 107 named destinations out of 1000 (max. 500000)
- 106689 words of extra memory for PDF output out of 106986 (max. 10000000)
+ 343 PDF objects out of 1000 (max. 8388607)
+ 89 named destinations out of 1000 (max. 500000)
+ 105633 words of extra memory for PDF output out of 106986 (max. 10000000)
 

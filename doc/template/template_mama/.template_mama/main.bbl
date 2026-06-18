@@ -19,9 +19,70 @@
 
 \refsection{0}
   \datalist[entry]{none/global//global/global/global}
-    \entry{ws2812b}{misc}{}{}
+    \entry{a2025_serial}{misc}{}{}
+      \list{organization}{1}{%
+        {Mikrocontroller.net}%
+      }
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labeltitlesource}{title}
+      \field{title}{Serial Peripheral Interface – Mikrocontroller.net}
+      \field{year}{2025}
+      \verb{urlraw}
+      \verb https://www.mikrocontroller.net/articles/Serial_Peripheral_Interface
+      \endverb
+      \verb{url}
+      \verb https://www.mikrocontroller.net/articles/Serial_Peripheral_Interface
+      \endverb
+    \endentry
+    \entry{power}{misc}{}{}
       \field{sortinit}{2}
       \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labeltitlesource}{title}
+      \field{title}{POWER DRIVER FOR STEPPER MOTORS INTEGRATED CIRCUITS TMC5160 / TMC5160A DATASHEET FEATURES AND BENEFITS 2-phase stepper motors from 1 to several 10A coil current Motion Controller with SixPoint™ ramp}
+      \verb{urlraw}
+      \verb https://www.analog.com/media/en/technical-documentation/data-sheets/TMC5160A_datasheet_rev1.17.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.analog.com/media/en/technical-documentation/data-sheets/TMC5160A_datasheet_rev1.17.pdf
+      \endverb
+    \endentry
+    \entry{a2026_statemachine}{misc}{}{}
+      \list{organization}{1}{%
+        {Mikrocontroller.net}%
+      }
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labeltitlesource}{title}
+      \field{title}{Statemachine – Mikrocontroller.net}
+      \field{urlday}{27}
+      \field{urlmonth}{5}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.mikrocontroller.net/articles/Statemachine
+      \endverb
+      \verb{url}
+      \verb https://www.mikrocontroller.net/articles/Statemachine
+      \endverb
+    \endentry
+    \entry{a2021_this}{misc}{}{}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labeltitlesource}{title}
+      \field{title}{STM32F446RE Datasheet}
+      \field{year}{2021}
+      \verb{urlraw}
+      \verb https://www.st.com/resource/en/datasheet/stm32f446mc.pdf
+      \endverb
+      \verb{url}
+      \verb https://www.st.com/resource/en/datasheet/stm32f446mc.pdf
+      \endverb
+    \endentry
+    \entry{ws2812b}{misc}{}{}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
       \field{labeltitlesource}{title}
       \field{title}{WS2812B Intelligent control LED integrated light source Features and Benefits}
       \verb{urlraw}
@@ -31,28 +92,8 @@
       \verb https://cdn-shop.adafruit.com/datasheets/WS2812B.pdf
       \endverb
     \endentry
-    \entry{ws2812}{misc}{}{}
-      \list{organization}{1}{%
-        {Mikrocontroller.net}%
-      }
-      \field{sortinit}{3}
-      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
-      \field{labeltitlesource}{title}
-      \field{title}{WS2812 Ansteuerung – Mikrocontroller.net}
-      \field{urlday}{10}
-      \field{urlmonth}{2}
-      \field{urlyear}{2025}
-      \field{year}{2025}
-      \field{urldateera}{ce}
-      \verb{urlraw}
-      \verb https://www.mikrocontroller.net/articles/WS2812_Ansteuerung?
-      \endverb
-      \verb{url}
-      \verb https://www.mikrocontroller.net/articles/WS2812_Ansteuerung?
-      \endverb
-    \endentry
   \enddatalist
-  \missing{byrd1995limited}
+  \missing{ws2812}
 \endrefsection
 \endinput
 

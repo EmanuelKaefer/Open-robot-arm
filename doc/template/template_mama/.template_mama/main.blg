@@ -1,22 +1,22 @@
 [0] Config.pm:328> INFO - This is Biber 2.21
-[0] Config.pm:331> INFO - Logfile is 'main.blg'
-[408] biber-MSWIN64:342> INFO - === 
-[537] Biber.pm:421> INFO - Reading 'main.bcf'
-[704] Biber.pm:1002> INFO - Found 3 citekeys in bib section 0
-[724] Biber.pm:4487> INFO - Processing section 0
-[750] Biber.pm:4678> INFO - Looking for bibtex file 'references-biber-Gas.bib' for section 0
-[817] bibtex.pm:1713> INFO - LaTeX decoding ...
-[843] bibtex.pm:1519> INFO - Found BibTeX data source 'references-biber-Gas.bib'
-[940] Biber.pm:4678> INFO - Looking for bibtex file 'references-biber-Käf.bib' for section 0
-[941] Biber.pm:4678> INFO - Looking for bibtex file 'references-biber-Dic.bib' for section 0
-[1016] bibtex.pm:1713> INFO - LaTeX decoding ...
-[1038] bibtex.pm:1519> INFO - Found BibTeX data source 'references-biber-Dic.bib'
-[1058] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[1059] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'variable = shifted' with 'variable = non-ignorable'
-[1059] Biber.pm:4307> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'de-DE'
-[1059] Biber.pm:4313> INFO - No sort tailoring available for locale 'de-DE'
-[1144] bbl.pm:676> INFO - Writing 'main.bbl' with encoding 'UTF-8'
-[1145] bbl.pm:779> INFO - Output to main.bbl
-[1145] Biber.pm:132> WARN - Data source 'references-biber-Käf.bib' is empty, ignoring
-[1145] Biber.pm:132> WARN - I didn't find a database entry for 'byrd1995limited' (section 0)
-[1145] Biber.pm:134> INFO - WARNINGS: 2
+[1] Config.pm:331> INFO - Logfile is 'main.blg'
+[294] biber-MSWIN64:342> INFO - === 
+[389] Biber.pm:421> INFO - Reading 'main.bcf'
+[757] Biber.pm:1002> INFO - Found 6 citekeys in bib section 0
+[807] Biber.pm:4487> INFO - Processing section 0
+[840] Biber.pm:4678> INFO - Looking for bibtex file 'references-biber-Gas.bib' for section 0
+[939] bibtex.pm:1713> INFO - LaTeX decoding ...
+[959] bibtex.pm:1519> INFO - Found BibTeX data source 'references-biber-Gas.bib'
+[1049] Biber.pm:4678> INFO - Looking for bibtex file 'references-biber-Käf.bib' for section 0
+[1050] Biber.pm:4678> INFO - Looking for bibtex file 'references-biber-Dic.bib' for section 0
+[1140] bibtex.pm:1713> INFO - LaTeX decoding ...
+[1148] bibtex.pm:1519> INFO - Found BibTeX data source 'references-biber-Dic.bib'
+[1172] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[1172] UCollate.pm:68> INFO - Overriding locale 'de-DE' defaults 'variable = shifted' with 'variable = non-ignorable'
+[1172] Biber.pm:4307> INFO - Sorting list 'none/global//global/global/global' of type 'entry' with template 'none' and locale 'de-DE'
+[1173] Biber.pm:4313> INFO - No sort tailoring available for locale 'de-DE'
+[1191] bbl.pm:676> INFO - Writing 'main.bbl' with encoding 'UTF-8'
+[1194] bbl.pm:779> INFO - Output to main.bbl
+[1195] Biber.pm:132> WARN - Data source 'references-biber-Käf.bib' is empty, ignoring
+[1195] Biber.pm:132> WARN - I didn't find a database entry for 'ws2812' (section 0)
+[1195] Biber.pm:134> INFO - WARNINGS: 2

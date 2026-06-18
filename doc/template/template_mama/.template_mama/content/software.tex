@@ -1,10 +1,8 @@
 % !TeX spellcheck = de_DE
 \chapter{Low Level Architektur und Steuerung}
 
-% --- START DES SOFTWARE-KAPITELS ---
-
 %\section{Low Level Architektur und Steuerung}
-%\label{sec:software}
+\label{sec:software}
 
 Dieses Kapitel beschreibt die Implementierung der zentralen Low-Level-Robotersteuerung, die auf einem Mikrocontroller läuft. Sie stellt das funktionale Bindeglied zwischen der mechanischen Konstruktion (siehe \ref{sec:hardware}) und der elektrischen Leistungselektronik (siehe \ref{sec:elektrisches}) dar. Die Firmware wurde in Bare-Metal-C für einen STM32F446-Mikrocontroller in der Entwicklungsumgebung STM32CubeIDE entwickelt. Ziel der Softwarearchitektur ist es, harte Echtzeitanforderungen für die synchrone Ansteuerung von sechs Schrittmotoren zu erfüllen und gleichzeitig eine hochgradig skalierbare Basis für zukünftige Pfadplanungen zu schaffen.
 
@@ -17,7 +15,7 @@ Durch diese Entkopplung von physikalischer Hardware und Steuerungslogik kann jed
 
 \subsection{Richtungssignale (DIR Pins)}
 \label{subsec:hal_DIR}
-Um die Richtung der Motoren zu bestimmen benötigt jeder Schrittmotortreiber einen DIR (Direction) Pin der entweder auf 1 um im Uhrzeigersinn zu drehen oder auf 0 um gegen der Uhrzeiger Sinn zu drehen. Um dies für alle 6 Motoren komfortabel und skalierbar zu lösen wurden Arrays implementiert. 
+Um die Richtung der Motoren zu bestimmen benötigt jeder Schrittmotortreiber einen DIR (Direction) Pin der entweder auf 1 um im Uhrzeigersinn zu drehen oder auf 0 um gegen den Uhrzeiger Sinn zu drehen. Um dies für alle 6 Motoren komfortabel und skalierbar zu lösen wurden Arrays implementiert. 
 
 \begin{lstlisting}[language=C, caption={Arrays für DIR Pins/Ports}, label={lst:ARRAY_DIR}]
 	GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
@@ -72,7 +70,7 @@ Dieses Anti-Pattern führt zu mehreren Problemen:
 \section{Initialisierung und SPI-Kommunikation der Motortreiber}
 \label{subsec:spi_init}
 \subsection{SPI Protokoll}
-Das Seriel Peripheral Interface (SPI) ist ein Serielles Hochgeschwindigkeit Bussystem das vorwiegend zur Kommunikation von Mikrocontrollern mit Peripheriegeräten auf Platinen dient. SPI ist full duplex fähig, das heißt das bei jedem Takt 1 Bit vom Master an den Slave und zurück gesendet wird. Es besteht aus 3 Leitungen MOSI (Master Out $\longrightarrow$ Slave In), MISO (Master In $\longleftarrow$ Slave Out) und SCK (Serial Clock). Dazu kommt eine CS (Chip Select) Leitung die vom Master zu jeden Slave einzeln gehen muss. Nur wenn diese CS Leitung LOW ist sendet/empfängt der Slave Daten. Die Kommunikation erfolgt meist so das 2 Übertragungen nötig sind. In der ersten Übertragung sendet der Master ein Kommando an den Slave danach, da der Slave aber noch nicht bereit für eine Sinnvolle Rückmeldung ist sendet er nur Datenmüll. In der 2 Übertragung sendet der Master einen beliebigen Datensatz an den Slave, dieser hat inzwischen zeit gehabt seine Antwort auf das Kommando des Masters bereitzustellen und sendet diese zum Master. Die Übertragungen sind jeweils synchron, heißt der Master und der Slave senden/empfangen synchron Daten.
+Das Seriel Peripheral Interface (SPI) ist ein Serielles Hochgeschwindigkeit Bussystem das vorwiegend zur Kommunikation von Mikrocontrollern mit Peripheriegeräten auf Platinen dient. SPI ist full duplex fähig, das heißt das bei jedem Takt 1 Bit vom Master an den Slave und zurück gesendet wird. Es besteht aus 3 Leitungen MOSI (Master Out $\longrightarrow$ Slave In), MISO (Master In $\longleftarrow$ Slave Out) und SCK (Serial Clock). Dazu kommt eine CS (Chip Select) Leitung die vom Master zu jeden Slave einzeln gehen muss. Nur wenn diese CS Leitung LOW ist sendet/empfängt der Slave Daten. Die Kommunikation erfolgt meist so das 2 Übertragungen nötig sind. In der ersten Übertragung sendet der Master ein Kommando an den Slave, da der Slave aber noch nicht bereit für eine Sinnvolle Rückmeldung ist sendet er nicht relevante Daten. In der 2 Übertragung sendet der Master einen beliebigen Datensatz an den Slave, dieser hat inzwischen Zeit gehabt seine Antwort auf das Kommando des Masters bereitzustellen und sendet diese zum Master. Die Übertragungen sind jeweils synchron.\cite{a2025_serial}%TODO SPI oft zitieren
 
 \subsubsection{SPI-Modis}
 \label{subsubsec:SPIMODE}
@@ -96,14 +94,15 @@ CPHA (Clock Phase):
 	\item 0: Daten werden bei steigender Taktflanke (=abh. von CPOL) eingelesen, bei fallender ausgegeben
 	\item 1: Daten werden bei fallender Taktflanke eingelesen, bei steigender ausgegeben
 \end{itemize}
-%TODO SPI oft zitieren
+
 
 \subsection{Initialisierung der Motortreiber}
-Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten SPI Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. Die TMC5160 erfordern den Betrieb in SPI Mode 3 (siehe \ref{fig:SPIMode})
-%TODO Ausführen wie SPI bei unseren Treibern funktionert
+Die verwendeten Schrittmotortreiber vom Typ TMC5160 in Kombination mit NEMA-17 Schrittmotoren erfordern eine initiale Konfiguration ihrer internen Register, um Parameter wie den Haltestrom, Run-Current und den Chopper-Modus festzulegen. Diese Kommunikation erfolgt über einen geteilten SPI Bus. Um die Treiber individuell adressieren zu können, wird vor jedem Datentransfer der spezifische Chip-Select (\texttt{CS}) Pin der Zielachse auf ein niedriges Potential (LOW) gezogen. Die TMC5160 erfordern den Betrieb in SPI Mode 3 (siehe \ref{fig:SPIMode})\cite{power}
+%TODO Datasheet von TMC zitieren
+
 
 Um Fehler direkt beim Initialisieren der Treiber zu erkennen, wurde eine Validierung eingebaut, ohne die der nächste Schritt nicht erreicht werden kann. Nach dem Schreiben der Konfigurationsdaten liest der Mikrocontroller das globale Statusregister (\texttt{GSTAT}) sowie aktuelle Treiberzustände zurück. Nur wenn das System valide Antworten (\texttt{GSTAT} = 0) detektiert, wird die Steuerung freigegeben. Störsignale oder fehlende Hardware-Verbindungen werden so unmittelbar beim Systemstart erkannt und führen zu einem sicheren Systemabbruch. 
-%TODO Datasheet von TMC zitieren
+
 
 Die gewählte Konfiguration der Motortreiber ist wie folgt:
 
@@ -133,8 +132,8 @@ Die gewählte Konfiguration der Motortreiber ist wie folgt:
 \section{Finite State Machine (Endlicher Zustandsautomat)}
 \label{subsec:fsm}
 
-Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein Selbstblockieren der Software zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht immer aus den folgenden Komponenten: 
-%TODO Zitieren von FSM
+Um die auf dem Mikrocontroller laufende Software übersichtlich zu gestalten und ein Selbstblockieren der Software zu verhindern, kommt eine Finite State Machine (FSM) zum Einsatz. Eine FSM ist ein mathematisches Modell für Systeme, die sich zu jedem Zeitpunkt in genau einem von mehreren Zuständen befinden. Eine FSM besteht immer aus den folgenden Komponenten: \cite{a2026_statemachine}
+
 
 \begin{itemize}
 	\item Zustände (States): Die verschiedenen Phasen des Systems.
@@ -188,7 +187,9 @@ Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kost
 \subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
 \label{subsubsec:interrupts}
 
-Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) wird aufgerufen. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.%TODO zitieren extis aus STM Datasheet
+Für die Erfassung der Endschalter kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. \texttt{EXTI}s sparen erheblichen Rechenaufwand, da der Prozessor nicht permanent den Pin abfragen muss (Polling). Sobald eine Flanke erkannt wird, wird ein Interrupt-Request ausgelöst, der das Hauptprogramm pausiert und eine spezifische Interrupt-Service-Routine (ISR) wird aufgerufen. Diese Funktion setzt ein Flag, um dem Hauptprogramm zu signalisieren, dass der Endschalter getroffen wurde, das zu fahrende Offset zu berechnen ist und die Fahrtrichtung umgekehrt werden muss.\cite{a2021_this}
+
+%TODO zitieren extis aus STM Datasheet
 
 Um das mehrfache Auslösen des Interrupts zu verhindern, das durch sogenanntes Bouncen bei mechanischen Schaltern auftreten kann, ist in der Interrupt-Funktion eine Software-Entprellung eingebettet, die nach einem registrierten Interrupt alle weiteren Signale für 30\,ms ignoriert. 
 
@@ -230,141 +231,144 @@ Mit den Konkreten eingesetzten Werten ergibt sich die Formel:
 	
 	Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit auf den Endschalter zu. Nach Auslösen des Interrupts berechnet das Programm den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und wechselt in den Zustand \texttt{STATE\_HOMING\_OFFSET}. Erst wenn die exakt berechnete Schrittzahl für den Offset über den Timer-Interrupt abgefahren wurde, gilt die Achse als referenziert. Der Index wird inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das System vollständig kalibriert ist und in den Betriebszustand \texttt{STATE\_READY} übergeht.
 	
-\section{Verbindung mir Raspberry Pi und normaler Betrieb}
-\label{sec:normalerBetrieb}
-	Im normalen Betrieb erhält der STM über UART Befehle von einem Raspberry pi 4b, der Raspberry sendet die Zielposition zu der sich der Endeffektor des Roboterarms bewegen soll in Radianten, also einen Array von 6 joint Winkeln und die Ausrichtung des Greifers. Außerdem noch eine Maximale Geschwindigkeit auf die die Motoren beschleunigen sollen
-\subsection{UART-Protokoll}
-	  
+%\section{Verbindung mir Raspberry Pi und normaler Betrieb}
+%\label{sec:normalerBetrieb}
+%	Im normalen Betrieb erhält der STM über UART Befehle von einem Raspberry pi 4b, der Raspberry sendet die Zielposition zu der sich der Endeffektor des Roboterarms bewegen soll in Radianten, also einen Array von 6 joint Winkeln und die Ausrichtung des Greifers. Außerdem noch eine Maximale Geschwindigkeit auf die die Motoren beschleunigen sollen
+%\subsection{UART-Protokoll}
+%	  
+
+
+\section{Ausblick}
+Die nächsten Schritte zur Weiterentwicklung der Low Level Logik ist die Änderung des Homingprozesses von Sequenziellem Homing mit Endschaltern auf dauerhafte Winkelerkennung mittels Encodern. Weiteres muss eine Kommunikationsbrüke zwischen dem Raspberry Pi der die High level berechnungen übernimmt und dem STM hergestellt werden. Der letzte Schritt zur funktionierenden Low level Logik ist die Implementierung eines Trapazoidal velocity Profils um flüssiges Beschleunigen/Bremsen zu gewährleisten.
 
 \chapter{High Level Software}
-Die High Level Logik Software auf dem Raspberry Pi dient um über eine GUI(Grafical User Interface) kartesische Koordinaten einzugeben zu dem ich der Endeffektor der Roboterarms bewegen soll. Diese x,y,z Koordinaten werden mithilfe von Inverser Kinematik mit der Python library IKpy zu 6 Jointwinkel in Radianten transformiert. Über die GUI kann man auch eine maximale Geschwindigkeit festlegen auf die die Motoren beschleunigen.
+\section{Ausblick}
+Die High Level Logik Software auf dem Raspberry Pi dient um über eine GUI(Grafical User Interface) kartesische Koordinaten einzugeben zu dem ich der Endeffektor der Roboterarms bewegen soll. Diese x,y,z Koordinaten werden mithilfe von Inverser Kinematik mit der Python library IKpy zu 6 Jointwinkel in Radianten transformiert. Über die GUI kann man auch eine maximale Geschwindigkeit festlegen auf die die Motoren beschleunigen. In diesem Bereich ist noch nicht viel passiert da die Low level Software bis jetzt die Hauptpriorität war.
 
-\section{Inverse Kinematik}
-
-\subsection{Grundlagen der Kinematik}
-
-Die Kinematik ist ein Teilgebiet der Mechanik, das sich mit der Beschreibung von Bewegungen 
-starrer Körper befasst, ohne dabei die verursachenden Kräfte zu berücksichtigen. Im Kontext 
-der Robotik wird zwischen zwei grundlegenden Problemstellungen unterschieden: der 
-\textit{Vorwärtskinematik} (engl. \textit{Forward Kinematics}) und der \textit{Inversen 
-	Kinematik} (engl. \textit{Inverse Kinematics}, kurz IK).
-
-Bei der \textbf{Vorwärtskinematik} werden aus gegebenen Gelenkwinkeln $\theta_1, \theta_2, 
-\ldots, \theta_n$ eines kinematischen Systems die resultierende Position und Orientierung 
-des Endeffektors im kartesischen Raum berechnet. Diese Transformation ist eindeutig und 
-lässt sich durch eine geschlossene mathematische Abbildung beschreiben:
-
-\begin{equation}
-	\mathbf{T} = f(\theta_1, \theta_2, \ldots, \theta_n)
-\end{equation}
-
-\noindent wobei $\mathbf{T} \in SE(3)$ die homogene Transformationsmatrix darstellt, die 
-sowohl die Rotation als auch die Translation des Endeffektors im Weltkoordinatensystem 
-kodiert.
-
-\subsection{Definition der Inversen Kinematik}
-
-Die \textbf{Inverse Kinematik} stellt das inverse Problem dar: Gegeben eine gewünschte 
-Position und Orientierung $\mathbf{T}^* \in SE(3)$ des Endeffektors, gesucht ist der 
-Vektor der Gelenkwinkel $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)^T$, der 
-diese Zielkonfiguration realisiert:
-
-\begin{equation}
-	\boldsymbol{\theta} = f^{-1}(\mathbf{T}^*)
-\end{equation}
-
-Im Gegensatz zur Vorwärtskinematik ist dieses Problem im Allgemeinen weder trivial noch 
-eindeutig lösbar. Abhängig von der Struktur des Roboters und der gewünschten Zielposition 
-können mehrere, unendlich viele oder keine Lösungen existieren.
-
-\subsection{Mathematische Herausforderungen}
-
-Die Inverse Kinematik ist mit einer Reihe grundlegender mathematischer Herausforderungen 
-verbunden:
-
-\begin{itemize}
-	\item \textbf{Nichtlinearität:} Die kinematischen Gleichungen beinhalten trigonometrische 
-	Funktionen, was das System nichtlinear und damit analytisch schwer lösbar macht.
-	
-	\item \textbf{Mehrdeutigkeit:} Ein und dieselbe Endeffektorposition kann durch 
-	unterschiedliche Gelenkkonfigurationen erreicht werden (z.\,B. Ellbogen oben vs. 
-	Ellbogen unten bei einem menschlichen Arm).
-	
-	\item \textbf{Redundanz:} Besitzt ein Roboterarm mehr Freiheitsgrade (DOF, 
-	\textit{Degrees of Freedom}) als zur Erfüllung der Aufgabe notwendig, spricht man von 
-	einem redundanten System. In diesem Fall existiert ein kontinuierlicher Lösungsraum.
-	
-	\item \textbf{Erreichbarkeit:} Nicht jede beliebige Pose im Raum liegt im 
-	Arbeitsraum (engl. \textit{Workspace}) des Roboters. Außerhalb des Arbeitsraums 
-	existiert keine Lösung.
-	
-	\item \textbf{Singularitäten:} Bestimmte Konfigurationen führen zu sogenannten 
-	kinematischen Singularitäten, in denen die Jacobi-Matrix ihren vollen Rang verliert 
-	und das System seine Manövrierfähigkeit in bestimmten Richtungen einbüßt.
-\end{itemize}
-
-\subsection{Lösungsverfahren der Inversen Kinematik}
-
-Die Inverse Kinematik lässt sich grundsätzlich durch verschiedene Ansätze lösen. Die
-Bibliothek IKpy, die in dieser Arbeit eingesetzt wird, verwendet ein
-\textbf{optimierungsbasiertes numerisches Verfahren}. Dabei wird die Inverse Kinematik
-als nichtlineares Minimierungsproblem formuliert: Gesucht ist derjenige
-Gelenkwinkelvektor $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)^T$, der den
-Fehler zwischen der tatsächlich erreichten Pose des Endeffektors
-$f(\boldsymbol{\theta})$ und der gewünschten Zielppose $\mathbf{T}^*$ minimiert:
-
-\begin{equation}
-	\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}}
-	\left\| f(\boldsymbol{\theta}) - \mathbf{T}^* \right\|^2
-\end{equation}
-
-\noindent Zur Lösung dieses Optimierungsproblems greift IKpy auf Algorithmen aus der
-Bibliothek \texttt{scipy.optimize} zurück, standardmäßig auf die Methode
-\textit{L-BFGS-B} (\textit{Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds})
-\cite{byrd1995limited}. Dabei handelt es sich um ein quasi-Newton-Verfahren, das speziell
-für hochdimensionale Probleme mit Variablenbeschränkungen entwickelt wurde. Es approximiert
-die Hesse-Matrix der Kostenfunktion durch eine kompakte Darstellung der vergangenen
-Gradienten, ohne diese vollständig zu berechnen oder zu speichern. Dies macht das
-Verfahren sowohl speicher- als auch recheneffizient.
-
-Der Gradient der Kostenfunktion wird dabei numerisch über finite Differenzen approximiert.
-Für jeden Iterationsschritt $k$ wird der Gelenkwinkelvektor in Richtung des negativen
-Gradienten aktualisiert, bis ein Konvergenzkriterium erfüllt ist:
-
-\begin{equation}
-	\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k -
-	\alpha_k \, \mathbf{H}_k^{-1} \, \nabla_{\boldsymbol{\theta}} \,
-	\mathcal{L}(\boldsymbol{\theta}_k)
-\end{equation}
-
-\noindent wobei $\alpha_k$ die Schrittweite, $\mathbf{H}_k^{-1}$ die approximierte
-inverse Hesse-Matrix und $\mathcal{L}(\boldsymbol{\theta})$ die Kostenfunktion bezeichnet.
-Gelenklimitierungen $\theta_i \in [\theta_i^{\min},\, \theta_i^{\max}]$ werden direkt
-als Variablenbeschränkungen (Bounds) in das Optimierungsproblem integriert und vom
-L-BFGS-B-Algorithmus nativ berücksichtigt, ohne dass Strafterme erforderlich sind.
-%TODO irgendwie Zitieren und AI auch Zitieren
-\subsection{Implementierung mit IKpy}
-
-
-\subsubsection{Universal Robot Description File - URDF}
-% -------------------------------------------------------------------
-% HIER: Beschreibung der Bibliothek IKpy und deines eigenen Programms
-% -------------------------------------------------------------------
-
-\subsection{Zusammenfassung}
-
-Die Inverse Kinematik stellt eine zentrale Aufgabe in der Robotik dar, die die Brücke 
-zwischen der aufgabenorientierten Beschreibung von Bewegungen im kartesischen Raum und 
-der gelenk\-winkel\-basierten Steuerung realer Robotersysteme schlägt. Die Wahl des 
-geeigneten Lösungsverfahrens hängt dabei stets von der konkreten Roboterstruktur, den 
-Echtzeitanforderungen sowie den gewünschten Nebenbedingungen ab.
-
-
-\section{Hypertext Markup Language-HTML}
-
-
-\section{FastAPI}
-
+%\section{Inverse Kinematik}
+%
+%\subsection{Grundlagen der Kinematik}
+%
+%Die Kinematik ist ein Teilgebiet der Mechanik, das sich mit der Beschreibung von Bewegungen 
+%starrer Körper befasst, ohne dabei die verursachenden Kräfte zu berücksichtigen. Im Kontext 
+%der Robotik wird zwischen zwei grundlegenden Problemstellungen unterschieden: der 
+%\textit{Vorwärtskinematik} (engl. \textit{Forward Kinematics}) und der \textit{Inversen 
+%	Kinematik} (engl. \textit{Inverse Kinematics}, kurz IK).
+%
+%Bei der \textbf{Vorwärtskinematik} werden aus gegebenen Gelenkwinkeln $\theta_1, \theta_2, 
+%\ldots, \theta_n$ eines kinematischen Systems die resultierende Position und Orientierung 
+%des Endeffektors im kartesischen Raum berechnet. Diese Transformation ist eindeutig und 
+%lässt sich durch eine geschlossene mathematische Abbildung beschreiben:
+%
+%\begin{equation}
+%	\mathbf{T} = f(\theta_1, \theta_2, \ldots, \theta_n)
+%\end{equation}
+%
+%\noindent wobei $\mathbf{T} \in SE(3)$ die homogene Transformationsmatrix darstellt, die 
+%sowohl die Rotation als auch die Translation des Endeffektors im Weltkoordinatensystem 
+%kodiert.
+%
+%\subsection{Definition der Inversen Kinematik}
+%
+%Die \textbf{Inverse Kinematik} stellt das inverse Problem dar: Gegeben eine gewünschte 
+%Position und Orientierung $\mathbf{T}^* \in SE(3)$ des Endeffektors, gesucht ist der 
+%Vektor der Gelenkwinkel $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)^T$, der 
+%diese Zielkonfiguration realisiert:
+%
+%\begin{equation}
+%	\boldsymbol{\theta} = f^{-1}(\mathbf{T}^*)
+%\end{equation}
+%
+%Im Gegensatz zur Vorwärtskinematik ist dieses Problem im Allgemeinen weder trivial noch 
+%eindeutig lösbar. Abhängig von der Struktur des Roboters und der gewünschten Zielposition 
+%können mehrere, unendlich viele oder keine Lösungen existieren.
+%
+%\subsection{Mathematische Herausforderungen}
+%
+%Die Inverse Kinematik ist mit einer Reihe grundlegender mathematischer Herausforderungen 
+%verbunden:
+%
+%\begin{itemize}
+%	\item \textbf{Nichtlinearität:} Die kinematischen Gleichungen beinhalten trigonometrische 
+%	Funktionen, was das System nichtlinear und damit analytisch schwer lösbar macht.
+%	
+%	\item \textbf{Mehrdeutigkeit:} Ein und dieselbe Endeffektorposition kann durch 
+%	unterschiedliche Gelenkkonfigurationen erreicht werden (z.\,B. Ellbogen oben vs. 
+%	Ellbogen unten bei einem menschlichen Arm).
+%	
+%	\item \textbf{Redundanz:} Besitzt ein Roboterarm mehr Freiheitsgrade (DOF, 
+%	\textit{Degrees of Freedom}) als zur Erfüllung der Aufgabe notwendig, spricht man von 
+%	einem redundanten System. In diesem Fall existiert ein kontinuierlicher Lösungsraum.
+%	
+%	\item \textbf{Erreichbarkeit:} Nicht jede beliebige Pose im Raum liegt im 
+%	Arbeitsraum (engl. \textit{Workspace}) des Roboters. Außerhalb des Arbeitsraums 
+%	existiert keine Lösung.
+%	
+%	\item \textbf{Singularitäten:} Bestimmte Konfigurationen führen zu sogenannten 
+%	kinematischen Singularitäten, in denen die Jacobi-Matrix ihren vollen Rang verliert 
+%	und das System seine Manövrierfähigkeit in bestimmten Richtungen einbüßt.
+%\end{itemize}
+%
+%\subsection{Lösungsverfahren der Inversen Kinematik}
+%
+%Die Inverse Kinematik lässt sich grundsätzlich durch verschiedene Ansätze lösen. Die
+%Bibliothek IKpy, die in dieser Arbeit eingesetzt wird, verwendet ein
+%\textbf{optimierungsbasiertes numerisches Verfahren}. Dabei wird die Inverse Kinematik
+%als nichtlineares Minimierungsproblem formuliert: Gesucht ist derjenige
+%Gelenkwinkelvektor $\boldsymbol{\theta} = (\theta_1, \ldots, \theta_n)^T$, der den
+%Fehler zwischen der tatsächlich erreichten Pose des Endeffektors
+%$f(\boldsymbol{\theta})$ und der gewünschten Zielppose $\mathbf{T}^*$ minimiert:
+%
+%\begin{equation}
+%	\boldsymbol{\theta}^* = \arg\min_{\boldsymbol{\theta}}
+%	\left\| f(\boldsymbol{\theta}) - \mathbf{T}^* \right\|^2
+%\end{equation}
+%
+%\noindent Zur Lösung dieses Optimierungsproblems greift IKpy auf Algorithmen aus der
+%Bibliothek \texttt{scipy.optimize} zurück, standardmäßig auf die Methode
+%\textit{L-BFGS-B} (\textit{Limited-memory Broyden–Fletcher–Goldfarb–Shanno with Bounds})
+%\cite{byrd1995limited}. Dabei handelt es sich um ein quasi-Newton-Verfahren, das speziell
+%für hochdimensionale Probleme mit Variablenbeschränkungen entwickelt wurde. Es approximiert
+%die Hesse-Matrix der Kostenfunktion durch eine kompakte Darstellung der vergangenen
+%Gradienten, ohne diese vollständig zu berechnen oder zu speichern. Dies macht das
+%Verfahren sowohl speicher- als auch recheneffizient.
+%
+%Der Gradient der Kostenfunktion wird dabei numerisch über finite Differenzen approximiert.
+%Für jeden Iterationsschritt $k$ wird der Gelenkwinkelvektor in Richtung des negativen
+%Gradienten aktualisiert, bis ein Konvergenzkriterium erfüllt ist:
+%
+%\begin{equation}
+%	\boldsymbol{\theta}_{k+1} = \boldsymbol{\theta}_k -
+%	\alpha_k \, \mathbf{H}_k^{-1} \, \nabla_{\boldsymbol{\theta}} \,
+%	\mathcal{L}(\boldsymbol{\theta}_k)
+%\end{equation}
+%
+%\noindent wobei $\alpha_k$ die Schrittweite, $\mathbf{H}_k^{-1}$ die approximierte
+%inverse Hesse-Matrix und $\mathcal{L}(\boldsymbol{\theta})$ die Kostenfunktion bezeichnet.
+%Gelenklimitierungen $\theta_i \in [\theta_i^{\min},\, \theta_i^{\max}]$ werden direkt
+%als Variablenbeschränkungen (Bounds) in das Optimierungsproblem integriert und vom
+%L-BFGS-B-Algorithmus nativ berücksichtigt, ohne dass Strafterme erforderlich sind.
+%%TODO irgendwie Zitieren und AI auch Zitieren
+%\subsection{Implementierung mit IKpy}
+%Die Python Bibliothek IKpy übernimmt mit einem Simplen code die Berechnung der Inversen Kinematik. Das spart den Zeitaufwand die Inverse Kinematik von Grund auf selbst zu programmieren. Dabei bezieht sie sich für die Propationendes Roboters auf die aus dem 3d CAD Model extrahierte URDF. 
+%
+%\subsubsection{Universal Robot Description File - URDF}
+%
+%
+%\subsection{Zusammenfassung}
+%
+%Die Inverse Kinematik stellt eine zentrale Aufgabe in der Robotik dar, die die Brücke 
+%zwischen der aufgabenorientierten Beschreibung von Bewegungen im kartesischen Raum und 
+%der gelenk\-winkel\-basierten Steuerung realer Robotersysteme schlägt. Die Wahl des 
+%geeigneten Lösungsverfahrens hängt dabei stets von der konkreten Roboterstruktur, den 
+%Echtzeitanforderungen sowie den gewünschten Nebenbedingungen ab.
+%
+%
+%\section{Hypertext Markup Language-HTML}
+%
+%
+%\section{FastAPI}
+%
 
 
 
