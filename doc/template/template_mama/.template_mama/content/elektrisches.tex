@@ -33,7 +33,7 @@ Um die harten Echtzeitanforderungen bei der synchronen Generierung der Schrittfr
 
 \subsection{Programmierschnittstelle (SWD) und USB-C-Interface}
 Das Flashen und Debuggen der Firmware erfolgt über ein standardisiertes Serial-Wire-Debug-Interface (SWD) via Stecker \texttt{J2} (\texttt{SWDIO}, \texttt{SWCLK}). Ergänzend wurde ein USB-C-Anschluss (\texttt{J1}) als USB-2.0-Full-Speed-Schnittstelle integriert. Um eine korrekte Erkennung an modernen USB-C-Host-Anschlüssen (z.\,B. PCs) zu gewährleisten, sind die Configuration-Channel-Leitungen (\texttt{CC1}, \texttt{CC2}) mit zwei Pull-Down-Widerständen gegen Masse gezogen. Ein Pull-Up-Widerstand an der \texttt{D+}-Leitung sorgt für die korrekte USB-Enumeration.
-\cite{power}
+
 
 \section{Schnittstellen und Bus-Topologie}
 \label{subsec:schnittstellen}
@@ -45,12 +45,12 @@ Die Kommunikation mit dem Raspberry Pi erfolgt über eine direkt angebundene UAR
 Da sich alle sechs TMC5160-Treiber denselben SPI-Bus teilen (MOSI, MISO, SCK), muss jede Achse über eine eigene Chip-Select-Leitung (\texttt{CS}) exklusiv angesprochen werden.
 
 \subsection{STEP/DIR-Leitungen und Signalintegrität}
-Neben SPI benötigt jeder Treiber eine dedizierte \texttt{STEP}- und \texttt{DIR}-Leitung zur Vorgabe von Geschwindigkeit und Drehrichtung. Da diese Signale im harten Schaltbetrieb (MHz-Bereich) arbeiten, werden im Layout optionale Vorwiderstände zur Dämpfung von Signalüberschwingen eingeplant.
+Neben SPI benötigt jeder Treiber eine dedizierte \texttt{STEP}- und \texttt{DIR}-Leitung zur Vorgabe von Geschwindigkeit und Drehrichtung. Da diese Signale im harten Schaltbetrieb (MHz-Bereich) arbeiten, werden im Layout optionale Vorwiderstände zur Dämpfung von Signalüberschwingen eingeplant.\cite{power}
 
 \section{Spannungsversorgung und Power-Management}
 \label{subsec:power}
 
-Aufgrund der hohen Eingangsspannung von $24\,\text{V}$ und den unterschiedlichen Lastanforderungen der Systemkomponenten ist der Einsatz hocheffizienter DC/DC-Abwärtswandler (Buck Converter) zwingend erforderlich. Ein linearer Spannungsregler würde bei dieser Spannungsdifferenz eine unzulässige Verlustleistung $P_{\text{loss}} = (V_{\text{in}} - V_{\text{out}}) \cdot I$ in Form von Wärme erzeugen. Das System nutzt eine kaskadierte und parallele Schaltregler-Topologie, um vier getrennte Spannungsebenen bereitzustellen:\cite{kirasich_new}
+Aufgrund der hohen Eingangsspannung von $24\,\text{V}$ und den unterschiedlichen Lastanforderungen der Systemkomponenten ist der Einsatz von DC/DC-Abwärtswandler (Buck Converter) erforderlich. Ein linearer Spannungsregler würde bei dieser Spannungsdifferenz eine unzulässige Verlustleistung $P_{\text{loss}} = (V_{\text{in}} - V_{\text{out}}) \cdot I$ in Form von Wärme erzeugen. Das System nutzt eine kaskadierte und parallele Schaltregler-Topologie, um vier getrennte Spannungsebenen bereitzustellen:\cite{kirasich_new}
 
 \begin{itemize}
 	\item \textbf{24\,V Hauptversorgung:} Direkte Speisung der TMC5160-Leistungsstufen über den Terminal-Block \texttt{J2}.
@@ -71,7 +71,7 @@ Da Schrittmotortreiber steile Stromflanken erzeugen, wurden auf dem Testboard ge
 \begin{itemize}
 	\item \textbf{Lokale Dekopplung:} Jeder Treiber verfügt über eine direkte Pufferung aus einem $100\,\mu\text{F}$ Elektrolytkondensator (transiente Spitzenströme) und einem $100\,\text{nF}$ Keramikkondensator (hochfrequente Störungen) unmittelbar am Pin \texttt{VM}.
 	\item \textbf{Überspannungsschutz:} Am 24\,V-Eingang (\texttt{J2}) ist eine Suppressordiode (TVS-Diode, \texttt{D1}) platziert, welche die Gegen-EMK der Motoren beim abrupten Bremsen absorbiert.
-	\item \textbf{Massive Stromschienen:} Die Versorgungsleitung für die Motorspannung wurde auf der Oberseite als großflächige, niederohmige Kupcherschiene ausgeführt, um Spannungsabfälle zu minimieren.
+	\item \textbf{Massive Stromschienen:} Die Versorgungsleitung für die Motorspannung wurde auf der Oberseite als großflächige, niederohmige Kupferschiene ausgeführt, um Spannungsabfälle zu minimieren.
 \end{itemize}
 
 \section{Schaltplan und PCB-Layout (Integriertes Design)}

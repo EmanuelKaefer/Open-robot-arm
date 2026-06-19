@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  19 JUN 2026 08:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  19 JUN 2026 10:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2056,11 +2056,12 @@ Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 ))
 (formal/title.tex
-<figures/allgemein/abcdxyz.png, id=6, 763.05075pt x 458.31226pt>
-File: figures/allgemein/abcdxyz.png Graphic file (type png)
-<use figures/allgemein/abcdxyz.png>
-Package pdftex.def Info: figures/allgemein/abcdxyz.png  used on input line 22.
-(pdftex.def)             Requested size: 256.0748pt x 153.81003pt.
+<figures/allgemein/abcdxyza .png, id=6, 1336.995pt x 803.0pt>
+File: figures/allgemein/abcdxyza .png Graphic file (type png)
+<use figures/allgemein/abcdxyza .png>
+Package pdftex.def Info: figures/allgemein/abcdxyza .png  used on input line 22
+.
+(pdftex.def)             Requested size: 256.0748pt x 153.79686pt.
 <figures/allgemein/HTBLA_Saalfelden_Logo.png, id=8, 110.21175pt x 109.6095pt>
 File: figures/allgemein/HTBLA_Saalfelden_Logo.png Graphic file (type png)
 <use figures/allgemein/HTBLA_Saalfelden_Logo.png>
@@ -2073,8 +2074,8 @@ nput line 41.
 
 {C:/Users/matte/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/matt
 e/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc} <./figures/allgeme
-in/abcdxyz.png> <./figures/allgemein/HTBLA_Saalfelden_Logo.png>]) (formal/diplo
-marbeit-doku.tex) (content/vorwort.tex)
+in/abcdxyza .png> <./figures/allgemein/HTBLA_Saalfelden_Logo.png>]) (formal/dip
+lomarbeit-doku.tex) (content/vorwort.tex)
 (content/Aufgabenstellung.tex) (content/abstract.tex)
 (content/abtract_englisch.tex) (content/danksagung.tex)
 Package microtype Info: Loading generic protrusion settings for font family
@@ -2163,6 +2164,9 @@ chapter 1.
 
 
 ]
+Package babel Info: 'ngerman' activates 'ngerman' shorthands.
+(babel)             Reported on input line 5.
+ [2]
 \openout2 = `content/software.aux'.
 
  (content/software.tex
@@ -2179,7 +2183,7 @@ Overfull \hbox (9.56352pt too wide) in paragraph at lines 12--13
 die Zu-wei-sung von Mikrocontroller-
  []
 
-[2
+[3
 
 
 
@@ -2190,39 +2194,36 @@ Overfull \hbox (50.46272pt too wide) in paragraph at lines 28--29
 wird mit-tels Hardware-Pulsweitenmodulation
  []
 
-[3]
+[4]
 LaTeX Font Info:    Trying to load font information for TS1+pplj on input line 
 63.
  (C:\Users\matte\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1pplj.fd
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
-Package babel Info: 'ngerman' activates 'ngerman' shorthands.
-(babel)             Reported on input line 74.
-
-[4]
-<figures/allgemein/SPIMode.png, id=129, 138.5175pt x 99.9735pt>
+[5]
+<figures/allgemein/SPIMode.png, id=136, 138.5175pt x 99.9735pt>
 File: figures/allgemein/SPIMode.png Graphic file (type png)
 <use figures/allgemein/SPIMode.png>
 Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 81.
 (pdftex.def)             Requested size: 318.66948pt x 230.02417pt.
- [5 <./figures/allgemein/SPIMode.png>]
+ [6 <./figures/allgemein/SPIMode.png>]
 Package microtype Info: Character `013' is missing
 (microtype)             in font `OT1/pplj/m/sc/10'.
 (microtype)             Ignoring protrusion settings for this character.
 
 Underfull \vbox (badness 5446) has occurred while \output is active []
 
- [6]
-<figures/allgemein/State_maschin.png, id=154, 566.71725pt x 239.6955pt>
+ [7]
+<figures/allgemein/State_maschin.png, id=160, 566.71725pt x 239.6955pt>
 File: figures/allgemein/State_maschin.png Graphic file (type png)
 <use figures/allgemein/State_maschin.png>
 Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
 e 146.
 (pdftex.def)             Requested size: 318.66948pt x 134.78815pt.
 
-[7 <./figures/allgemein/State_maschin.png>] [8] [9] [10]
+[8 <./figures/allgemein/State_maschin.png>] [9] [10] [11]
 chapter 3.
-) [11
+) [12
 
 ]
 \openout2 = `content/hardware.aux'.
@@ -2234,12 +2235,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 30--31
 []|\OT1/pplj/m/n/12 (+20) Strukturrahmen, Be-fes-ti-
  []
 
-[12
+[13
 
 
 
 
-] [13]
+] [14]
 Overfull \hbox (7.83719pt too wide) in paragraph at lines 80--81
 []\OT1/pplj/m/n/12 (-20) F[]ur ei-ne sta-ti-sche Worst-Case-Absch[]atzung neh-m
 en wir ei-ne Ge-samt-mas-se von $\OML/zplm/m/it/12 m[] \OT1/zplm/m/n/12 =
@@ -2248,13 +2249,13 @@ en wir ei-ne Ge-samt-mas-se von $\OML/zplm/m/it/12 m[] \OT1/zplm/m/n/12 =
 
 Underfull \vbox (badness 6978) has occurred while \output is active []
 
- [14])
-[15]
+ [15])
+[16]
 \openout2 = `content/elektrisches.aux'.
 
  (content/elektrisches.tex
 chapter 5.
-<figures/allgemein/blockschaltbild.png, id=218, 928.21782pt x 216.81pt>
+<figures/allgemein/blockschaltbild.png, id=224, 928.21782pt x 216.81pt>
 File: figures/allgemein/blockschaltbild.png Graphic file (type png)
 <use figures/allgemein/blockschaltbild.png>
 Package pdftex.def Info: figures/allgemein/blockschaltbild.png  used on input l
@@ -2263,25 +2264,19 @@ ine 13.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [16
+ [17
 
 
 
 
- <./figures/allgemein/blockschaltbild.png>] [17]
-Overfull \hbox (19.83601pt too wide) in paragraph at lines 53--54
-\OT1/pplj/m/n/12 (-20) de-run-gen der Sys-tem-kom-po-nen-ten ist der Ein-satz h
-och-ef-fi-zi-en-ter DC/DC-Abw[]artswandler
- []
-
-[18]
+ <./figures/allgemein/blockschaltbild.png>] [18] [19]
 Overfull \hbox (23.72392pt too wide) in paragraph at lines 57--58
 []\OT1/pplj/b/n/12 (-20) 12V L[]ufter-Versorgung: \OT1/pplj/m/n/12 (-20) Er-zeu
 gt aus den $\OT1/pplx/m/n/12 24 []$ []\OT1/pplj/m/n/12 (-20) uber einen syn-chr
 o-nen Abw[]artswandler
  []
 
-[19]) [20] [21]) (content/Fazit-und-Ausblick.tex)
+[20]) [21] [22]) (content/Fazit-und-Ausblick.tex)
 
 Package geometry Warning: `a4paper': not available in `\newgeometry'; skipped.
 
@@ -2339,7 +2334,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[22
+[23
 
 
 
@@ -2347,7 +2342,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [23
+(formal/Begleiterprotokoll.tex) [24
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2360,10 +2355,10 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 80805 strings out of 467871
- 2030727 string characters out of 5418377
- 3522813 words of memory out of 5000000
- 107994 multiletter control sequences out of 15000+600000
+ 80810 strings out of 467871
+ 2030806 string characters out of 5418377
+ 3522932 words of memory out of 5000000
+ 107997 multiletter control sequences out of 15000+600000
  693255 words of font info for 492 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
  113i,20n,134p,11262b,2760s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -2384,9 +2379,9 @@ b><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplrij8a
 b8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/
 uplr8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palati
 no/uplri8a.pfb>
-Output written on main.pdf (25 pages, 1835281 bytes).
+Output written on main.pdf (26 pages, 1667969 bytes).
 PDF statistics:
- 461 PDF objects out of 1000 (max. 8388607)
- 124 named destinations out of 1000 (max. 500000)
- 111854 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 470 PDF objects out of 1000 (max. 8388607)
+ 126 named destinations out of 1000 (max. 500000)
+ 111862 words of extra memory for PDF output out of 128383 (max. 10000000)
 
