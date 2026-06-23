@@ -107,6 +107,8 @@ void Error_Handler(void);
 #define TMC4_STEP_GPIO_Port GPIOB
 #define TMC6_STEP_Pin GPIO_PIN_8
 #define TMC6_STEP_GPIO_Port GPIOB
+#define Srevo_sig_Pin GPIO_PIN_9
+#define Srevo_sig_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 
