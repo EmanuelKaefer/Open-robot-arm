@@ -4093,10 +4093,6 @@
 		(uuid "8688e74a-5d6b-413e-b38d-9a280253d5e3")
 	)
 	(no_connect
-		(at 147.32 119.38)
-		(uuid "8c6623f1-311f-41da-b0bb-7be1e8ffc80c")
-	)
-	(no_connect
 		(at 106.68 124.46)
 		(uuid "a708c499-8780-4368-9b48-e30c7c217817")
 	)
@@ -5577,6 +5573,28 @@
 		(uuid "ac465eb5-2aba-4a0a-b3df-91330a53ef65")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 165.4241 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "PB5_MOSI_SPI1"
+		(shape input)
+		(at 147.32 119.38 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c28a7d77-3c26-4e6d-b9d2-df5558c50d41")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 164.8799 119.38 0)
 			(effects
 				(font
 					(size 1.27 1.27)
