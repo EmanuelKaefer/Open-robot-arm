@@ -2,7 +2,7 @@
 	(version 20250114)
 	(generator "eeschema")
 	(generator_version "9.0")
-	(uuid "3821bba1-d28e-401e-b66e-7f151b32d39c")
+	(uuid "2ceec933-3f24-4a7b-bae0-52a505d5c8ec")
 	(paper "A4")
 	(lib_symbols
 		(symbol "Connector:Conn_01x03_Pin"
@@ -468,7 +468,7 @@
 		)
 		(uuid "268e326e-ee5d-475e-925a-8142959b0e05")
 	)
-	(global_label "Servo_PWM_PB9"
+	(global_label "PB9_PWM_Servo"
 		(shape input)
 		(at 119.38 93.98 180)
 		(fields_autoplaced yes)
@@ -478,7 +478,7 @@
 			)
 			(justify right)
 		)
-		(uuid "2d96dd77-0e21-4b87-a95b-2871722720af")
+		(uuid "9892d08a-02af-4e52-957b-c7f9a389534e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 101.3364 93.98 0)
 			(effects
