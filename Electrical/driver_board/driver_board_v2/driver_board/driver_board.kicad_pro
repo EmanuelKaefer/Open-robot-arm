@@ -617,6 +617,10 @@
     [
       "1d053789-bb06-47b5-b093-e7b74b4d3277",
       "Peripherals"
+    ],
+    [
+      "0f2edaf0-864d-4f2a-a0d0-ce96f74fd0f2",
+      "Gripper"
     ]
   ],
   "text_variables": {}

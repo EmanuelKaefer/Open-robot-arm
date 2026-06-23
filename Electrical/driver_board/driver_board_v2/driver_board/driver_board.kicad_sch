@@ -6,6 +6,48 @@
 	(paper "A4")
 	(lib_symbols)
 	(sheet
+		(at 177.8 68.58)
+		(size 43.18 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "0f2edaf0-864d-4f2a-a0d0-ce96f74fd0f2")
+		(property "Sheetname" "Gripper"
+			(at 177.8 67.8684 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Gripper.kicad_sch"
+			(at 177.8 89.4846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "driver_board"
+				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215"
+					(page "6")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 60.96 101.6)
 		(size 43.18 20.32)
 		(exclude_from_sim no)
