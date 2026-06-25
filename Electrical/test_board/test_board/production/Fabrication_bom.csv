@@ -1,0 +1,9 @@
+﻿Designator,Footprint,Quantity,Value,LCSC Part #
+"C1, C2, C3, C7, C8, C9",CP_Radial_D8.0mm_P2.50mm,6,100nF,
+"C10, C11, C12, C4, C5, C6",CP_Radial_D8.0mm_P2.50mm,6,100uF,
+D1,D_DO-201AD_P15.24mm_Horizontal,1,D_TVS,
+"DRV_1, DRV_2, DRV_3, DRV_4, DRV_5, DRV_6",TMC5160T_Pro_V1.0_Breakout,6,TMC5160T_V1.0,
+"J1, J10_2, J12, J14, J6_2, J6, J8",PinHeader_1x03_P2.54mm_Vertical,7,Conn_01x03_Pin,
+"J10, J11, J3, J4, J5, J9",JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical,6,Conn_01x04_Socket,
+J2,"TerminalBlock_Phoenix_MKDS-1,5-4-5.08_1x04_P5.08mm_Horizontal",1,Screw_Terminal_01x04,
+"R1, R10, R11, R12, R2, R3, R4, R5, R6, R7, R8, R9",R_Axial_DIN0207_L6.3mm_D2.5mm_P10.16mm_Horizontal,12,0Ohm,
