@@ -1,5 +1,45 @@
 import ikpy.chain
 import numpy as np
+import json
+import websockets
+import asyncio
+
+# the URL of the server we comunikate with
+SERVER_URL = "ws://localhost:8000/ws/data"
+
+async def listen_for_coordinates(websocket):
+    """Hoert auf X/Y/Z-Werte, die vom Dashboard kommen."""
+    async for raw_message in websocket:
+        data = json.loads(raw_message)
+        if data["key"] in ("x", "y", "z"):
+            print(f"[Koordinate empfangen] {data['key']} = {data['value']} mm")
+    
+
+
+async def send_status_updates(websocket):
+    """Simuliert Statusmeldungen einer Maschine."""
+ 
+    # 1. Erst eine Referenzfahrt (Homing) simulieren
+    await websocket.send(json.dumps({"key": "status", "value": "Homing"}))
+    await websocket.send(json.dumps({"key": "homing", "value": False}))
+    await websocket.send(json.dumps({"key": "error", "value": False}))
+    await asyncio.sleep(3)
+ 
+    await websocket.send(json.dumps({"key": "homing", "value": True}))
+    await websocket.send(json.dumps({"key": "status", "value": "Idle"}))
+
+async def main():
+    async with websockets.connect(SERVER_URL) as websocket:
+        print(f"Verbunden mit {SERVER_URL}")
+        await asyncio.gather(
+            listen_for_coordinates(websocket),
+            send_status_updates(websocket),
+        )
+ 
+ 
+if __name__ == "__main__":
+    asyncio.run(main())
+ 
 
 # ── Chain laden ──────────────────────────────────────────────────────
 chain = ikpy.chain.Chain.from_urdf_file(

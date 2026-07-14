@@ -251,7 +251,7 @@ int main(void)
                   uint8_t all_drivers_ok = 1;
 
                   // Hier wird 'ax' deklariert! Die Schleife läuft von 1 bis kleiner 2 , 2 mit 6 auswechseln für alle achsen
-                  for (uint8_t ax = 1; ax < 6; ax++) {
+                  for (uint8_t ax = 1; ax < 2; ax++) {
                       printf("Konfiguriere Achse %d... ", ax);
 
                       TMC_WriteReg(ax, 0x01, 0x00000007);
@@ -292,10 +292,10 @@ int main(void)
           // Phase 1: Fahre Richtung Endschalter
           if (!started) {
               started = 1;
-              printf("Starte Homing fuer Achse %d...\r\n", ax);
+              //printf("Starte Homing fuer Achse %d...\r\n", ax);
               // Richtung Schalter
               HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
-              Step_SetFreqHz(ax, 1000);
+              Step_SetFreqHz(ax, 5000);
               Step_Start(ax);
           }
           // Phase 2: Endschalter wurde getroffen
@@ -313,7 +313,7 @@ int main(void)
 
                   HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_RESET);
                   HAL_Delay(5); // Kurze Setup-Time für DIR Pin geben!
-                  Step_SetFreqHz(ax, 1000);
+                  Step_SetFreqHz(ax, 5000);
                   Step_Start_Exact(ax, steps_to_move);
                   printf("Fahre offset\r\n");
                   currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt

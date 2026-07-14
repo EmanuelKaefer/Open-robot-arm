@@ -227,6 +227,6 @@ void EXTI15_10_IRQHandler(void)
 //interrupt request handler for line 2
 void EXTI2_IRQHandler(void)
 {
-    HAL_GPIO_EXTI_IRQHandler(LimitSwitch_base_Pin);
+    HAL_GPIO_EXTI_IRQHandler(LimitSwitch_2_Pin);
 }
 /* USER CODE END 1 */
