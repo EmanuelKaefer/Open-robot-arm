@@ -70,7 +70,7 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 //adc value array
-uint32_t value_adc[6];
+//uint32_t value_adc[6];
 // Arrays for counting steps for all 6 axes
 
 #define PI 3.14159265359f //PI
@@ -120,61 +120,92 @@ GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_
 uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 
 // Status-Variables
-uint8_t current_homingaxis = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+uint8_t ax = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+
+//Generall config Registers(Kap. 6.1 in Datasheet)
+#define GCONF 0x00
+#define GSTAT 0x01
+#define IOIN  0x04
+
+//Velocity Dependent Driver Feature Control Register Set(Kap. 6.2 in Datasheet)
+#define IHOLD_IRUN 0x10
+#define CHOPCONF 0x6C
 
 
 
+//Ramp Generator Register (Kap. 6.3 in Datasheet)
+#define RAMPMODE   0x20
+#define XACTUAL    0x21
+#define VACTUAL	   0x22
+#define VSTART     0x23
+#define A1         0x24
+#define V1         0x25
+#define AMAX       0x26
+#define VMAX       0x27
+#define DMAX       0x28
+#define D1         0x2A
+#define VSTOP      0x2B
+#define XTARGET    0x2D
+#define RAMP_STAT  0x35
+
+typedef struct {
+	uint32_t vstart;
+	uint32_t a1;
+	uint32_t v1;
+	uint32_t amax;
+	uint32_t vmax;
+	uint32_t dmax;
+	uint32_t d1;
+	uint32_t vstop;
+	uint32_t xtarget;
+
+} TMC_RampConfig;
+
+TMC_RampConfig RampConfig;
 // Constants for state machine
 typedef enum {
     STATE_INIT,
+	STATE_CONFIGURE_RAMP,
+	STATE_MOVE_TEST,
+	STATE_WAIT_TARGET,
     STATE_HOMING,
-    STATE_HOMING_OFFSET, // NEU: Zustand für Offset-Fahrt
     STATE_READY,
     STATE_ERROR
 } SystemState;
 
 SystemState currentState = STATE_INIT;
 
-
-//Stop/Start/Speed for driver dynamically
-static void Step_Start(uint8_t ax)
-{
-    //set holding current back to normal
-    TMC_WriteReg(ax, 0x10, 0x00061008);
-    HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
+//function to configure ramp
+void SETRAMP(TMC_RampConfig *PTMC_RampConfig){
+	PTMC_RampConfig->vstart=0;
+	PTMC_RampConfig->a1=0x000003E8;//1000
+	PTMC_RampConfig->v1=0x0000C350;//50000
+	PTMC_RampConfig->amax=0x000003E8;//1000
+	PTMC_RampConfig->vmax=0x00030D40;//200000
+	PTMC_RampConfig->dmax=0x000001F4;//500
+	PTMC_RampConfig->d1=0x000001F4;//500
+	PTMC_RampConfig->vstop=0x0000000A;//10
+	PTMC_RampConfig->xtarget=0x00030D40;//200000
 }
 
-static void Step_Stop(uint8_t ax)
-{
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    HAL_TIM_PWM_Stop(htim, AXIS_CHANNELS[ax]);
-    HAL_TIM_Base_Stop_IT(htim);
-
-    // MOE force disable funktioniert nur bei Advanced Timern (TIM1, TIM8)
-    if (htim->Instance == TIM1 || htim->Instance == TIM8) {
-        __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(htim);
-    }
+//function to start
+void SETXTARGET(uint8_t ax, TMC_RampConfig *PTMC_RampConfig){
+    TMC_WriteReg(ax, XTARGET, RampConfig.xtarget);
+    printf("XTARGET: 0x%08lx\r\n", TMC_ReadReg(ax, XTARGET));
 }
 
-static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
-{
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    uint32_t channel = AXIS_CHANNELS[ax];
-
-    if (freq_hz == 0) {
-        __HAL_TIM_SET_COMPARE(htim, channel, 0); // keine Pulse
-        return;
-    }
-
-    const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
-    uint32_t arr = (timer_tick_hz / freq_hz) - 1;
-
-    if (arr < 2) arr = 2;
-    if (arr > 0xFFFF) arr = 0xFFFF;
-
-    __HAL_TIM_SET_AUTORELOAD(htim, arr);
-    __HAL_TIM_SET_COMPARE(htim, channel, (arr + 1) / 2); // 50% duty
+//function to chek if there
+uint8_t POSREACHED(uint8_t ax){
+	uint32_t rampstat=TMC_ReadReg(ax, RAMP_STAT);
+	if ((rampstat & (1<<9))!=0){
+		return 1;
+	}else {
+		return 0;
+	}
 }
+
+
+
 
 /* USER CODE END 0 */
 
@@ -222,7 +253,7 @@ int main(void)
   MX_TIM11_Init();
   /* USER CODE BEGIN 2 */
   //start ADC DMY
-  HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,6);
+  //HAL_ADC_Start_DMA(&hadc1,(uint32_t*)&value_adc,6);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -235,64 +266,117 @@ int main(void)
     switch (currentState)
     {
       case STATE_INIT:
-        HAL_Delay(500); //Boot-Delay für die TMC Treiber!
+        HAL_Delay(500);
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
 
-                  uint8_t all_drivers_ok = 1;
+        TMC_WriteReg(ax, GCONF, 0x00000010);
+        printf("GCONF: 0x%08lx\r\n", TMC_ReadReg(ax, GCONF));
 
-                  // Hier wird 'ax' deklariert! Die Schleife läuft von 1 bis kleiner 2 , 2 mit 6 auswechseln für alle achsen
-                  for (uint8_t ax = 1; ax < 6; ax++) {
-                      printf("Konfiguriere Achse %d... ", ax);
+        TMC_WriteReg(ax, GSTAT, 0x00000007);
+        printf("GSTAT: 0x%08lx\r\n", TMC_ReadReg(ax, GSTAT));
 
-                      TMC_WriteReg(ax, 0x01, 0x00000007);
-                      HAL_Delay(10);
+        TMC_WriteReg(ax, IHOLD_IRUN, 0x000015EF);
+        printf("IHOLD_IRUN: 0x%08lx\r\n", TMC_ReadReg(ax, IHOLD_IRUN));
 
-                      TMC_WriteReg(ax, 0x00, 0x00000004);
-                      TMC_WriteReg(ax, 0x10, 0x00061008);
-                      TMC_WriteReg(ax, 0x6C, 0x14010053);
-                      TMC_WriteReg(ax, 0x70, 0xC10D0024);
-                      HAL_Delay(10);
+        TMC_WriteReg(ax, CHOPCONF, 0x100C0403);
+        printf("CHOPCONF: 0x%08lx\r\n", TMC_ReadReg(ax, CHOPCONF));
 
-                      uint32_t gstat = TMC_ReadReg(ax, 0x01);
-                      uint32_t drvstatus = TMC_ReadReg(ax, 0x6F);
-                      uint32_t cs_actual = (drvstatus >> 16) & 0x1F;
+        //IOIN Register to chek things(See Datasheet)
+        uint32_t reg = TMC_ReadReg(ax, IOIN);
+        printf("0b");
+        for (int i=31; i >=0 ; i--) {
+        	printf("%lu", (reg>>i)&1);
+		}
+        printf("\r\n");
 
-                      if (gstat == 0 && cs_actual > 0) {
-                          printf("OK! (CS actual: %lu)\r\n", cs_actual);
-                      } else {
-                          printf("FEHLER! (GSTAT: 0x%08lX)\r\n", gstat);
-                          all_drivers_ok = 0;
-                      }
-                  }
+        TMC_WriteReg(ax, XACTUAL, 0);
+        printf("CHOPCONF: 0x%08lx\r\n", TMC_ReadReg(ax, CHOPCONF));
 
-                  if (all_drivers_ok) {
-                      printf("  >>> Treiber erfolgreich initialisiert! <<<\r\n");
-                      currentState = STATE_HOMING;
-                  } else {
-                      printf("  >>> INITIALISIERUNG ABGEBROCHEN - Verdrahtung prüfen! <<<\r\n");
-                      currentState = STATE_ERROR;
-                  }
+        if (TMC_ReadReg(ax, GSTAT) != 0x00000000) {
+        	printf("GCONF not ok: 0x%08lx\r\n", TMC_ReadReg(ax, GSTAT));
+        	currentState=STATE_ERROR;
+		} else{
+			printf("GSTAT ok, going into STATE_CONFIGURE_RAMP\r\n");
+			currentState=STATE_CONFIGURE_RAMP;
+		}
+        break;
 
-                  break;
 
-       // break;
+      case STATE_CONFIGURE_RAMP:
+    	  SETRAMP(&RampConfig);
+
+          TMC_WriteReg(ax, VSTART, RampConfig.vstart);
+          printf("VSTART: 0x%08lx\r\n", TMC_ReadReg(ax, VSTART));
+
+          TMC_WriteReg(ax, A1, RampConfig.a1);
+          printf("A1: 0x%08lx\r\n", TMC_ReadReg(ax, A1));
+
+          TMC_WriteReg(ax, V1, RampConfig.v1);
+          printf("V1: 0x%08lx\r\n", TMC_ReadReg(ax, V1));
+
+          TMC_WriteReg(ax, AMAX, RampConfig.amax);
+          printf("AMAX: 0x%08lx\r\n", TMC_ReadReg(ax, AMAX));
+
+          TMC_WriteReg(ax, VMAX, RampConfig.vmax);
+          printf("VMAX: 0x%08lx\r\n", TMC_ReadReg(ax, VMAX));
+
+          TMC_WriteReg(ax, DMAX, RampConfig.dmax);
+          printf("DMAX: 0x%08lx\r\n", TMC_ReadReg(ax, DMAX));
+
+          TMC_WriteReg(ax, D1, RampConfig.d1);
+          printf("D1: 0x%08lx\r\n", TMC_ReadReg(ax, D1));
+
+          TMC_WriteReg(ax, VSTOP, RampConfig.vstop);
+          printf("VSTART: 0x%08lx\r\n", TMC_ReadReg(ax, VSTOP));
+
+          TMC_WriteReg(ax, RAMPMODE, 0x00);
+          printf("RAMPMODE: 0x%08lx\r\n", TMC_ReadReg(ax, RAMPMODE));
+
+          currentState=STATE_MOVE_TEST;
+          break;
+
+
+      case STATE_MOVE_TEST:
+    	  SETXTARGET(ax, &RampConfig);
+
+    	  printf("RAMPSTAT: 0x%08lx\r\n", TMC_ReadReg(ax, RAMP_STAT));
+    	  printf("XACTUAL: 0x%08lx\r\n", TMC_ReadReg(ax, XACTUAL));
+    	  printf("VACTUAL: 0x%08lx\r\n", TMC_ReadReg(ax, VACTUAL));
+
+    	  currentState=STATE_WAIT_TARGET;
+          break;
+
+
+      case STATE_WAIT_TARGET:
+
+    	  printf("RAMPSTAT: 0x%08lx\r\n", TMC_ReadReg(ax, RAMP_STAT));
+    	  printf("XACTUAL: 0x%08lx\r\n", TMC_ReadReg(ax, XACTUAL));
+    	  printf("VACTUAL: 0x%08lx\r\n", TMC_ReadReg(ax, VACTUAL));
+          printf("GSTAT: 0x%08lx\r\n", TMC_ReadReg(ax, GSTAT));
+
+    	  uint8_t posreached= POSREACHED(ax);
+
+    	  if (posreached==1){
+
+    		  currentState=STATE_HOMING;
+    	  }
+
+    	  break;
 
       case STATE_HOMING:
-          for (int i=0; i<=6; i++){
-        	  printf("%lu\n", value_adc[i]);
-          }
-          break;
-
-      	  case STATE_HOMING_OFFSET:
+    	  printf("In STATE HOMING\r\n");
+    	  currentState=STATE_READY;
 
           break;
+
+
 
       case STATE_READY:
-          printf("State Ready erreicht\n"); // Auskommentiert, damit es nicht spammt
+         // printf("State Ready erreicht\n");
           break;
 
       case STATE_ERROR:
-    	  printf("BAD");
+    	 // printf("BAD");
           break;
 
     }
