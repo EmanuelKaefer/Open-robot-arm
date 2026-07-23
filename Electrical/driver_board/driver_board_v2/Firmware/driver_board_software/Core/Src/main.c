@@ -51,7 +51,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-SPI_HandleTypeDef hspi1;
+SPI_HandleTypeDef hspi2;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -80,7 +80,6 @@ volatile uint32_t step_counter[6] = {0};
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_SPI1_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART3_UART_Init(void);
@@ -90,6 +89,7 @@ static void MX_TIM4_Init(void);
 static void MX_TIM5_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
+static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
 // Deklaration der TMC Funktion, falls nicht über Header verfügbar
 //extern void TMC_WriteReg(uint8_t addr, uint32_t value);
@@ -105,56 +105,56 @@ uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CH
 
 // Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
 //-0.3470f
-float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 0.3363f, -1.0126f, -0.0202f, 2.1291f aber stimmt nicht deshalb herausgemessen
+//float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 0.3363f, -1.0126f, -0.0202f, 2.1291f aber stimmt nicht deshalb herausgemessen
 //Limitangles from solidworks
-float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
+//float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
 
 //array for homing pins
 GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
-uint16_t      DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
+uint16_t DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 
 // Status-Variables
-volatile uint8_t stoprequest[6] = {0};
-volatile uint8_t is_moving_offset[6] = {0};
-uint8_t current_homingaxis = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+uint8_t ax = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+uint8_t stat=1;
+volatile uint32_t debug_counter = 0;
 
-
+//registers for TMC
+#define GSTAT 0x01
+#define GCONF 0x00
+#define IOIN 0x04
+#define IHOLDIRUN 0x10	//write only, returns 0x0 when read
+#define CHOPCONF 0X6C
 
 // Constants for state machine
 typedef enum {
     STATE_INIT,
     STATE_HOMING,
-    STATE_HOMING_OFFSET, // NEU: Zustand für Offset-Fahrt
+    STATE_HOMING_OFFSET,
     STATE_READY,
+	STATE_MOVING,
     STATE_ERROR
 } SystemState;
 
 SystemState currentState = STATE_INIT;
 
-static void Step_Start_Exact(uint8_t ax, uint32_t steps)//fährt die exakten schritte von endschalter zu home position
-{
-    if (steps == 0) return;
+//variables for ramp profile
+typedef struct {
+	float    current_freq;   // Hz, aktuelle Schrittfrequenz
+	float    vmax;           // Hz, Zielgeschwindigkeit dieser Achse für diesen Move
+	float    accel;          // Hz pro Sekunde
+    float    pos;             // Schritte, als float für Sub-Schritt-Genauigkeit in der Integration
+    float    target;          // Schritte, Ziel
+    uint8_t  direction;
+    uint8_t  active;
+} AxisRamp;
 
-    step_counter[ax] = 0;
-    target_steps[ax] = steps;
-    is_moving_offset[ax] = 1;
-
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    uint32_t channel = AXIS_CHANNELS[ax];
-
-    // Interrupt-Flag löschen
-    __HAL_TIM_CLEAR_IT(htim, TIM_IT_UPDATE);
-
-    // Timer Base Interrupt UND PWM starten
-    HAL_TIM_Base_Start_IT(htim);
-    HAL_TIM_PWM_Start(htim, channel);
-}
+AxisRamp axisRamp[6];
+//war exacte fahrt von Limitswitch zu 0 position
 
 //Stop/Start/Speed for driver dynamically
 static void Step_Start(uint8_t ax)
 {
-    //set holding current back to normal
-    TMC_WriteReg(ax, 0x10, 0x00061008);
+
     HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
 }
 
@@ -164,7 +164,7 @@ static void Step_Stop(uint8_t ax)
     HAL_TIM_PWM_Stop(htim, AXIS_CHANNELS[ax]);
     HAL_TIM_Base_Stop_IT(htim);
 
-    // MOE force disable funktioniert nur bei Advanced Timern (TIM1, TIM8)
+    // MOE force disable nur bei Advanced Timern
     if (htim->Instance == TIM1 || htim->Instance == TIM8) {
         __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(htim);
     }
@@ -188,6 +188,63 @@ static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
 
     __HAL_TIM_SET_AUTORELOAD(htim, arr);
     __HAL_TIM_SET_COMPARE(htim, channel, (arr + 1) / 2); // 50% duty
+}
+
+void UpdateAllRamps(float dt, uint8_t min_freq)
+{
+	debug_counter ++;
+    for (uint8_t ax = 1; ax < 2; ax++) {
+        if (!axisRamp[ax].active) continue;
+
+        float remaining = axisRamp[ax].target - axisRamp[ax].pos;
+        float dir_sign = (remaining >= 0) ? 1.0f : -1.0f;
+        float remaining_abs = fabsf(remaining);
+
+        // calculate breaking distance
+        float decel_dist = (axisRamp[ax].current_freq * axisRamp[ax].current_freq)
+                            / (2.0f * axisRamp[ax].accel);
+
+        //calculating if decceleration or acceleration is needed
+        if (remaining_abs <= decel_dist) {
+            axisRamp[ax].current_freq -= axisRamp[ax].accel * dt;
+        } else if (axisRamp[ax].current_freq < axisRamp[ax].vmax) {
+            axisRamp[ax].current_freq += axisRamp[ax].accel * dt;
+        }
+
+        if (axisRamp[ax].current_freq < min_freq){
+        	axisRamp[ax].current_freq = min_freq;
+        }
+        if (axisRamp[ax].current_freq > axisRamp[ax].vmax){
+        	axisRamp[ax].current_freq = axisRamp[ax].vmax;
+        }
+
+        // Position update
+        axisRamp[ax].pos += dir_sign * axisRamp[ax].current_freq * dt;
+
+        //target reached
+        if (remaining_abs < 1.0f) {
+            Step_Stop(ax);
+            axisRamp[ax].active = 0;
+            continue;
+        }
+        //set a new frequency everytime for every axis
+        Step_SetFreqHz(ax, (uint32_t)axisRamp[ax].current_freq);
+    }
+}
+
+void StartMove(uint8_t ax, float target_steps, float vmax, float accel)
+{
+	printf("IN STARTMOVE\r\n");
+    axisRamp[ax].pos = 0.0f;
+    axisRamp[ax].target = target_steps;
+    axisRamp[ax].vmax = vmax;
+    axisRamp[ax].accel = accel;
+    axisRamp[ax].current_freq = 50.0f;
+    axisRamp[ax].active = 1;
+
+    HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
+
+    Step_Start(ax);
 }
 
 /* USER CODE END 0 */
@@ -221,7 +278,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI1_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_USART3_UART_Init();
@@ -231,8 +287,11 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM8_Init();
   MX_TIM10_Init();
+  MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
 
+  //start TIM5 in interrupt mode
+  HAL_TIM_Base_Start_IT(&htim5);	//goofy ahh das ma des selber mochn muas lowk so 3std debugen bis i do draufkemma bi
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -248,113 +307,57 @@ int main(void)
         HAL_Delay(500); //Boot-Delay für die TMC Treiber!
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
 
-                  uint8_t all_drivers_ok = 1;
+        for (uint8_t ax = 1; ax < 2; ax++) {
+			printf("axis %d\r\n", ax );
+        	TMC_WriteReg(ax, GSTAT, 0x00000007);
+        	printf("GSTAT of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
 
-                  // Hier wird 'ax' deklariert! Die Schleife läuft von 1 bis kleiner 2 , 2 mit 6 auswechseln für alle achsen
-                  for (uint8_t ax = 1; ax < 2; ax++) {
-                      printf("Konfiguriere Achse %d... ", ax);
+        	TMC_WriteReg(ax, GCONF, 0x00000005);
+        	printf("GCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GCONF));
 
-                      TMC_WriteReg(ax, 0x01, 0x00000007);
-                      HAL_Delay(10);
+        	TMC_WriteReg(ax, IHOLDIRUN, 0x0008100A);
 
-                      TMC_WriteReg(ax, 0x00, 0x00000004);
-                      TMC_WriteReg(ax, 0x10, 0x00061008);
-                      TMC_WriteReg(ax, 0x6C, 0x14010053);
-                      TMC_WriteReg(ax, 0x70, 0xC10D0024);
-                      HAL_Delay(10);
+        	TMC_WriteReg(ax, CHOPCONF, 0x100C0403);
+        	printf("CHOPCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, CHOPCONF));
 
-                      uint32_t gstat = TMC_ReadReg(ax, 0x01);
-                      uint32_t drvstatus = TMC_ReadReg(ax, 0x6F);
-                      uint32_t cs_actual = (drvstatus >> 16) & 0x1F;
+        	if (TMC_ReadReg(ax, GSTAT)==0x0) {
+        		printf("GSTAT of %d ok, going into ready\r\n",ax);
+        		currentState=STATE_READY;
+        	}else {
+        		printf("GSTAT of %d not ok:((: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
+        		currentState=STATE_ERROR;
+        	}
+        }
 
-                      if (gstat == 0 && cs_actual > 0) {
-                          printf("OK! (CS actual: %lu)\r\n", cs_actual);
-                      } else {
-                          printf("FEHLER! (GSTAT: 0x%08lX)\r\n", gstat);
-                          all_drivers_ok = 0;
-                      }
-                  }
 
-                  if (all_drivers_ok) {
-                      printf("  >>> Treiber erfolgreich initialisiert! <<<\r\n");
-                      currentState = STATE_HOMING;
-                  } else {
-                      printf("  >>> INITIALISIERUNG ABGEBROCHEN - Verdrahtung prüfen! <<<\r\n");
-                      currentState = STATE_ERROR;
-                  }
-                  break;
         break;
 
       case STATE_HOMING:
-          uint8_t started = 0;
-          uint8_t ax = current_homingaxis;
+          //uint8_t started = 0;
+          //uint8_t ax = current_homingaxis;
 
-          // Phase 1: Fahre Richtung Endschalter
-          if (!started) {
-              started = 1;
-              //printf("Starte Homing fuer Achse %d...\r\n", ax);
-              // Richtung Schalter
-              HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
-              Step_SetFreqHz(ax, 5000);
-              Step_Start(ax);
-          }
-          // Phase 2: Endschalter wurde getroffen
-          else if (stoprequest[ax]) {
-        	  printf("Stoprequest erhalten");
-              stoprequest[ax] = 0;
 
-              // Schalter getroffen! Brauchen wir ein Offset?
-              float delta_rad = limit_rad[ax] - home_rad[ax];
-              if (delta_rad < 0) delta_rad = -delta_rad;
-
-              if (delta_rad > 0.001f) {
-                  // Achse BRAUCHT Offset
-                  uint32_t steps_to_move = (uint32_t)((delta_rad / (2.0f * PI)) * MOTOR_STEPS * MICROSTEPS * GEAR_RATIO);
-
-                  HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_RESET);
-                  HAL_Delay(5); // Kurze Setup-Time für DIR Pin geben!
-                  Step_SetFreqHz(ax, 5000);
-                  Step_Start_Exact(ax, steps_to_move);
-                  printf("Fahre offset\r\n");
-                  currentState = STATE_HOMING_OFFSET; // Warten auf Offset-Fahrt
-              }
-              else {
-                  // Achse dreht endlos, BRAUCHT KEIN Offset
-                  current_homingaxis++;
-                  started = 0; // Reset für die nächste Achse
-
-                  if (current_homingaxis >= 6) {
-                      printf("Homing komplett abgeschlossen!\r\n");
-                      currentState = STATE_READY;
-                  }
-              }
-          }
           break;
 
       case STATE_HOMING_OFFSET:
-          // Warten, bis der Timer-Callback der aktuellen Achse fertig ist
-          if (is_moving_offset[current_homingaxis] == 0) {
-              // Offset-Fahrt abgeschlossen!
-              current_homingaxis++; // Nächste Achse an die Reihe lassen
-              	 printf("State homing offset \r\n");
-              // Start-Flag im STATE_HOMING muss wieder freigegeben werden.
 
-          if (current_homingaxis >= 6) {
-              printf("Homing komplett abgeschlossen!\r\n");
-              currentState = STATE_READY;
-           } else{
-        	   started = 0;
-        	   currentState = STATE_HOMING;
-           }
-          }
           break;
 
       case STATE_READY:
-          printf("State Ready erreicht\n"); // Auskommentiert, damit es nicht spammt
+
+    	  StartMove(ax, 150000.0f, 20000.0f, 5000.0f);//ax, targetsteps, vmax, accel
+
+    	  currentState=STATE_MOVING;
           break;
 
+      case STATE_MOVING:
+    	  printf("MOVING\r\n");
+
+    	  currentState=STATE_HOMING_OFFSET;
+	  	  break;
       case STATE_ERROR:
     	  printf("BAD");
+    	  currentState=STATE_HOMING_OFFSET;
           break;
 
     }
@@ -404,40 +407,40 @@ void SystemClock_Config(void)
 }
 
 /**
-  * @brief SPI1 Initialization Function
+  * @brief SPI2 Initialization Function
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
+static void MX_SPI2_Init(void)
 {
 
-  /* USER CODE BEGIN SPI1_Init 0 */
+  /* USER CODE BEGIN SPI2_Init 0 */
 
-  /* USER CODE END SPI1_Init 0 */
+  /* USER CODE END SPI2_Init 0 */
 
-  /* USER CODE BEGIN SPI1_Init 1 */
+  /* USER CODE BEGIN SPI2_Init 1 */
 
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
-  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 10;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
+  /* USER CODE END SPI2_Init 1 */
+  /* SPI2 parameter configuration*/
+  hspi2.Instance = SPI2;
+  hspi2.Init.Mode = SPI_MODE_MASTER;
+  hspi2.Init.Direction = SPI_DIRECTION_2LINES;
+  hspi2.Init.DataSize = SPI_DATASIZE_8BIT;
+  hspi2.Init.CLKPolarity = SPI_POLARITY_HIGH;
+  hspi2.Init.CLKPhase = SPI_PHASE_2EDGE;
+  hspi2.Init.NSS = SPI_NSS_SOFT;
+  hspi2.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+  hspi2.Init.FirstBit = SPI_FIRSTBIT_MSB;
+  hspi2.Init.TIMode = SPI_TIMODE_DISABLE;
+  hspi2.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  hspi2.Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(&hspi2) != HAL_OK)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN SPI1_Init 2 */
+  /* USER CODE BEGIN SPI2_Init 2 */
 
-  /* USER CODE END SPI1_Init 2 */
+  /* USER CODE END SPI2_Init 2 */
 
 }
 
@@ -941,7 +944,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, TMC1_CS_Pin|TMC2_CS_Pin|TMC3_CS_Pin|TMC5_CS_Pin
@@ -983,30 +985,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LimitSwitch_3_Pin LimitSwitch_4_Pin LimitSwitch_5_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_3_Pin|LimitSwitch_4_Pin|LimitSwitch_5_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
   /*Configure GPIO pins : TMC5_DIR_Pin TMC4_DIR_Pin */
   GPIO_InitStruct.Pin = TMC5_DIR_Pin|TMC4_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : LimitSwitch_1_Pin LimitSwitch_2_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_1_Pin|LimitSwitch_2_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pin : LimitSwitch_6_Pin */
-  GPIO_InitStruct.Pin = LimitSwitch_6_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(LimitSwitch_6_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
@@ -1024,43 +1008,15 @@ static void MX_GPIO_Init(void)
 // Callback für Timer Interrupts aller Achsen (zählt Schritte)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-    // Durch alle 6 Achsen loopen, um den auslösenden Timer zu finden
-    for (uint8_t ax = 0; ax < 6; ax++) {
-        if (htim->Instance == AXIS_TIMERS[ax]->Instance) {
-
-            // Wenn diese Achse gerade in Offset-Fahrt ist
-            if (is_moving_offset[ax]) {
-                step_counter[ax]++;
-
-                if (step_counter[ax] >= target_steps[ax]) {
-                    // Ziel erreicht! Motor stoppen
-                    Step_Stop(ax);
-                    is_moving_offset[ax] = 0;
-                }
-            }
-            break; // Timer gefunden, Schleife abbrechen
-        }
+        if (htim->Instance == TIM5) {
+        	UpdateAllRamps(0.001f, 50);
     }
 }
 
 // EXTI15_10 callback for homing switches
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    static uint32_t last = 0;
-    uint32_t now = HAL_GetTick();
-    if (now - last < 30) return;
-    last = now;
 
-    if (currentState == STATE_HOMING) {
-        switch (GPIO_Pin) {
-            case LimitSwitch_1_Pin:  Step_Stop(0); stoprequest[0] = 1; break;//achse base
-            case LimitSwitch_2_Pin:     Step_Stop(1); stoprequest[1] = 1; break;//achse 2
-            case LimitSwitch_3_Pin:     Step_Stop(2); stoprequest[3] = 1; break;//achse 3
-            case LimitSwitch_4_Pin:     Step_Stop(3); stoprequest[4] = 1; break;//achse 4
-            case LimitSwitch_5_Pin:     Step_Stop(4); stoprequest[5] = 1; break;//achse 5
-            case LimitSwitch_6_Pin:     Step_Stop(5); stoprequest[5] = 1; break; //achse 6
-        }
-    }
 }
 
 

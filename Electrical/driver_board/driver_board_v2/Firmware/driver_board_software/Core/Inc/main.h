@@ -44,6 +44,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "SPIconfig.h"
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -87,12 +88,6 @@ void Error_Handler(void);
 #define TMC6_CS_GPIO_Port GPIOB
 #define TMC1_DIR_Pin GPIO_PIN_2
 #define TMC1_DIR_GPIO_Port GPIOB
-#define LimitSwitch_3_Pin GPIO_PIN_12
-#define LimitSwitch_3_GPIO_Port GPIOB
-#define LimitSwitch_4_Pin GPIO_PIN_13
-#define LimitSwitch_4_GPIO_Port GPIOB
-#define LimitSwitch_5_Pin GPIO_PIN_14
-#define LimitSwitch_5_GPIO_Port GPIOB
 #define TMC5_STEP_Pin GPIO_PIN_6
 #define TMC5_STEP_GPIO_Port GPIOC
 #define TMC2_DIR_Pin GPIO_PIN_7
@@ -107,12 +102,6 @@ void Error_Handler(void);
 #define TMC5_DIR_GPIO_Port GPIOA
 #define TMC4_DIR_Pin GPIO_PIN_10
 #define TMC4_DIR_GPIO_Port GPIOA
-#define LimitSwitch_1_Pin GPIO_PIN_10
-#define LimitSwitch_1_GPIO_Port GPIOC
-#define LimitSwitch_2_Pin GPIO_PIN_11
-#define LimitSwitch_2_GPIO_Port GPIOC
-#define LimitSwitch_6_Pin GPIO_PIN_2
-#define LimitSwitch_6_GPIO_Port GPIOD
 #define TMC3_STEP_Pin GPIO_PIN_4
 #define TMC3_STEP_GPIO_Port GPIOB
 #define TMC4_STEP_Pin GPIO_PIN_6

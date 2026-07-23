@@ -56,6 +56,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim5;
 extern TIM_HandleTypeDef htim10;
 /* USER CODE BEGIN EV */
 
@@ -214,19 +215,29 @@ void TIM1_UP_TIM10_IRQHandler(void)
   /* USER CODE END TIM1_UP_TIM10_IRQn 1 */
 }
 
+/**
+  * @brief This function handles TIM5 global interrupt.
+  */
+void TIM5_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM5_IRQn 0 */
+
+  /* USER CODE END TIM5_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim5);
+  /* USER CODE BEGIN TIM5_IRQn 1 */
+
+  /* USER CODE END TIM5_IRQn 1 */
+}
+
 /* USER CODE BEGIN 1 */
 //interrupt request handler for line 10
 void EXTI15_10_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_1_Pin);
-  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_3_Pin);
-  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_4_Pin);
-  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_5_Pin);
-  HAL_GPIO_EXTI_IRQHandler(LimitSwitch_6_Pin);
+
 }
 //interrupt request handler for line 2
 void EXTI2_IRQHandler(void)
 {
-    HAL_GPIO_EXTI_IRQHandler(LimitSwitch_2_Pin);
+
 }
 /* USER CODE END 1 */
