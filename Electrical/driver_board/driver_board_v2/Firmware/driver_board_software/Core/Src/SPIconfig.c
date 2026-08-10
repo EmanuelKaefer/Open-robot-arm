@@ -19,8 +19,8 @@
 #include "SPIconfig.h"
 // Array für die Chip Select (CS) Pins der SPI-Kommunikation
 // (Index 0 = TMC2, Index 1 = TMC1, wie bei den DIR Pins gewünscht)
-GPIO_TypeDef* CS_PORTS[6] = {TMC2_CS_GPIO_Port, TMC1_CS_GPIO_Port, TMC3_CS_GPIO_Port, TMC4_CS_GPIO_Port, TMC5_CS_GPIO_Port, TMC6_CS_GPIO_Port};
-uint16_t      CS_PINS[6]  = {TMC2_CS_Pin, TMC1_CS_Pin, TMC3_CS_Pin, TMC4_CS_Pin, TMC5_CS_Pin, TMC6_CS_Pin};
+GPIO_TypeDef* CS_PORTS[6] = {TMC1_CS_GPIO_Port, TMC2_CS_GPIO_Port, TMC3_CS_GPIO_Port, TMC4_CS_GPIO_Port, TMC5_CS_GPIO_Port, TMC6_CS_GPIO_Port};
+uint16_t      CS_PINS[6]  = {TMC1_CS_Pin, TMC2_CS_Pin, TMC3_CS_Pin, TMC4_CS_Pin, TMC5_CS_Pin, TMC6_CS_Pin};
 
 extern SPI_HandleTypeDef hspi2;
 

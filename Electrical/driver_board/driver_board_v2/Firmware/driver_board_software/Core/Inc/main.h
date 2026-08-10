@@ -45,6 +45,17 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "SPIconfig.h"
 #include <math.h>
+
+
+
+// Prototypes
+//static void Step_Start(uint8_t);
+//static void Step_Stop(uint8_t);
+//static void Step_SetFreqHz(uint8_t , uint32_t );
+//void UpdateAllRamps(float , uint8_t );
+//float ComputeSyncedVmax(float , float , float );
+//void StartSyncedMove(float , float , float , uint8_t );
+//void StartMove(uint8_t , float , float , float );
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -67,8 +67,9 @@ UART_HandleTypeDef huart3;
 /* USER CODE BEGIN PV */
 
 // Arrays for counting steps for all 6 axes
-volatile uint32_t target_steps[6] = {0};
-volatile uint32_t step_counter[6] = {0};
+
+
+#define axis 2
 
 #define PI 3.14159265359f //PI
 #define MOTOR_STEPS 200.0f //steps/revolution
@@ -100,7 +101,7 @@ static void MX_SPI2_Init(void);
 /* USER CODE BEGIN 0 */
 
 // Arrays für die Hardware-Timer
-TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim2, &htim1, &htim3, &htim4, &htim8, &htim10};
+TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim1, &htim2, &htim3, &htim4, &htim8, &htim10};
 uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
 
 // Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
@@ -114,9 +115,15 @@ GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_
 uint16_t DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
 
 // Status-Variables
-uint8_t ax = 1; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
-uint8_t stat=1;
+uint8_t ax = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+
+float target_steps[] ={50000.0f, 50000.0f, 0.0f,0.0f,0.0f,0.0f};
+
 volatile uint32_t debug_counter = 0;
+
+volatile uint32_t move_start_time = 0;
+volatile uint32_t axis_finish_time[6] = {0};
+volatile uint8_t print_results_flag = 0;
 
 //registers for TMC
 #define GSTAT 0x01
@@ -151,11 +158,19 @@ typedef struct {
 AxisRamp axisRamp[6];
 //war exacte fahrt von Limitswitch zu 0 position
 
-//Stop/Start/Speed for driver dynamically
+//Stop/Start
 static void Step_Start(uint8_t ax)
 {
 
     HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
+
+    // MOE force enable only Advanced Timern
+    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
+    if (htim->Instance == TIM1 || htim->Instance == TIM8) {
+    	__HAL_TIM_MOE_ENABLE(htim);
+    }
+           //
+
 }
 
 static void Step_Stop(uint8_t ax)
@@ -164,12 +179,13 @@ static void Step_Stop(uint8_t ax)
     HAL_TIM_PWM_Stop(htim, AXIS_CHANNELS[ax]);
     HAL_TIM_Base_Stop_IT(htim);
 
-    // MOE force disable nur bei Advanced Timern
+    // MOE force disable only Advanced Timern
     if (htim->Instance == TIM1 || htim->Instance == TIM8) {
         __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(htim);
     }
 }
 
+//set frequenzy
 static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
 {
     TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
@@ -186,14 +202,17 @@ static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
     if (arr < 2) arr = 2;
     if (arr > 0xFFFF) arr = 0xFFFF;
 
+    htim->Instance->CR1 |= TIM_CR1_ARPE;
+
     __HAL_TIM_SET_AUTORELOAD(htim, arr);
     __HAL_TIM_SET_COMPARE(htim, channel, (arr + 1) / 2); // 50% duty
 }
 
+//Ramps
 void UpdateAllRamps(float dt, uint8_t min_freq)
 {
-	debug_counter ++;
-    for (uint8_t ax = 1; ax < 2; ax++) {
+	//debug_counter ++;
+    for (uint8_t ax = 0; ax < axis; ax++) {
         if (!axisRamp[ax].active) continue;
 
         float remaining = axisRamp[ax].target - axisRamp[ax].pos;
@@ -225,6 +244,8 @@ void UpdateAllRamps(float dt, uint8_t min_freq)
         if (remaining_abs < 1.0f) {
             Step_Stop(ax);
             axisRamp[ax].active = 0;
+            axis_finish_time[ax] = HAL_GetTick() - move_start_time;
+
             continue;
         }
         //set a new frequency everytime for every axis
@@ -234,6 +255,7 @@ void UpdateAllRamps(float dt, uint8_t min_freq)
 
 void StartMove(uint8_t ax, float target_steps, float vmax, float accel)
 {
+
 	printf("IN STARTMOVE\r\n");
     axisRamp[ax].pos = 0.0f;
     axisRamp[ax].target = target_steps;
@@ -242,10 +264,52 @@ void StartMove(uint8_t ax, float target_steps, float vmax, float accel)
     axisRamp[ax].current_freq = 50.0f;
     axisRamp[ax].active = 1;
 
-    HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], GPIO_PIN_SET);
+    HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], target_steps>0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
     Step_Start(ax);
+
 }
+
+// Berechnet vmax für eine Achse, damit sie in genau t Sekunden fertig ist
+// bei fester Beschleunigung a und Distanz d
+float ComputeSyncedVmax(float d, float a, float t)
+{
+    float disc = (a*t)*(a*t) - 4.0f*a*d;
+    if (disc < 0.0f) disc = 0.0f;
+    return (a*t - sqrtf(disc)) / 2.0f;
+}
+
+void StartSyncedMove(float target_steps[6], float accel, float vmax_max, uint8_t axis_count)
+{
+    float t_sync = 0.0f;
+
+    // Calculating the time every axis would need for the distance if it would go to vmax.
+    for (uint8_t i = 0; i < axis_count; i++) {
+        float d = fabsf(target_steps[i]);
+        if (d == 0.0f) continue;
+        float t_i = (2.0f*vmax_max <= sqrtf(4*d*accel)) ? (d/vmax_max + vmax_max/accel) : (2.0f*sqrtf(d/accel)); //Trapez oder Dreieck ? Trapezformel : Dreiecksformel
+        if (t_i > t_sync){
+        	t_sync = t_i;	//es wird nach der längsten dauer gesucht und diese wird in t_synch gespeichert
+        }
+    }
+
+    //Messvariablen zurücksetzen
+        for(uint8_t i = 0; i < 6; i++) {
+            axis_finish_time[i] = 0;
+        }
+        print_results_flag = 0;
+
+        // 2. Startzeit merken (genau bevor die ersten Steps generiert werden)
+        move_start_time = HAL_GetTick();
+
+    //Für jede Achse vmax neu berechnen, damit alle bei t_sync fertig sind
+    for (uint8_t i = 0; i < axis_count; i++) {
+        float d = fabsf(target_steps[i]);
+        float v = ComputeSyncedVmax(d, accel, t_sync);
+        StartMove(i, target_steps[i], v, accel);
+    }
+}
+
 
 /* USER CODE END 0 */
 
@@ -306,8 +370,8 @@ int main(void)
       case STATE_INIT:
         HAL_Delay(500); //Boot-Delay für die TMC Treiber!
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
-
-        for (uint8_t ax = 1; ax < 2; ax++) {
+        uint8_t all_ok = 1;
+        for (uint8_t ax = 0; ax < axis; ax++) {
 			printf("axis %d\r\n", ax );
         	TMC_WriteReg(ax, GSTAT, 0x00000007);
         	printf("GSTAT of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
@@ -322,13 +386,14 @@ int main(void)
 
         	if (TMC_ReadReg(ax, GSTAT)==0x0) {
         		printf("GSTAT of %d ok, going into ready\r\n",ax);
-        		currentState=STATE_READY;
+
         	}else {
-        		printf("GSTAT of %d not ok:((: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
-        		currentState=STATE_ERROR;
+        		printf("GSTAT of %d not ok:((  : 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
+        		all_ok=0;
         	}
         }
 
+        currentState = all_ok ? STATE_READY : STATE_ERROR;
 
         break;
 
@@ -340,12 +405,38 @@ int main(void)
           break;
 
       case STATE_HOMING_OFFSET:
+    	  if (print_results_flag == 0) {
 
+    	          uint8_t all_finished = 1;
+    	          for(uint8_t i = 0; i < axis; i++) {
+    	              // Wenn eine Achse losfahren sollte, aber ihr active-Flag noch 1 ist
+    	              if (axisRamp[i].active == 1) {
+    	                  all_finished = 0;
+    	                  break; // Nicht alle fertig, Prüfung abbrechen
+    	              }
+    	          }
+
+    	          // Wenn alle Achsen fertig sind -> Ergebnisse ausdrucken!
+    	          if (all_finished == 1) {
+    	              printf("\n--- Synchronisations-Test ---\n");
+    	              for(uint8_t i = 0; i < axis; i++) {
+    	                  if (target_steps[i] != 0.0f) { // Nur bewegte Achsen anzeigen
+    	                      printf("Achse %d: %lu ms\n", i, axis_finish_time[i]);
+    	                  }
+    	              }
+    	              printf("-----------------------------\n");
+
+    	              // Flag setzen, damit wir nicht endlos spammen
+    	              print_results_flag = 1;
+
+    	          }
+    	          //currentState=STATE_HOMING;
+    	      }
           break;
 
       case STATE_READY:
 
-    	  StartMove(ax, 150000.0f, 20000.0f, 5000.0f);//ax, targetsteps, vmax, accel
+    	  StartSyncedMove(target_steps, 5000, 20000, axis);
 
     	  currentState=STATE_MOVING;
           break;
