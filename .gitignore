@@ -140,3 +140,84 @@ compile_commands.json
 *.out
 *.blg
 *.bbl
+
+# ============================================================
+# ROS2
+# ============================================================
+# ==========================================
+# ROS 2 / Colcon Build-Artefakte
+# ==========================================
+build*
+install/
+log/
+!/build/.gitkeep
+!.gitkeep
+!.gitignore
+
+# ==========================================
+# Temporäre Dateien / Editoren / OS
+# ==========================================
+*.bak
+*#
+.#*
+*~
+*.swp
+.*.kate-swp
+.*.swo
+.DS_Store
+
+# Virtual Environment & IDEs
+.idea
+.venv
+.cache
+
+# ==========================================
+# C++ / CMake / Python Binaries
+# ==========================================
+*.pyc
+*.o
+*.os
+*.a
+*.la
+*.lo
+*.so
+*.dylib
+moc_*
+
+CMakeFiles
+CMakeCache.txt
+CMakeLists.txt.user*
+.cmake/api/v1/
+
+# ==========================================
+# IDE-spezifische Projektdateien
+# ==========================================
+# eclipse stuff
+.project
+.pydevproject
+.settings
+.metadata
+.cproject
+
+# qtcreator project stuff
+*.pro
+*.pro.user
+
+# vscode stuff (Ignoriert lokale Daten, erlaubt geteilte Konfigurationen)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ==========================================
+# Linter & Formatter (WICHTIG: Nicht ignorieren!)
+# ==========================================
+# .cache/clangd/ wird durch das obige ".cache" bereits ignoriert.
+# Die folgenden Zeilen stellen sicher, dass die Configs im Repo bleiben:
+!.clang-format
+!.clang-tidy
+
+
+
+
