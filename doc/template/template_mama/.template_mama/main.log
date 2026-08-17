@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  19 JUN 2026 10:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.1.8)  16 AUG 2026 21:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -2201,7 +2201,7 @@ LaTeX Font Info:    Trying to load font information for TS1+pplj on input line
 File: ts1pplj.fd 2004/09/06 font definitions for TS1/pplj.
 )
 [5]
-<figures/allgemein/SPIMode.png, id=136, 138.5175pt x 99.9735pt>
+<figures/allgemein/SPIMode.png, id=134, 138.5175pt x 99.9735pt>
 File: figures/allgemein/SPIMode.png Graphic file (type png)
 <use figures/allgemein/SPIMode.png>
 Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 81.
@@ -2210,20 +2210,25 @@ Package pdftex.def Info: figures/allgemein/SPIMode.png  used on input line 81.
 Package microtype Info: Character `013' is missing
 (microtype)             in font `OT1/pplj/m/sc/10'.
 (microtype)             Ignoring protrusion settings for this character.
-
-Underfull \vbox (badness 5446) has occurred while \output is active []
-
  [7]
-<figures/allgemein/State_maschin.png, id=160, 566.71725pt x 239.6955pt>
+<figures/allgemein/State_maschin.png, id=157, 566.71725pt x 239.6955pt>
 File: figures/allgemein/State_maschin.png Graphic file (type png)
 <use figures/allgemein/State_maschin.png>
 Package pdftex.def Info: figures/allgemein/State_maschin.png  used on input lin
-e 146.
+e 144.
 (pdftex.def)             Requested size: 318.66948pt x 134.78815pt.
+ [8 <./figures/allgemein/State_maschin.png>] [9]
+Overfull \hbox (4.62389pt too wide) in paragraph at lines 263--264
+\OT1/pplj/m/n/12 (-20) Die Ge-ne-rie-rung der Schritt-fre-quen-zen er-folgtcht-
+zeit-nah []uber ei-ne pe-ri-odi-sche Interrupt-
+ []
 
-[8 <./figures/allgemein/State_maschin.png>] [9] [10] [11]
+[10]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/b/n' tried instead on input line 277.
+ [11] [12]
 chapter 3.
-) [12
+) [13
 
 ]
 \openout2 = `content/hardware.aux'.
@@ -2235,12 +2240,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 30--31
 []|\OT1/pplj/m/n/12 (+20) Strukturrahmen, Be-fes-ti-
  []
 
-[13
+[14
 
 
 
 
-] [14]
+] [15]
 Overfull \hbox (7.83719pt too wide) in paragraph at lines 80--81
 []\OT1/pplj/m/n/12 (-20) F[]ur ei-ne sta-ti-sche Worst-Case-Absch[]atzung neh-m
 en wir ei-ne Ge-samt-mas-se von $\OML/zplm/m/it/12 m[] \OT1/zplm/m/n/12 =
@@ -2249,13 +2254,13 @@ en wir ei-ne Ge-samt-mas-se von $\OML/zplm/m/it/12 m[] \OT1/zplm/m/n/12 =
 
 Underfull \vbox (badness 6978) has occurred while \output is active []
 
- [15])
-[16]
+ [16])
+[17]
 \openout2 = `content/elektrisches.aux'.
 
  (content/elektrisches.tex
 chapter 5.
-<figures/allgemein/blockschaltbild.png, id=224, 928.21782pt x 216.81pt>
+<figures/allgemein/blockschaltbild.png, id=237, 928.21782pt x 216.81pt>
 File: figures/allgemein/blockschaltbild.png Graphic file (type png)
 <use figures/allgemein/blockschaltbild.png>
 Package pdftex.def Info: figures/allgemein/blockschaltbild.png  used on input l
@@ -2264,19 +2269,19 @@ ine 13.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [17
+ [18
 
 
 
 
- <./figures/allgemein/blockschaltbild.png>] [18] [19]
+ <./figures/allgemein/blockschaltbild.png>] [19] [20]
 Overfull \hbox (23.72392pt too wide) in paragraph at lines 57--58
 []\OT1/pplj/b/n/12 (-20) 12V L[]ufter-Versorgung: \OT1/pplj/m/n/12 (-20) Er-zeu
 gt aus den $\OT1/pplx/m/n/12 24 []$ []\OT1/pplj/m/n/12 (-20) uber einen syn-chr
 o-nen Abw[]artswandler
  []
 
-[20]) [21] [22]) (content/Fazit-und-Ausblick.tex)
+[21]) [22] [23]) (content/Fazit-und-Ausblick.tex)
 
 Package geometry Warning: `a4paper': not available in `\newgeometry'; skipped.
 
@@ -2334,7 +2339,7 @@ Package scrlayer-scrpage Warning: \headheight to low.
 Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 
-[23
+[24
 
 
 
@@ -2342,7 +2347,7 @@ Overfull \vbox (2.1749pt too high) has occurred while \output is active []
 
 ]
 chapter without number
-(formal/Begleiterprotokoll.tex) [24
+(formal/Begleiterprotokoll.tex) [25
 
 ] (main.aux (content/einleitung.aux)
 (content/software.aux) (content/hardware.aux) (content/elektrisches.aux))
@@ -2355,33 +2360,35 @@ Package logreq Info: Writing requests to 'main.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 80810 strings out of 467871
- 2030806 string characters out of 5418377
- 3522932 words of memory out of 5000000
- 107997 multiletter control sequences out of 15000+600000
- 693255 words of font info for 492 fonts, out of 8000000 for 9000
+ 80828 strings out of 467871
+ 2031164 string characters out of 5418377
+ 3522893 words of memory out of 5000000
+ 108001 multiletter control sequences out of 15000+600000
+ 694019 words of font info for 498 fonts, out of 8000000 for 9000
  1145 hyphenation exceptions out of 8191
  113i,20n,134p,11262b,2760s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
-cmex10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmr10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/pu
-blic/amsfonts/cm/cmss12.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts
-/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/matte/AppData/Local/Programs/M
-iKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/matte/AppData/Local/P
-rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/matte/AppDat
-a/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/Users/mat
-te/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplbj8a.pfb><C:/Users/m
-atte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmr.pfb><C:/Us
-ers/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplmri.pfb>
-<C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplrc8a.pf
-b><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplrij8a
-.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/upl
-b8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/
-uplr8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palati
-no/uplri8a.pfb>
-Output written on main.pdf (26 pages, 1667969 bytes).
+ <C:\Users\matte\AppData\Local\MiKTeX\fonts/pk/ljfour/public/cm/dpi720\cmttb1
+0.pk><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
+cm/cmex10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmmi10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type
+1/public/amsfonts/cm/cmr10.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmss12.pfb><C:/Users/matte/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><C:/Users/matte/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/matte/App
+Data/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/
+matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><
+C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fpl/fplbj8a.pfb
+><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo/fplm
+r.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/mathpazo
+/fplmri.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/fp
+l/fplrc8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+fpl/fplrij8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/urw/
+palatino/uplb8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type1/u
+rw/palatino/uplr8a.pfb><C:/Users/matte/AppData/Local/Programs/MiKTeX/fonts/type
+1/urw/palatino/uplri8a.pfb>
+Output written on main.pdf (27 pages, 1684594 bytes).
 PDF statistics:
- 470 PDF objects out of 1000 (max. 8388607)
- 126 named destinations out of 1000 (max. 500000)
- 111862 words of extra memory for PDF output out of 128383 (max. 10000000)
+ 498 PDF objects out of 1000 (max. 8388607)
+ 135 named destinations out of 1000 (max. 500000)
+ 118510 words of extra memory for PDF output out of 128383 (max. 10000000)
 

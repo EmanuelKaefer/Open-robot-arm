@@ -115,13 +115,11 @@ Die gewählte Konfiguration der Motortreiber stellt sich wie folgt dar:
 		\midrule
 		\texttt{GSTAT} (0x01) = \texttt{0x00000007} & Setzt das globale Statusregister zurück. Löscht den Fehlerspeicher für Reset, Unterspannung der Charge-Pump und Driver-Shutdown vor dem Testlauf. \\
 		\addlinespace
-		\texttt{GCONF} (0x00) = \texttt{0x00000004} & Aktiviert das Bit \texttt{pdn\_disable}. Schaltet den Treiber in den internen Sensing-Modus um und erzwingt die Kommunikation rein über die SPI-Schnittstelle. \\
+		\texttt{GCONF} (0x00) = \texttt{0x00000005} & Der treiber nutzt die Analoge Stromskalierung und den Internen Sense Wiederstand \\
 		\addlinespace
-		\texttt{IHOLD\_IRUN} (0x10) = \texttt{0x00061008} & Konfiguriert den Motorstrom: Setzt den Fahrstrom (\texttt{IRUN}) auf ca. 50\,\%, den Haltestrom im Stillstand (\texttt{IHOLD}) auf ca. 25\,\% sowie eine Verzögerung (\texttt{IHOLDDELAY}) für die Stromabsenkung. \\
+		\texttt{IHOLD\_IRUN} (0x10) = \texttt{0x0008100A} & Konfiguriert den Motorstrom: Setzt den Fahrstrom (\texttt{IRUN}) auf 52\,\%, den Haltestrom im Stillstand (\texttt{IHOLD}) auf 32\,\% sowie eine Verzögerung (\texttt{IHOLDDELAY}) von 20µs für die Stromabsenkung. \\
 		\addlinespace
-		\texttt{CHOPCONF} (0x6C) = \texttt{0x14010053} & Konfiguration des Chopper-Verfahrens. Aktiviert den \textit{SpreadCycle}-Modus, stellt die Schrittauflösung auf 16 Mikroschritte (mit automatischer Interpolation auf 256 Schritte) und definiert das Signal-Timing (\textit{TOFF}, \textit{TBL}). \\
-		\addlinespace
-		\texttt{PWMCONF} (0x70) = \texttt{0xC10D0024} & Hinterlegt die Parameter für den \textit{StealthChop2}-Modus (Spannungsamplitude, Frequenz, Gradienten) für einen potenziellen, geschwindigkeitsabhängigen Moduswechsel. \\
+		\texttt{CHOPCONF} (0x6C) = \texttt{0x100C0403} & Konfiguration des Chopper-Verfahrens. Aktiviert den \textit{SpreadCycle}-Modus und definiert das Signal-Timing (\textit{TOFF}, \textit{TBL}). \\
 		\bottomrule \cite{power}
 	\end{tabularx}
 \end{table}
@@ -149,7 +147,7 @@ Um die auf dem Mikrocontroller laufende Software deterministisch zu gestalten un
 \end{figure}
 
 Für den entwickelten Roboterarm wurden die Zustände \texttt{STATE\_INIT}, \texttt{STATE\_HOMING}, \texttt{STATE\_HOMING\_OFFSET}, \texttt{STATE\_READY} und \texttt{STATE\_ERROR} definiert. Als Startzustand dient \texttt{STATE\_INIT}, da vor dem regulären Betrieb eine Treiberinitialisierung zwingend erforderlich ist.
-%TODO mehr ausführen wie unsere Finite State Machine die Komponenten macht
+%TODO mehr ausführen wie unsere Finite State Machine die Komponenten macht und ändern auf das was es dann am ende ist
 Die Spezifikationen der Zustände gestalten sich wie folgt:
 
 \begin{table}[htbp]
@@ -175,62 +173,129 @@ Die Spezifikationen der Zustände gestalten sich wie folgt:
 	\end{tabularx}
 \end{table}
 \newpage
-\section{Kinematische Referenzierungsfahrt (Homing)}
-\label{subsec:homing}
-
-Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kostengründen auf absolute Encoder verzichtet wurde, ist der Systemzustand nach jedem Kaltstart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
-
-\subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
-\label{subsubsec:interrupts}
-
-Für die Erfassung der Endschaltersignale kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. Die Verwendung von Interrupts reduziert die Prozessorauslastung signifikant, da aktives Polling (permanentes Abfragen der Pins) entfällt. Sobald eine Signalflanke detektiert wird, löst der Hardware-Controller einen Interrupt-Request aus, der den regulären Programmablauf unterbricht und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Routine setzt ein Flag, das dem Hauptprogramm signalisiert, dass der Endschalter erreicht wurde, der Positions-Offset berechnet und die Drehrichtung umgekehrt werden muss \cite{a2021_this}.
-
-Um mehrfache Interrupt-Auslösungen durch mechanisches Schalterprellen (Bouncing) zu verhindern, ist in der Interrupt-Routine eine softwareseitige Entprellung (Debouncing) integriert. Diese blockiert nach der ersten Flankenerkennung alle weiteren Signale desselben Pins für ein Zeitfenster von 30\,ms. 
-
-Die Implementierung in C ist wie folgt realisiert:
-\newpage
-\begin{lstlisting}[language=C, caption={Software-Entprellung (Debouncing) innerhalb der ISR}, label={lst:IQR_debounce}]
-	static uint32_t last = 0;
-	uint32_t now = HAL_GetTick();
-	if (now - last < 30) return;
-	last = now;
-\end{lstlisting}
-
-\subsection{Berechnung kinematischer Offsets}
-\label{subsubsec:offsets}
-
-Der mechanische Nullpunkt an der Position der Endschalter entspricht in der Regel nicht dem kinematischen Nullpunkt des Robotermodells. Diese Diskrepanz erfordert die Berechnung eines Ausgleichsoffsets. Die zu kompensierende Winkeldifferenz muss dazu in die entsprechende Schrittanzahl der Motoren umgerechnet werden. Die allgemeine Gleichung lautet:
-
-$$ \text{Steps} = \frac{\Delta\text{rad}}{2\cdot\pi} \cdot \text{Vollschritte} \cdot \text{Mikroschritte} \cdot \text{Getriebeübersetzung} $$
-
-Mit den konkret eingesetzten Hardwareparametern ergibt sich folgende Berechnung:
-
-$$ \text{Steps} = \frac{\Delta\text{rad}}{2\cdot\pi} \cdot 200 \cdot 16 \cdot 20 $$
-
-\begin{itemize}
-	\item $\Delta\text{rad}$: Die berechnete Winkeldifferenz zwischen Endschalter und kinematischer Home-Position (in Radiant).
-	\item $200$: Die Anzahl der physikalischen Vollschritte des Motors pro Umdrehung ($1,8^\circ$ Schrittwinkel).
-	\item $16$: Die konfigurierte Mikroschritt-Auflösung pro Vollschritt.
-	\item $20$: Das mechanische Untersetzungsverhältnis des Getriebes (1:20) für alle Achsen.
-\end{itemize}
-
-\subsection{Sequenzieller Homing-Ablauf}
-\label{subsubsec:homing_sequence}
-
-Die Referenzierung des 6-Achs-Systems erfolgt aus Sicherheitsgründen sequenziell. Dadurch werden mechanische Kollisionen oder kritische Fehler – wie das gleichzeitige Auffahren mehrerer Achsen auf die Endanschläge – konstruktiv ausgeschlossen. Ein weiterer Vorteil des sequenziellen Homings ist die Möglichkeit der isolierten visuellen Überprüfung der Korrektheit jeder einzelnen Achsbewegung. Der Ablauf wird durch eine globale Index-Variable (\texttt{current\_homingaxis}) gesteuert und verläuft hierarchisch von der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Vorgang pro Achse gliedert sich in folgende Phasen: 
-
-Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit in Richtung des Endschalters. Nach Auslösen des Interrupts berechnet der Algorithmus den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und leitet den Zustandswechsel zu \texttt{STATE\_HOMING\_OFFSET} ein. Die Achse gilt erst dann als referenziert, wenn die berechnete Schrittzahl für den Offset über den Timer-Interrupt exakt abgefahren wurde. Anschließend wird der Achsindex inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das Gesamtsystem kalibriert ist und in den regulären Betriebszustand \texttt{STATE\_READY} übergeht.
+%\section{Kinematische Referenzierungsfahrt (Homing)}
+%\label{subsec:homing}
+%
+%Da Schrittmotoren über keine absolute Positionscodierung verfügen und aus Kostengründen auf absolute Encoder verzichtet wurde, ist der Systemzustand nach jedem Kaltstart undefiniert. Um den vordefinierten kinematischen Nullpunkt des Roboters zu ermitteln, muss zwingend eine Kalibrierungsfahrt (Homing) durchgeführt werden.
+%
+%\subsection{Interrupt-Verarbeitung und Hardware-Entprellung}
+%\label{subsubsec:interrupts}
+%
+%Für die Erfassung der Endschaltersignale kommen externe Interrupts (\texttt{EXTI}s) zum Einsatz. Die Verwendung von Interrupts reduziert die Prozessorauslastung signifikant, da aktives Polling (permanentes Abfragen der Pins) entfällt. Sobald eine Signalflanke detektiert wird, löst der Hardware-Controller einen Interrupt-Request aus, der den regulären Programmablauf unterbricht und eine spezifische Interrupt-Service-Routine (ISR) aufruft. Diese Routine setzt ein Flag, das dem Hauptprogramm signalisiert, dass der Endschalter erreicht wurde, der Positions-Offset berechnet und die Drehrichtung umgekehrt werden muss \cite{a2021_this}.
+%
+%Um mehrfache Interrupt-Auslösungen durch mechanisches Schalterprellen (Bouncing) zu verhindern, ist in der Interrupt-Routine eine softwareseitige Entprellung (Debouncing) integriert. Diese blockiert nach der ersten Flankenerkennung alle weiteren Signale desselben Pins für ein Zeitfenster von 30\,ms. 
+%
+%Die Implementierung in C ist wie folgt realisiert:
+%\newpage
+%\begin{lstlisting}[language=C, caption={Software-Entprellung (Debouncing) innerhalb der ISR}, label={lst:IQR_debounce}]
+%	static uint32_t last = 0;
+%	uint32_t now = HAL_GetTick();
+%	if (now - last < 30) return;
+%	last = now;
+%\end{lstlisting}
+%
+%\subsection{Berechnung kinematischer Offsets}
+%\label{subsubsec:offsets}
+%
+%Der mechanische Nullpunkt an der Position der Endschalter entspricht in der Regel nicht dem kinematischen Nullpunkt des Robotermodells. Diese Diskrepanz erfordert die Berechnung eines Ausgleichsoffsets. Die zu kompensierende Winkeldifferenz muss dazu in die entsprechende Schrittanzahl der Motoren umgerechnet werden. Die allgemeine Gleichung lautet:
+%
+%$$ \text{Steps} = \frac{\Delta\text{rad}}{2\cdot\pi} \cdot \text{Vollschritte} \cdot \text{Mikroschritte} \cdot \text{Getriebeübersetzung} $$
+%
+%Mit den konkret eingesetzten Hardwareparametern ergibt sich folgende Berechnung:
+%
+%$$ \text{Steps} = \frac{\Delta\text{rad}}{2\cdot\pi} \cdot 200 \cdot 16 \cdot 20 $$
+%
+%\begin{itemize}
+%	\item $\Delta\text{rad}$: Die berechnete Winkeldifferenz zwischen Endschalter und kinematischer Home-Position (in Radiant).
+%	\item $200$: Die Anzahl der physikalischen Vollschritte des Motors pro Umdrehung ($1,8^\circ$ Schrittwinkel).
+%	\item $16$: Die konfigurierte Mikroschritt-Auflösung pro Vollschritt.
+%	\item $20$: Das mechanische Untersetzungsverhältnis des Getriebes (1:20) für alle Achsen.
+%\end{itemize}
+%
+%\subsection{Sequenzieller Homing-Ablauf}
+%\label{subsubsec:homing_sequence}
+%
+%Die Referenzierung des 6-Achs-Systems erfolgt aus Sicherheitsgründen sequenziell. Dadurch werden mechanische Kollisionen oder kritische Fehler – wie das gleichzeitige Auffahren mehrerer Achsen auf die Endanschläge – konstruktiv ausgeschlossen. Ein weiterer Vorteil des sequenziellen Homings ist die Möglichkeit der isolierten visuellen Überprüfung der Korrektheit jeder einzelnen Achsbewegung. Der Ablauf wird durch eine globale Index-Variable (\texttt{current\_homingaxis}) gesteuert und verläuft hierarchisch von der Basis (Achse 0) bis zum Endeffektor (Achse 5). Der Vorgang pro Achse gliedert sich in folgende Phasen: 
+%
+%Zunächst verfährt die Achse im Zustand \texttt{STATE\_HOMING} mit konstanter Geschwindigkeit in Richtung des Endschalters. Nach Auslösen des Interrupts berechnet der Algorithmus den erforderlichen Offset, invertiert das Richtungssignal (\texttt{DIR}) und leitet den Zustandswechsel zu \texttt{STATE\_HOMING\_OFFSET} ein. Die Achse gilt erst dann als referenziert, wenn die berechnete Schrittzahl für den Offset über den Timer-Interrupt exakt abgefahren wurde. Anschließend wird der Achsindex inkrementiert und die Prozedur für das nächste Gelenk gestartet, bis das Gesamtsystem kalibriert ist und in den regulären Betriebszustand \texttt{STATE\_READY} übergeht.
 
 %\section{Verbindung mir Raspberry Pi und normaler Betrieb}
+
 %\label{sec:normalerBetrieb}
 %	Im normalen Betrieb erhält der STM über UART Befehle von einem Raspberry pi 4b, der Raspberry sendet die Zielposition zu der sich der Endeffektor des Roboterarms bewegen soll in Radianten, also einen Array von 6 joint Winkeln und die Ausrichtung des Greifers. Außerdem noch eine Maximale Geschwindigkeit auf die die Motoren beschleunigen sollen
 %\subsection{UART-Protokoll}
 %	  
+\section{Regulärer Betrieb und Trajektoriensteuerung}
+\label{sec:regulaerer_betrieb}
+%TODO: alles da iwan mal umschreiben weil is !:! von ai wegen kein bock jetz doku schreiben aber trotzdem bsschen zusammenfassung das ich anhalt habe wenn ich mache...
 
+Im regulären Punkt-zu-Punkt-Betrieb würde ein abruptes Anfahren der Schrittmotoren zu extrem hohen mechanischen Belastungen, starken Schwingungen und eventuellen Schrittverlusten führen. Um eine geschmeidige Bewegung zu garantieren wird eine Trajektorienplanung mit trapez- bzw. dreieckförmigem Geschwindigkeitsprofil auf dem Mikrocontroller ausgeführt.
 
-\section{Ausblick}
-Die nächsten Evaluierungsschritte für die Low-Level-Logik umfassen die Umstellung des Homing-Prozesses von Endschaltern auf eine kontinuierliche Winkelerfassung mittels Encodern. Des Weiteren muss eine robuste Kommunikationsschnittstelle zwischen dem Raspberry Pi, der die High-Level-Trajektorien berechnet, und dem Mikrocontroller etabliert werden. Der finale Meilenstein zur Fertigstellung der Low-Level-Steuerung ist die Integration eines trapezförmigen Geschwindigkeitsprofils, um ein ruckfreies Beschleunigen und Abbremsen der Gelenke sicherzustellen.
+\subsection{Mathematische Umsetzung des Trapezprofils}
+\label{subsec:math_trapez}
 
+Das Geschwindigkeitsprofil unterteilt die Bewegung einer Achse grundsätzlich in drei Phasen: Beschleunigung ($a$), Konstantfahrt ($v_{\max}$) und Verzögerung ($-a$). 
+
+\subsubsection{Unterscheidung zwischen Trapez- und Dreiecksprofil}
+Vor Beginn einer Bewegung wird für jede Achse geprüft, ob die zu fahrende Distanz $S_i$ ausreicht, um die gewünschte Maximalgeschwindigkeit $v_{\max, i}$ und damit das Trapezprofil zu erreichen. Die dafür erforderliche Mindestdistanz berechnet sich zu:
+\begin{equation}
+	S_{\text{min}, i} = \frac{v_{\max, i}^2}{a_i}
+\end{equation}
+Ist $S_i < S_{\text{min}, i}$, wird die Maximalgeschwindigkeit nicht erreicht. Das Profil wird zu einem Dreiecksprofil reduziert.
+\subsubsection{Mehrachs-Synchronisation ($t_{\text{sync}}$)}
+Damit sich der Endeffektor des Roboterarms geradlinigen und synchrone bewegt, müssen alle sechs Achsen exakt zeitgleich an ihrer jeweiligen Zielposition ankommen. Dafür wird zunächst für jede Achse $i$ die theoretische Gesamtfahrzeit $t_i$ berechnet:
+\begin{equation}
+	t_i = 
+	\begin{cases} 
+		\frac{S_i}{v_{\max, i}} + \frac{v_{\max, i}}{a_i} & \text{falls Trapezprofil} \\[6pt]
+		2 \cdot \sqrt{\frac{S_i}{a_i}} & \text{falls Dreiecksprofil}
+	\end{cases}
+\end{equation}
+Die langsamste Achse bestimmt die globale Synchronisationszeit $t_{\text{sync}}$ des Gesamtsystems:
+\begin{equation}
+	t_{\text{sync}} = \min(t_1, t_2, \dots, t_6)
+\end{equation}
+Anschließend werden die Geschwindigkeiten $v_{\text{synced}, i}$ aller schnelleren Achsen skaliert, sodass ihre Bewegung exakt über die Zeit $t_{\text{sync}}$ gestreckt wird. Die beschleunigung bleibt hierbei unabhängig der zu fahrenden Schritte gleich da die veränderung von  $v_{\text{max}}$ ausreicht um alle möglichen szenarien ausreichend abzudecken.
+
+\subsection{Softwareimplementierung auf dem STM32}
+\label{subsec:sw_implementation}
+
+Die Generierung der Schrittfrequenzen erfolgtchtzeitnah über eine periodische Interrupt-Service-Routine (ISR) mittels eines Timer-Interrupts.
+
+\subsubsection{Dynamische Frequenzanpassung via ARR}
+Die Geschwindigkeit eines Schrittmotors ist proportional zur Frequenz der STEP-Impulse. Der STM32 steuert diese Frequenz über das Auto-Reload-Register (\texttt{ARR}) des jeweiligen Timers. In jedem Regelzyklus der ISR wird die neue Soll-Geschwindigkeit $v(t)$ berechnet und das \texttt{ARR}-Register dynamisch nach folgender Formel aktualisiert:
+\begin{equation}
+	\text{ARR}_i = \frac{f_{\text{timer}}}{(PSC_i + 1) \cdot f_{\text{step}, i}} - 1
+\end{equation}
+wobei $f_{\text{timer}}$ die Quarzfrequenz des Mikrocontrollers und $PSC$ den eingestellten Prescaler bezeichnet.
+
+\subsection{Systemstabilität und Troubleshooting (Praktische Herausforderungen)}
+\label{subsec:troubleshooting}
+
+Bei der Umsetzung der Trajektoriensteuerung zeigten sich in der Praxis hardware- und softwareseitige Phänomene, die gezielt gelöst werden mussten, um einen stabilen Lauf zu garantieren.
+
+\subsubsection{Timer-Lockup und Auto-Reload Preload (\texttt{TIM\_CR1\_ARPE})}
+Beim dynamischen Herabsetzen des \texttt{ARR}-Wertes während der Bremsphase trat vereinzelt ein Einfrieren des Timers bzw. ein Kriecheffekt mit minimaler Frequenz ($\approx 15\,\text{Hz}$) auf. 
+\textbf{Ursache:} Wenn der aktuelle Zählerstand des Timers (\texttt{CNT}) im Moment des Umschreibens bereits größer war als der neue, kleinere \texttt{ARR}-Wert, zählte der Timer bis zum Maximum des 16-Bit-Registers ($65.535$) hoch, bevor ein Overflow stattfand.
+\textbf{Lösung:} Aktivierung des Auto-Reload Preload Bits (\texttt{ARPE}) im Kontrollregister \texttt{TIMx\_CR1}. Dadurch wird das neue \texttt{ARR} gepuffert und erst beim nächsten regulären Update-Event (UEV) übernommen.
+
+\subsubsection{Besonderheiten der Advanced Timers (\texttt{TIM1} / \texttt{TIM8})}
+Während die Allzweck-Timer (\texttt{TIM2}--\texttt{TIM4}) direkt PWM-Signale ausgaben, blieben die Ausgänge von \texttt{TIM1} und \texttt{TIM8} zunächst pegellos.
+\textbf{Ursache:} \texttt{TIM1} und \texttt{TIM8} sind präzise \textit{Advanced Control Timer}. Diese verfügen über eine Totzeit-Generierung und eine Notabschaltung (Break Input), weshalb die Ausgänge standardmäßig hochohmig geschaltet sind.
+\textbf{Lösung:} Explizites Setzen des Main Output Enable Bits (\texttt{MOE}) im Break-and-Dead-Time-Register (\texttt{BDTR}) via Macro:
+\begin{lstlisting}[language=C, caption={Freischaltung der Advanced Timer Ausgänge}]
+	__HAL_TIM_MOE_ENABLE(&htim1);
+	__HAL_TIM_MOE_ENABLE(&htim8);
+\end{lstlisting}
+
+\subsubsection{Fließkommarundung und Kriechphasen-Eliminierung}
+Durch Akkumulation von Fließkomma-Rundungsfehlern (\texttt{float}-Präzision) in der Iterationsschleife erreichte die Differenz zwischen Ist- und Zielposition in Grenzfällen nie exakt Null. Dies führte dazu, dass der Motor kurz vor dem Ziel in einer unendlichen Kriechphase mit Minimalfrequenz verharrte.
+\textbf{Lösung:} Einführung einer Abbruchschwelle. Unterschreitet die Restdistanz einen Wert von $0{,}5$ Mikroschritten, wird die Profilberechnung hart beendet und der PWM-Timer gestoppt.
+\textbf{Mathematischer Nachweis der Toleranz:} Bei $16$ Mikroschritten pro Vollschritt, einem $1{,}8^\circ$-Motor und einer $1:20$ Getriebeübersetzung entspricht eine Abweichung von $0{,}5$ Mikroschritten:
+\begin{equation}
+	\Delta\varphi = \frac{1{,}8^\circ}{16 \cdot 20} \cdot 0{,}5 = 0{,}0028125^\circ \ll 1^\circ
+\end{equation}
+Die Positioniergenauigkeit liegt somit um Größenordnungen unterhalb der geforderten $1^\circ$-Toleranzgrenze.
 \chapter{High Level Software}
 \section{Ausblick}
 Die High-Level-Software auf dem Raspberry Pi ermöglicht die Eingabe kartesischer Zielkoordinaten für den Endeffektor über ein Graphical User Interface (GUI). Diese kartesischen Koordinaten (x, y, z) werden mithilfe der Python-Bibliothek IKpy über inverse Kinematik in sechs Gelenkwinkel in Radiant transformiert. Zudem lässt sich über die GUI die maximale Geschwindigkeit definieren, auf welche die Motoren beschleunigen dürfen. Da der Fokus der bisherigen Entwicklung primär auf der Low-Level-Software lag, befindet sich die High-Level-Implementierung noch in einer frühen Projektphase.

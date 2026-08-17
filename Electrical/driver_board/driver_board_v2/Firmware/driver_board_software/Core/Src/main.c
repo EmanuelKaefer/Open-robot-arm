@@ -169,8 +169,6 @@ static void Step_Start(uint8_t ax)
     if (htim->Instance == TIM1 || htim->Instance == TIM8) {
     	__HAL_TIM_MOE_ENABLE(htim);
     }
-           //
-
 }
 
 static void Step_Stop(uint8_t ax)

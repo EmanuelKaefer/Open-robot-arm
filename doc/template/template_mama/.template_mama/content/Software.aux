@@ -31,31 +31,35 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Initialisierung der Motortreiber}{7}{subsection.2.2.2}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Konfiguration der TMC5160T-Register via SPI}}{7}{table.caption.5}\protected@file@percent }
 \newlabel{tab:tmc5160_config}{{2.1}{7}{Konfiguration der TMC5160T-Register via SPI}{table.caption.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Finite State Machine (Endlicher Zustandsautomat)}{8}{section.2.3}\protected@file@percent }
-\newlabel{subsec:fsm}{{2.3}{8}{Finite State Machine (Endlicher Zustandsautomat)}{section.2.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Finite State Machine (Endlicher Zustandsautomat)}{7}{section.2.3}\protected@file@percent }
+\newlabel{subsec:fsm}{{2.3}{7}{Finite State Machine (Endlicher Zustandsautomat)}{section.2.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Zustände}{8}{subsection.2.3.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Diagramm der Finite State Machine}}{8}{figure.caption.6}\protected@file@percent }
 \newlabel{fig:Finite_State_Maschine}{{2.2}{8}{Diagramm der Finite State Machine}{figure.caption.6}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Zustände der Finite State Machine}}{9}{table.caption.7}\protected@file@percent }
 \newlabel{tab:fsm_states}{{2.2}{9}{Zustände der Finite State Machine}{table.caption.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Kinematische Referenzierungsfahrt (Homing)}{9}{section.2.4}\protected@file@percent }
-\newlabel{subsec:homing}{{2.4}{9}{Kinematische Referenzierungsfahrt (Homing)}{section.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Interrupt-Verarbeitung und Hardware-Entprellung}{9}{subsection.2.4.1}\protected@file@percent }
-\newlabel{subsubsec:interrupts}{{2.4.1}{9}{Interrupt-Verarbeitung und Hardware-Entprellung}{subsection.2.4.1}{}}
-\newlabel{lst:IQR_debounce}{{2.4}{10}{Software-Entprellung (Debouncing) innerhalb der ISR}{lstlisting.2.4}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.4}{\ignorespaces Software-Entprellung (Debouncing) innerhalb der ISR}}{10}{lstlisting.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Berechnung kinematischer Offsets}{10}{subsection.2.4.2}\protected@file@percent }
-\newlabel{subsubsec:offsets}{{2.4.2}{10}{Berechnung kinematischer Offsets}{subsection.2.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Sequenzieller Homing-Ablauf}{10}{subsection.2.4.3}\protected@file@percent }
-\newlabel{subsubsec:homing_sequence}{{2.4.3}{10}{Sequenzieller Homing-Ablauf}{subsection.2.4.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Ausblick}{11}{section.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}High Level Software}{12}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Regulärer Betrieb und Trajektoriensteuerung}{9}{section.2.4}\protected@file@percent }
+\newlabel{sec:regulaerer_betrieb}{{2.4}{9}{Regulärer Betrieb und Trajektoriensteuerung}{section.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Mathematische Umsetzung des Trapezprofils}{9}{subsection.2.4.1}\protected@file@percent }
+\newlabel{subsec:math_trapez}{{2.4.1}{9}{Mathematische Umsetzung des Trapezprofils}{subsection.2.4.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Unterscheidung zwischen Trapez- und Dreiecksprofil}{9}{subsubsection*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Mehrachs-Synchronisation ($t_{\text  {sync}}$)}{10}{subsubsection*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Softwareimplementierung auf dem STM32}{10}{subsection.2.4.2}\protected@file@percent }
+\newlabel{subsec:sw_implementation}{{2.4.2}{10}{Softwareimplementierung auf dem STM32}{subsection.2.4.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Dynamische Frequenzanpassung via ARR}{10}{subsubsection*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Systemstabilität und Troubleshooting (Praktische Herausforderungen)}{11}{subsection.2.4.3}\protected@file@percent }
+\newlabel{subsec:troubleshooting}{{2.4.3}{11}{Systemstabilität und Troubleshooting (Praktische Herausforderungen)}{subsection.2.4.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Timer-Lockup und Auto-Reload Preload (\texttt  {TIM\_CR1\_ARPE})}{11}{subsubsection*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Besonderheiten der Advanced Timers (\texttt  {TIM1} / \texttt  {TIM8})}{11}{subsubsection*.12}\protected@file@percent }
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2.4}{\ignorespaces Freischaltung der Advanced Timer Ausgänge}}{11}{lstlisting.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\nonumberline Fließkommarundung und Kriechphasen-Eliminierung}{11}{subsubsection*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}High Level Software}{13}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Ausblick}{12}{section.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Ausblick}{13}{section.3.1}\protected@file@percent }
 \@setckpt{content/software}{
-\setcounter{page}{13}
+\setcounter{page}{14}
 \setcounter{equation}{0}
 \setcounter{enumi}{0}
 \setcounter{enumii}{0}
@@ -81,7 +85,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{7}
+\setcounter{instcount}{6}
 \setcounter{maxnames}{2}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{3}
@@ -194,7 +198,7 @@
 \setcounter{continuedfloat}{0}
 \setcounter{subfigure}{0}
 \setcounter{subtable}{0}
-\setcounter{lstnumber}{5}
+\setcounter{lstnumber}{3}
 \setcounter{oldtocdepth}{0}
 \setcounter{myclonecnt}{0}
 \setcounter{float@type}{16}

@@ -2383,12 +2383,11 @@
     <bcf:citekey order="7" intorder="1">power</bcf:citekey>
     <bcf:citekey order="8" intorder="1">a2026_statemachine</bcf:citekey>
     <bcf:citekey order="9" intorder="1">a2021_this</bcf:citekey>
-    <bcf:citekey order="10" intorder="1">a2021_this</bcf:citekey>
-    <bcf:citekey order="11" intorder="1">power</bcf:citekey>
+    <bcf:citekey order="10" intorder="1">power</bcf:citekey>
+    <bcf:citekey order="11" intorder="1">kirasich_new</bcf:citekey>
     <bcf:citekey order="12" intorder="1">kirasich_new</bcf:citekey>
-    <bcf:citekey order="13" intorder="1">kirasich_new</bcf:citekey>
+    <bcf:citekey order="13" intorder="1">a1998_ipc2221</bcf:citekey>
     <bcf:citekey order="14" intorder="1">a1998_ipc2221</bcf:citekey>
-    <bcf:citekey order="15" intorder="1">a1998_ipc2221</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="none">
