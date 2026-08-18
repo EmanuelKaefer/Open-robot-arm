@@ -50,9 +50,6 @@ class StepToAngleConverter(Node):
         response.message = 'Homing erfolgreich! Alle Winkel auf 0.0 rad gesetzt.'
         return response
 
-
-
-
     def step_callback(self, msg):
  
         steps = msg.data #wie viele schritte
