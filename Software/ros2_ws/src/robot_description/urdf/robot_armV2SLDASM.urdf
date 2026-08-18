@@ -3,7 +3,7 @@
      Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
      For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
 <robot
-  name="robot_armV2.SLDASM">
+  name="robot_armV2SLDASM">
   <link
     name="base_link">
     <inertial>
@@ -152,8 +152,8 @@
     <limit
       lower="-1.5708"
       upper="1.5708"
-      effort="1"
-      velocity="1" />
+      effort="1.0"
+      velocity="1.0" />
   </joint>
   <link
     name="forearm_link">
@@ -210,8 +210,8 @@
     <limit
       lower="-1.5708"
       upper="1.5708"
-      effort="1"
-      velocity="1" />
+      effort="1.0"
+      velocity="1.0" />
   </joint>
   <link
     name="wrist_turn_link">
@@ -321,8 +321,8 @@
     <limit
       lower="-2.0944"
       upper="1.5708"
-      effort="1"
-      velocity="1" />
+      effort="1.0"
+      velocity="1.0" />
   </joint>
   <link
     name="gripper_turn_link">
