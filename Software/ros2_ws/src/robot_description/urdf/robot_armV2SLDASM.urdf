@@ -736,4 +736,6 @@
   </joint>
 
   -->
+<!-- ros2_control Schnittstelle für MoveIt / Controller Manager -->
+  
 </robot>
