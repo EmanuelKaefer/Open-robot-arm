@@ -15,20 +15,22 @@ class StepPublisher(Node):
         while rclpy.ok():
             try:
                 print("\n--- Neue Bewegung eingeben ---")
-                axis = int(input("Achse (0-5): "))
-                steps = int(input("Anzahl Schritte: "))
-                direction = int(input("Richtung (1 = CW, 0 = CCW): "))
+                steps= []
+
+                for i in range(6):
+                    var = int(input(f"Anzahl Schritte für achse:{i}"))
+                    steps.append(var)
 
                 msg = Int32MultiArray()
-                msg.data = [axis, steps, direction] #wird gesendet, also in der empfängerdatei mit msg.data[i] arbeiten
+                msg.data = steps #wird gesendet, also in der empfängerdatei mit msg.data[i] arbeiten
                 self.publisher_.publish(msg)
-                self.get_logger().info(f"Gesendet auf /joint_steps -> Achse: {axis}, Schritte: {steps}, Dir: {direction}")
+                self.get_logger().info(f"Gesendet auf /joint_steps -> Schritte: {steps}")
 
                 # 2. UART-String formatieren (z. B. "MOVE:A0:S1600:D1\n")
                 cmd_msg = String()
-                cmd_msg.data = f"MOVE:A{axis}:S{steps}:D{direction}\n"  #wird gesendet, also in der empfängerdatei mit msg.data[i] arbeiten
+                cmd_msg.data = f"MOVE:S{steps}\n"  #wird gesendet, also in der empfängerdatei mit cmd_msg.data[i] arbeiten
                 self.pub_uart_stm.publish(cmd_msg)
-                self.get_logger().info(f"Gesendet auf /uart_stm: MOVE:A{axis}:S{steps}:D{direction}\n")
+                self.get_logger().info(f"Gesendet auf /uart_stm: MOVE:S{steps}\n")
 
             except ValueError:
                 self.get_logger().error("Bitte nur Ganzzahlen eingeben!")

@@ -10,6 +10,8 @@ def generate_launch_description():
         'config',
         'arm_parameter.yaml'
     )
+    pkg_share = get_package_share_directory('arm_control')
+    rqt_perspective_path = os.path.join(pkg_share, 'config', 'arm_dashboard.perspective')
 
     return LaunchDescription([
         # Node 1: Input
@@ -30,9 +32,10 @@ def generate_launch_description():
         ),
         # In arm_system.launch.py hinzufügen:
         Node(
-            package='rqt_publisher',
-            executable='rqt_publisher',
-            name='rqt_publisher'
-        )
-        # Node 3: UART-Bridge
+            package='rqt_gui',
+            executable='rqt_gui',
+            name='rqt_gui',
+            arguments=['--perspective-file', rqt_perspective_path],
+            output='screen')
+                # Node 3: UART-Bridge
     ])

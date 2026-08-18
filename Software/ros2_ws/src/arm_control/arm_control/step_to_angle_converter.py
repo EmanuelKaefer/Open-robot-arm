@@ -3,6 +3,7 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Int32MultiArray
 from sensor_msgs.msg import JointState
+from std_srvs.srv import Trigger
 
 
 class StepToAngleConverter(Node):
@@ -24,24 +25,47 @@ class StepToAngleConverter(Node):
         self.sub = self.create_subscription(Int32MultiArray, '/joint_steps', self.step_callback, 10)    #subscibe to steps
         self.pub = self.create_publisher(JointState, '/joint_states', 10)                  #publish standadised /jointsates for MOVIT u Rviz
 
-        # Initialen Zustand publizieren (Nullstellung) siehe funktion 
+        self.srv = self.create_service(Trigger, '/home_arm', self.home_callback)    #server für homing erstellen damit der arm wirklich auf 6*0 steht
+
+        # Initialen Zustand publizieren (Nullstellung), wichtig damit MOVEIT2 startet müssen sofort werte auf Joint_states sein 
         self.publish_joint_states() 
 
-    def step_callback(self, msg):
-        #schaut ob 3 Werte ankommen, msg.data ist das was reinkommt durch /joint_steps
-        if len(msg.data) < 3:
-            return
 
-        axis = msg.data[0]  #welche achse
-        steps = msg.data[1] #wie viele schritte
-        direction = 1.0 if msg.data[2] == 1 else -1.0   #welche richtung
-        #schaut ob die achse existeirt(im rahmen 0 bis 5-->6 achsen ist)
-        if 0 <= axis < 6:
-            # 1. Delta in Grad berechnen
-            delta_deg = direction * (steps / self.STEPS_PER_REV) * (360.0 / self.GEAR_RATIO)   
-            
-            # 2. In Radiant umrechnen und Position aktualisieren
-            self.joint_positions[axis] += math.radians(delta_deg)
+    def home_callback(self, request, response):
+        self.get_logger().info('Homing-Befehl empfangen. Kalibriere Nullpunkt...')
+
+        # Hier würde später das Warten auf das Signal deiner Serial-Bridge / MCU stehen:
+        # ------------------------------------------------------------------------
+        # MCU fährt auf Endschalter -> meldet "OK" zurück...
+        # ------------------------------------------------------------------------
+
+        # Winkel im Code auf echten Nullpunkt zurücksetzen
+        self.joint_positions = [0.0] * 6
+
+        # Neue Nullstellung sofort auf joint_states senden
+        self.publish_joint_states()
+
+        # Antwort an den Service-Aufrufer schicken
+        response.success = True
+        response.message = 'Homing erfolgreich! Alle Winkel auf 0.0 rad gesetzt.'
+        return response
+
+
+
+
+    def step_callback(self, msg):
+ 
+        steps = msg.data #wie viele schritte
+        delta_deg=[]
+
+        #schaut ob die achsen im rahmen sind 
+        if len(steps) == 6:
+            for i in range(6):
+                # 1. Delta in Grad berechnen
+                delta_deg.append((steps[i] / self.STEPS_PER_REV) * (360.0 / self.GEAR_RATIO))   
+
+                # 2. In Radiant umrechnen und Position aktualisieren
+                self.joint_positions[i] += math.radians(delta_deg[i])
 
             # 3. Aktualisierten Zustand senden wieder namen und position als standadisiertes topic
             self.publish_joint_states()

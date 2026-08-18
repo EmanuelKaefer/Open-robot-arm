@@ -14,7 +14,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
 
         #kopiert alle .yaml files aus seup in das shared verzeichnis install
-        (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),
+        (os.path.join('share', package_name, 'config'), glob('config/*')),
 
         #kopiert alle .launch.py files aus launch in das shared verzeichnis install
         (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')),
