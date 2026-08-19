@@ -34,7 +34,7 @@ setup(
         'console_scripts': [
             'step_publisher = arm_control.step_publisher:main',
             'step_converter = arm_control.step_to_angle_converter:main',
-            'serial_bridge = arm_control.serial_bridge:main',
+            'uart_bridge = arm_control.uart_bridge:main',
         ],
     },
     
