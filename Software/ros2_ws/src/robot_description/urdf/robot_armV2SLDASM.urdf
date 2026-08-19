@@ -84,9 +84,9 @@
       </geometry>
     </collision>
   </link>
-  <joint
+ <joint
     name="shoulder_joint1"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="0.046 0.01 -0.001"
       rpy="0 0 0" />
@@ -96,6 +96,11 @@
       link="shoulder_link" />
     <axis
       xyz="0 0 1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="50"
+      velocity="3.14" />
   </joint>
   <link
     name="upperarm_link">
@@ -255,7 +260,7 @@
   </link>
   <joint
     name="wrist_turn_joint"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="-0.0325 -0.0121430516635518 0.0675"
       rpy="0 0 0" />
@@ -265,6 +270,11 @@
       link="wrist_turn_link" />
     <axis
       xyz="0 -1 0" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="50"
+      velocity="3.14" />
   </joint>
   <link
     name="wrist_tilt_link">
@@ -364,9 +374,9 @@
       </geometry>
     </collision>
   </link>
-  <joint
+ <joint
     name="gripper_turn_joint"
-    type="continuous">
+    type="revolute">
     <origin
       xyz="-0.052084233509625 0.0664999999999997 0"
       rpy="0 0 0" />
@@ -376,6 +386,11 @@
       link="gripper_turn_link" />
     <axis
       xyz="0 1 0" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="50"
+      velocity="3.14" />
   </joint>
     <!--
   <link
