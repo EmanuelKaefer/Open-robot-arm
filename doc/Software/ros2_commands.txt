@@ -1,0 +1,4 @@
+homing: ros2 service call /home_arm std_srvs/srv/Trigger "{}"
+launch rviz: ros2 launch robot_moveit_config demo.launch.py
+run the sender node: ros2 launch robot_moveit_config demo.launch.py
+source:  source install/setup.bash

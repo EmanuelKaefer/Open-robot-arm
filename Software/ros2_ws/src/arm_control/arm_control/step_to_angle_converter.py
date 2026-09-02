@@ -9,13 +9,6 @@ from std_srvs.srv import Trigger
 class StepToAngleConverter(Node):
     def __init__(self):
         super().__init__('step_to_angle_converter')
-        
-        # System-Parameter
-        self.declare_parameter('steps_per_rev', 3200)
-        self.declare_parameter('gear_ratio', 20.0)
-        #System parameter aus arm_parameter.yaml auslesen
-        self.STEPS_PER_REV = self.get_parameter('steps_per_rev').value
-        self.GEAR_RATIO = self.get_parameter('gear_ratio').value
 
         #jointnamen und startposition definieren(auf URDF anpassen) weil MOVEIT u RVIZ wollen standardisierte nachrichten
         self.joint_names = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6']
@@ -49,23 +42,6 @@ class StepToAngleConverter(Node):
         response.success = True
         response.message = 'Homing erfolgreich! Alle Winkel auf 0.0 rad gesetzt.'
         return response
-
-    def step_callback(self, msg):
- 
-        steps = msg.data #wie viele schritte
-        delta_deg=[]
-
-        #schaut ob die achsen im rahmen sind 
-        if len(steps) == 6:
-            for i in range(6):
-                # 1. Delta in Grad berechnen
-                delta_deg.append((steps[i] / self.STEPS_PER_REV) * (360.0 / self.GEAR_RATIO))   
-
-                # 2. In Radiant umrechnen und Position aktualisieren
-                self.joint_positions[i] += math.radians(delta_deg[i])
-
-            # 3. Aktualisierten Zustand senden wieder namen und position als standadisiertes topic
-            self.publish_joint_states()
 
     def publish_joint_states(self):
         msg = JointState()  #sagt das auf Jointstate gepublished wird
