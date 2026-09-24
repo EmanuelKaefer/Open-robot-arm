@@ -32,7 +32,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,8 +66,6 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
-// Arrays for counting steps for all 6 axes
-
 
 #define axis 2
 
@@ -76,6 +74,15 @@ UART_HandleTypeDef huart3;
 #define MICROSTEPS 16.0f //defined microsteps
 #define GEAR_RATIO 20.0f //gear ratio for every axis
 
+
+//uart setup
+uint8_t rx_byte = 0;
+char rx_buffer[128];
+uint8_t rx_index = 0;
+volatile uint8_t cmd_ready = 0;
+uint8_t uart_result=0;
+
+float target_steps[] ={0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -100,6 +107,8 @@ static void MX_SPI2_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+
+
 // Arrays für die Hardware-Timer
 TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim1, &htim2, &htim3, &htim4, &htim8, &htim10};
 uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
@@ -116,8 +125,6 @@ uint16_t DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin
 
 // Status-Variables
 uint8_t ax = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
-
-float target_steps[] ={50000.0f, 50000.0f, 0.0f,0.0f,0.0f,0.0f};
 
 volatile uint32_t debug_counter = 0;
 
@@ -142,7 +149,7 @@ typedef enum {
     STATE_ERROR
 } SystemState;
 
-SystemState currentState = STATE_INIT;
+SystemState currentState = STATE_READY;	//TODO: change back
 
 //variables for ramp profile
 typedef struct {
@@ -156,7 +163,7 @@ typedef struct {
 } AxisRamp;
 
 AxisRamp axisRamp[6];
-//war exacte fahrt von Limitswitch zu 0 position
+
 
 //Stop/Start
 static void Step_Start(uint8_t ax)
@@ -308,6 +315,40 @@ void StartSyncedMove(float target_steps[6], float accel, float vmax_max, uint8_t
     }
 }
 
+uint8_t process_uart_command(void) {
+    // Wenn kein neuer Befehl vorliegt, sofort abbrechen
+    if (!cmd_ready) {
+        return 0;
+    }
+    uint8_t result=0;
+    cmd_ready = 0; // Flag zurücksetzen
+
+    // Fall 1: Homing-Befehl
+    if (strncmp(rx_buffer, "HOME", 4) == 0) {
+        //printf("OK\n");
+        result = 1;
+    }
+    // Fall 2: Bewegungsbefehl ("MOVE J1:... J2:...")
+    else if (strncmp(rx_buffer, "MOVE", 4) == 0) {
+        int parsed = sscanf(rx_buffer, "MOVE J1:%f J2:%f J3:%f J4:%f J5:%f J6:%f",
+                            &target_steps[0], &target_steps[1], &target_steps[2],
+                            &target_steps[3], &target_steps[4], &target_steps[5]);
+
+        if (parsed == 6.0) {
+        	result = 2;//normale sachen abfahren
+        	//for (uint8_t i = 0; i<6; i++){
+			//	printf("target steps %d: %f", i, target_steps[i]);
+			} else {
+				result = -1;//error
+			}
+
+    }
+
+    // Puffer leeren für die nächste Nachricht
+    memset(rx_buffer, 0, sizeof(rx_buffer));
+
+    return result;
+}
 
 /* USER CODE END 0 */
 
@@ -351,9 +392,11 @@ int main(void)
   MX_TIM10_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-
+  //uart empfang aktivieren
+  HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
+  HAL_UART_Receive_IT(&huart3, &rx_byte, 1);
   //start TIM5 in interrupt mode
-  HAL_TIM_Base_Start_IT(&htim5);	//goofy ahh das ma des selber mochn muas lowk so 3std debugen bis i do draufkemma bi
+  HAL_TIM_Base_Start_IT(&htim5);	//goofy ahh das ma des selber mochn muas lowk so 3tog debugen bis i do draufkemma bi
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -396,54 +439,61 @@ int main(void)
         break;
 
       case STATE_HOMING:
-          //uint8_t started = 0;
-          //uint8_t ax = current_homingaxis;
-
+          printf("OK\n\r");
 
           break;
 
       case STATE_HOMING_OFFSET:
-    	  if (print_results_flag == 0) {
-
-    	          uint8_t all_finished = 1;
-    	          for(uint8_t i = 0; i < axis; i++) {
-    	              // Wenn eine Achse losfahren sollte, aber ihr active-Flag noch 1 ist
-    	              if (axisRamp[i].active == 1) {
-    	                  all_finished = 0;
-    	                  break; // Nicht alle fertig, Prüfung abbrechen
-    	              }
-    	          }
-
-    	          // Wenn alle Achsen fertig sind -> Ergebnisse ausdrucken!
-    	          if (all_finished == 1) {
-    	              printf("\n--- Synchronisations-Test ---\n");
-    	              for(uint8_t i = 0; i < axis; i++) {
-    	                  if (target_steps[i] != 0.0f) { // Nur bewegte Achsen anzeigen
-    	                      printf("Achse %d: %lu ms\n", i, axis_finish_time[i]);
-    	                  }
-    	              }
-    	              printf("-----------------------------\n");
-
-    	              // Flag setzen, damit wir nicht endlos spammen
-    	              print_results_flag = 1;
-
-    	          }
-    	          //currentState=STATE_HOMING;
-    	      }
+//    	  if (print_results_flag == 0) {
+//
+//    	          uint8_t all_finished = 1;
+//    	          for(uint8_t i = 0; i < axis; i++) {
+//    	              // Wenn eine Achse losfahren sollte, aber ihr active-Flag noch 1 ist
+//    	              if (axisRamp[i].active == 1) {
+//    	                  all_finished = 0;
+//    	                  break; // Nicht alle fertig, Prüfung abbrechen
+//    	              }
+//    	          }
+//
+//    	          // Wenn alle Achsen fertig sind -> Ergebnisse ausdrucken!
+//    	          if (all_finished == 1) {
+//    	              printf("\n--- Synchronisations-Test ---\n");
+//    	              for(uint8_t i = 0; i < axis; i++) {
+//    	                  if (target_steps[i] != 0.0f) { // Nur bewegte Achsen anzeigen
+//    	                      printf("Achse %d: %lu ms\n", i, axis_finish_time[i]);
+//    	                  }
+//    	              }
+//    	              printf("-----------------------------\n");
+//
+//    	              // Flag setzen, damit wir nicht endlos spammen
+//    	              print_results_flag = 1;
+//
+//    	          }
+//    	          //currentState=STATE_HOMING;
+//    	      }
           break;
 
       case STATE_READY:
+    	  //printf("MOVvvvvvvvvvvvvvING\r\n");
+    	  uart_result = process_uart_command();
+    	  if (uart_result==1){
+    		  currentState=STATE_HOMING;
+    	  }else if (uart_result==2) {
+    		  currentState=STATE_MOVING;
+		} else if (uart_result==-1) {
+			currentState=STATE_ERROR;
+		}
 
-    	  StartSyncedMove(target_steps, 5000, 20000, axis);
 
-    	  currentState=STATE_MOVING;
+    	  //currentState=STATE_MOVING;
           break;
 
       case STATE_MOVING:
     	  printf("MOVING\r\n");
-
+    	  StartSyncedMove(target_steps, 5000, 20000, axis);
     	  currentState=STATE_HOMING_OFFSET;
 	  	  break;
+
       case STATE_ERROR:
     	  printf("BAD");
     	  currentState=STATE_HOMING_OFFSET;
@@ -1113,6 +1163,25 @@ int _write(int file, char *ptr, int len) {
     HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
     return len;
 }
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+    if (huart->Instance == USART2) {
+        if (rx_byte == '\n' || rx_byte == '\r') {
+            if (rx_index > 0) {
+                rx_buffer[rx_index] = '\0'; // String terminieren
+                cmd_ready = 1;              // Hauptschleife Bescheid geben
+                rx_index = 0;
+            }
+        } else {
+            if (rx_index < sizeof(rx_buffer) - 1) {
+                rx_buffer[rx_index++] = rx_byte;
+            }
+        }
+        // Interrupt für das nächste Byte direkt wieder scharfschalten
+        HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
+    }
+}
+
 /* USER CODE END 4 */
 
 /**

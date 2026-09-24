@@ -45,6 +45,8 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include "SPIconfig.h"
 #include <math.h>
+#include <string.h>
+#include <stdio.h>
 
 
 
