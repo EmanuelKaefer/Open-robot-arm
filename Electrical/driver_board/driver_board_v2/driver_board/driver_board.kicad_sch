@@ -1,7 +1,7 @@
 (kicad_sch
-	(version 20250114)
+	(version 20260306)
 	(generator "eeschema")
-	(generator_version "9.0")
+	(generator_version "10.0")
 	(uuid "914a9dfd-cc72-459d-a4b5-1249c31e6215")
 	(paper "A4")
 	(lib_symbols)
@@ -18,11 +18,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "0f2edaf0-864d-4f2a-a0d0-ce96f74fd0f2")
 		(property "Sheetname" "Gripper"
 			(at 177.8 67.8684 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -32,6 +34,8 @@
 		)
 		(property "Sheetfile" "Gripper.kicad_sch"
 			(at 177.8 89.4846 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -60,11 +64,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "147120b2-4873-41c0-b3ac-f217f740a2da")
 		(property "Sheetname" "Motordrivers"
 			(at 60.96 100.8884 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -74,6 +80,8 @@
 		)
 		(property "Sheetfile" "Motordrivers.kicad_sch"
 			(at 60.96 122.5046 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -102,11 +110,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "1d053789-bb06-47b5-b093-e7b74b4d3277")
 		(property "Sheetname" "Peripherals"
 			(at 119.38 100.8884 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -116,6 +126,8 @@
 		)
 		(property "Sheetfile" "peripherals.kicad_sch"
 			(at 119.38 122.5046 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -144,11 +156,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "465404f0-d3d7-43fb-a363-deca940ffc67")
 		(property "Sheetname" "MCU"
 			(at 60.96 67.8684 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -158,6 +172,8 @@
 		)
 		(property "Sheetfile" "microcontroller.kicad_sch"
 			(at 60.96 89.4846 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -186,11 +202,13 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 0 0 0 0)
 		)
 		(uuid "d8356156-726b-4444-b74b-74e8e554bca3")
 		(property "Sheetname" "PSU"
 			(at 119.38 67.8684 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -200,6 +218,8 @@
 		)
 		(property "Sheetfile" "power-supply.kicad_sch"
 			(at 119.38 89.4846 0)
+			(show_name no)
+			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
