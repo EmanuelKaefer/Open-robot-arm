@@ -1693,17 +1693,17 @@
 	)
 	(global_label "ENC_A5_RAW"
 		(shape input)
-		(at 63.5 68.58 180)
+		(at 64.77 62.23 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "1af48523-fe26-4c54-96c7-b3f723710e73")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 48.722 68.58 0)
+			(at 79.548 62.23 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1711,7 +1711,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
@@ -1741,17 +1741,17 @@
 	)
 	(global_label "ENC_A2_RAW"
 		(shape input)
-		(at 63.5 60.96 180)
+		(at 64.77 69.85 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "3e66ff4a-711c-40ce-b16a-7f5cefad068a")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 48.722 60.96 0)
+			(at 79.548 69.85 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1759,7 +1759,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
@@ -1813,17 +1813,17 @@
 	)
 	(global_label "ENC_A1_RAW"
 		(shape input)
-		(at 63.5 58.42 180)
+		(at 64.77 72.39 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "6119e8e1-3783-414e-b825-3060feb7163b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 48.722 58.42 0)
+			(at 79.548 72.39 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1831,7 +1831,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
@@ -1981,17 +1981,17 @@
 	)
 	(global_label "ENC_A4_RAW"
 		(shape input)
-		(at 63.5 66.04 180)
+		(at 64.77 64.77 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "bc0e40b5-8f12-45ff-a61e-5615015a7915")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 48.722 66.04 0)
+			(at 79.548 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -1999,23 +1999,23 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
 	(global_label "ENC_A3_RAW"
 		(shape input)
-		(at 63.5 63.5 180)
+		(at 64.77 67.31 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "c02b88e4-b243-4bff-9c47-2714c01e6d85")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 48.722 63.5 0)
+			(at 79.548 67.31 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2023,23 +2023,23 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
 	(global_label "ENC_A6_RAW"
 		(shape input)
-		(at 63.5 71.12 180)
+		(at 64.77 59.69 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify right)
+			(justify left)
 		)
 		(uuid "d5a91cd1-129a-4cef-863f-a4d6229547e2")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 48.722 71.12 0)
+			(at 79.548 59.69 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2047,7 +2047,7 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 	)
@@ -3426,7 +3426,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Conn_01x06_Pin")
-		(at 68.58 66.04 180)
+		(at 59.69 64.77 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3437,7 +3437,7 @@
 		(fields_autoplaced yes)
 		(uuid "c6d01933-c21b-43e0-afc0-0ce67b864ee6")
 		(property "Reference" "J10"
-			(at 69.85 63.4999 0)
+			(at 58.42 67.3101 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3448,7 +3448,7 @@
 			)
 		)
 		(property "Value" "Conn_01x06_Pin"
-			(at 69.85 66.0399 0)
+			(at 58.42 64.7701 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -3459,7 +3459,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 68.58 66.04 0)
+			(at 59.69 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3470,7 +3470,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 68.58 66.04 0)
+			(at 59.69 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3481,7 +3481,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x06, script generated"
-			(at 68.58 66.04 0)
+			(at 59.69 64.77 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
