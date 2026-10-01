@@ -149,7 +149,7 @@ typedef enum {
     STATE_ERROR
 } SystemState;
 
-SystemState currentState = STATE_READY;	//TODO: change back
+SystemState currentState = STATE_INIT;	//TODO: change back
 
 //variables for ramp profile
 typedef struct {
@@ -461,7 +461,7 @@ int main(void)
 //    	              for(uint8_t i = 0; i < axis; i++) {
 //    	                  if (target_steps[i] != 0.0f) { // Nur bewegte Achsen anzeigen
 //    	                      printf("Achse %d: %lu ms\n", i, axis_finish_time[i]);
-//    	                  }
+//
 //    	              }
 //    	              printf("-----------------------------\n");
 //
@@ -490,6 +490,9 @@ int main(void)
 
       case STATE_MOVING:
     	  printf("MOVING\r\n");
+    	  for (uint8_t i= 0; i < 5; i++) {
+			printf("targetsteps %f", target_steps[i]);
+		}
     	  StartSyncedMove(target_steps, 5000, 20000, axis);
     	  currentState=STATE_HOMING_OFFSET;
 	  	  break;
