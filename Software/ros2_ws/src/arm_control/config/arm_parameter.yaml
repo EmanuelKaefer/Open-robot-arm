@@ -1,0 +1,10 @@
+step_to_angle_converter:
+  ros__parameters:
+    steps_per_rev: 3600
+    gear_ratio: 20.0
+    
+
+serial_bridge:
+  ros__parameters:
+    port: "/dev/ttyACM0"
+    baudrate: 115200

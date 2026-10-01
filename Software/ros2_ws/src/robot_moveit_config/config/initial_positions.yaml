@@ -1,0 +1,9 @@
+# Default initial positions for robot_armV2SLDASM's ros2_control fake system
+
+initial_positions:
+  elbow_joint: 0.0
+  gripper_turn_joint: 0.0
+  shoulder_joint1: 0.0
+  shoulder_joint2: 0.0
+  wrist_tilt_joint: 0.0
+  wrist_turn_joint: 0.0
