@@ -22,7 +22,7 @@
 GPIO_TypeDef* CS_PORTS[6] = {TMC1_CS_GPIO_Port, TMC2_CS_GPIO_Port, TMC3_CS_GPIO_Port, TMC4_CS_GPIO_Port, TMC5_CS_GPIO_Port, TMC6_CS_GPIO_Port};
 uint16_t      CS_PINS[6]  = {TMC1_CS_Pin, TMC2_CS_Pin, TMC3_CS_Pin, TMC4_CS_Pin, TMC5_CS_Pin, TMC6_CS_Pin};
 
-extern SPI_HandleTypeDef hspi2;
+
 
 
 // --- SPI Write Funktion ---
