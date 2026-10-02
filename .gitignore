@@ -218,6 +218,29 @@ CMakeLists.txt.user*
 !.clang-format
 !.clang-tidy
 
+# Build-Ausgaben
+build/
+Debug/
+Release/
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+*.su
+*.cyclo
+
+# VS Code / CMake
+.vscode/
+.cache/
+CMakeUserPresets.json
+
+# CubeIDE-Workspace-Reste
+.metadata/
+.settings/
+RemoteSystemsTempFiles/
 
 
 
