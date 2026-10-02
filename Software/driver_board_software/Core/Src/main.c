@@ -439,32 +439,22 @@ int main(void)
           break;
 
       case STATE_HOMING_OFFSET:
-//    	  if (print_results_flag == 0) {
-//
-//    	          uint8_t all_finished = 1;
-//    	          for(uint8_t i = 0; i < axis; i++) {
-//    	              // Wenn eine Achse losfahren sollte, aber ihr active-Flag noch 1 ist
-//    	              if (axisRamp[i].active == 1) {
-//    	                  all_finished = 0;
-//    	                  break; // Nicht alle fertig, Prüfung abbrechen
-//    	              }
-//    	          }
-//
-//    	          // Wenn alle Achsen fertig sind -> Ergebnisse ausdrucken!
-//    	          if (all_finished == 1) {
-//    	              printf("\n--- Synchronisations-Test ---\n");
-//    	              for(uint8_t i = 0; i < axis; i++) {
-//    	                  if (target_steps[i] != 0.0f) { // Nur bewegte Achsen anzeigen
-//    	                      printf("Achse %d: %lu ms\n", i, axis_finish_time[i]);
-//
-//    	              }
-//    	              printf("-----------------------------\n");
-//
-//    	              // Flag setzen, damit wir nicht endlos spammen
-//    	              print_results_flag = 1;
-//
-//    	          }
-//    	          //currentState=STATE_HOMING;
+        {
+          uint8_t all_finished = 1;
+          for(uint8_t i = 0; i < axis; i++) {
+            // Prüfen, ob noch eine Achse aktiv ist
+            if (axisRamp[i].active == 1) {
+              all_finished = 0;
+              break; 
+            }
+          }
+          
+        // Wenn alle Achsen fertig sind, wieder bereit für den nächsten Befehl machen
+        if (all_finished == 1) {
+            currentState = STATE_READY; 
+        }
+        break;
+      }
 //    	      }
           break;
 
