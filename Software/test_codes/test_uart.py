@@ -4,10 +4,13 @@ import time
 # --- EINSTELLUNGEN ---
 SERIAL_PORT = 'COM10'  # Hier deinen echten COM-Port eintragen
 BAUD_RATE = 115200
-STEPS = 10000.0       # Wie viele Schritte getestet werden sollen
+STEPS1 = 20000.0      # Wie viele Schritte getestet werden sollen
+STEPS2 =15000.0
 WAIT_TIME = 5.0       # Wartezeit in Sekunden (muss länger sein als die Fahrt dauert!)
-
-
+#15000/20000: 8.5s
+#20000/15000:8.5s
+#15000/200:7.7s
+#200/15000: 7.7s
 def main():
     print(f"Verbinde mit {SERIAL_PORT}...")
     try:
@@ -22,7 +25,7 @@ def main():
             i+=1
             print("Durchlauf:", i)
             # 1. Vorwärts fahren
-            cmd_fwd = f"MOVE J1:{STEPS} J2:{STEPS} J3:0.0 J4:0.0 J5:0.0 J6:0.0\n"
+            cmd_fwd = f"MOVE J1:{STEPS1} J2:{STEPS2} J3:0.0 J4:0.0 J5:0.0 J6:0.0\n"
             print(f"Sende: {cmd_fwd.strip()}")
             ser.write(cmd_fwd.encode('utf-8'))
             
@@ -30,7 +33,7 @@ def main():
             time.sleep(WAIT_TIME)
             
             # 2. Rückwärts fahren
-            cmd_rev = f"MOVE J1:{-STEPS} J2:{-STEPS} J3:0.0 J4:0.0 J5:0.0 J6:0.0\n"
+            cmd_rev = f"MOVE J1:{-STEPS1} J2:{-STEPS2} J3:0.0 J4:0.0 J5:0.0 J6:0.0\n"
             print(f"Sende: {cmd_rev.strip()}")
             ser.write(cmd_rev.encode('utf-8'))
             
