@@ -21,36 +21,27 @@ volatile uint8_t cmd_ready = 0;
 char rx_buffer[128];
 
 uint8_t process_uart_command(void) {
-    // Wenn kein neuer Befehl vorliegt, sofort abbrechen
-    if (!cmd_ready) {
-        return 0;
-    }
-    uint8_t result=0;
-    cmd_ready = 0; // Flag zurücksetzen
+    if (!cmd_ready) return 0;
+    uint8_t result = 0;
+    cmd_ready = 0;
 
-    // Fall 1: Homing-Befehl
-    if (strncmp(rx_buffer, "HOME", 4) == 0) {
-        //printf("OK\n");
-        result = 1;
-    }
-    // Fall 2: Bewegungsbefehl ("MOVE J1:... J2:...")
-    else if (strncmp(rx_buffer, "MOVE", 4) == 0) {
-        int parsed = sscanf(rx_buffer, "MOVE J1:%f J2:%f J3:%f J4:%f J5:%f J6:%f",
-                            &target_steps[0], &target_steps[1], &target_steps[2],
-                            &target_steps[3], &target_steps[4], &target_steps[5]);
-
-        if (parsed == 6.0) {
-        	result = 2;//normale sachen abfahren
-        	//for (uint8_t i = 0; i<6; i++){
-			//	printf("target steps %d: %f", i, target_steps[i]);
-			} else {
-				result = -1;//error
-			}
-
+    // Wegpunkt zur Queue hinzufügen
+    if (strncmp(rx_buffer, "MOVE", 4) == 0) {
+        if (wp_count < MAX_WP) {
+            int parsed = sscanf(rx_buffer, "MOVE J1:%f J2:%f J3:%f J4:%f J5:%f J6:%f",
+                                &wp_queue[wp_head][0], &wp_queue[wp_head][1], 
+                                &wp_queue[wp_head][2], &wp_queue[wp_head][3], 
+                                &wp_queue[wp_head][4], &wp_queue[wp_head][5]);
+            if (parsed == 6) {
+                wp_head = (wp_head + 1) % MAX_WP;
+                wp_count++;
+                printf("Waypoint %d/%d geladen.\r\n", wp_count, MAX_WP);
+            }
+        } else {
+            printf("ERROR: Queue voll!\r\n");
+        }
     }
 
-    // Puffer leeren für die nächste Nachricht
     memset(rx_buffer, 0, sizeof(rx_buffer));
-
-    return result;
+    return result; 
 }

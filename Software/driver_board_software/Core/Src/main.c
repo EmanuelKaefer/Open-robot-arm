@@ -5,7 +5,7 @@
   * @brief          : Main program body
   ******************************************************************************
   * @attention
-  *
+  * 
   * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
@@ -73,6 +73,7 @@ uint8_t rx_byte = 0;
 uint8_t rx_index = 0;
 uint8_t uart_result=0;
 
+//target steps array
 float target_steps[] ={0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
 /* USER CODE END PV */
 
@@ -118,7 +119,7 @@ typedef enum {
     STATE_HOMING,
     STATE_HOMING_OFFSET,
     STATE_READY,
-	STATE_MOVING,
+	  STATE_MOVING,
     STATE_ERROR
 } SystemState;
 
@@ -183,11 +184,11 @@ int main(void)
     switch (currentState)
     {
       case STATE_INIT:
-        HAL_Delay(500); //Boot-Delay für die TMC Treiber!
+        HAL_Delay(500); //Boot-Delay
         printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
         uint8_t all_ok = 1;
         for (uint8_t ax = 0; ax < axis; ax++) {
-			printf("axis %d\r\n", ax );
+			    printf("axis %d\r\n", ax );
         	TMC_WriteReg(ax, GSTAT, 0x00000007);
         	printf("GSTAT of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
 
@@ -215,10 +216,10 @@ int main(void)
       case STATE_HOMING:
           printf("OK\n\r");
 
-          break;
+        break;
 
       case STATE_HOMING_OFFSET:
-        {
+        
           uint8_t all_finished = 1;
           for(uint8_t i = 0; i < axis; i++) {
             // Prüfen, ob noch eine Achse aktiv ist
@@ -228,43 +229,39 @@ int main(void)
             }
           }
           
-        // Wenn alle Achsen fertig sind, wieder bereit für den nächsten Befehl machen
-        if (all_finished == 1) {
+          // Wenn alle Achsen fertig sind, wieder bereit für den nächsten Befehl machen
+          if (all_finished == 1) {
             currentState = STATE_READY; 
-        }
+          }
         break;
-      }
-//    	      }
-          break;
 
       case STATE_READY:
-    	  //printf("MOVvvvvvvvvvvvvvING\r\n");
-    	  uart_result = process_uart_command();
-    	  if (uart_result==1){
-    		  currentState=STATE_HOMING;
-    	  }else if (uart_result==2) {
-    		  currentState=STATE_MOVING;
-		} else if (uart_result==-1) {
-			currentState=STATE_ERROR;
-		}
-
-
-    	  //currentState=STATE_MOVING;
-          break;
+    	  process_uart_command(); // Collekt data in the Ringpuffer
+          
+        // If there are points and no motors are running-->go
+        if (wp_count > 0 && !MotorsActive()) {
+            // StartSyncedMove gets the most recent point
+            StartSyncedMove(wp_queue[wp_tail], 5000, 20000, axis);
+            wp_tail = (wp_tail + 1) % MAX_WP;
+            wp_count--;
+            currentState = STATE_MOVING;
+        }
+      break;
 
       case STATE_MOVING:
-    	  printf("MOVING\r\n");
-    	  for (uint8_t i= 0; i < 5; i++) {
-			  printf("targetsteps %f", target_steps[i]);
-		  }
-    	  StartSyncedMove(target_steps, 5000, 20000, axis);
-    	  currentState=STATE_HOMING_OFFSET;
-	  	  break;
+    	  process_uart_command(); //Add waypoints during a movement
+          
+          // Wenn alle Achsen zum Stehen gekommen sind 
+          //if all axis are not moving go back
+          if (!MotorsActive()) {
+              currentState = STATE_READY; 
+          }
+	  	break;
 
       case STATE_ERROR:
     	  printf("BAD");
     	  currentState=STATE_HOMING_OFFSET;
-          break;
+      break;
 
     }
   }
@@ -911,12 +908,12 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-// Callback für Timer Interrupts aller Achsen (zählt Schritte)
+// Callback fot TIM interrupts
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-        if (htim->Instance == TIM5) {
-        	UpdateAllRamps(0.001f, 50);
-    }
+  if (htim->Instance == TIM5) {
+  	UpdateAllRamps(0.001f, 50);
+  }
 }
 
 // EXTI15_10 callback for homing switches

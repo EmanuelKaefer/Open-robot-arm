@@ -5,7 +5,7 @@
  *      Author: matteo gassler
  *
  */
-/*
+/* 
  * SPDX-License-Identifier: GPL-3.0-or-later
  * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
  * This program is free software: you can redistribute it and/or modify
@@ -33,13 +33,25 @@ typedef struct {
     uint8_t  active;
 } AxisRamp;
 
-// Externe Deklaration der Variablen (Speicher wird in der .c reserviert)
+
+#define MAX_WP 20 //max amount of Waypoints
+#define GLOBAL_ACCEL 5000.0f    //max amount of acceleration
+#define GLOBAL_VMAX 20000.0f    //max vmax
+// Ringpuffer for Multiple Waypints
+extern float wp_queue[MAX_WP][6];
+extern volatile uint8_t wp_head;
+extern volatile uint8_t wp_tail;
+extern volatile uint8_t wp_count;
+
+
+// Externs
 extern AxisRamp axisRamp[6];
 extern volatile uint32_t move_start_time;
 extern volatile uint32_t axis_finish_time[6];
 extern volatile uint8_t print_results_flag;
 
-// Öffentliche Funktionen (Prototypen)
+//Prototypes
+uint8_t MotorsActive(void);
 void UpdateAllRamps(float dt, uint8_t min_freq);
 void StartMove(uint8_t ax, float target_steps, float vmax, float accel);
 void StartSyncedMove(float target_steps[6], float accel, float vmax_max, uint8_t axis_count);
