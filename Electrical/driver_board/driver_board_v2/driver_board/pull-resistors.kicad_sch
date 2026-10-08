@@ -2,7 +2,7 @@
 	(version 20260306)
 	(generator "eeschema")
 	(generator_version "10.0")
-	(uuid "2722c381-4f4a-4d35-ac67-3377277f3601")
+	(uuid "b4199b53-17ab-43eb-babd-a5f5fd254f6c")
 	(paper "A4")
 	(lib_symbols
 		(symbol "Device:R"
@@ -425,8 +425,8 @@
 		(uuid "866db5a8-75d8-4bcf-b039-0c7fea5cd78e")
 	)
 	(rectangle
-		(start 190.5 20.32)
-		(end 241.3 162.56)
+		(start 187.96 20.32)
+		(end 243.84 162.56)
 		(stroke
 			(width 0)
 			(type dash)
@@ -1294,30 +1294,6 @@
 		)
 		(uuid "fb87c3b6-66ee-417f-8912-06b515776208")
 	)
-	(global_label "PA1_CS_DRV4_MCU"
-		(shape input)
-		(at 66.04 130.81 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "042f44a2-33ae-4dfb-9aab-079983022b3d")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 86.8656 130.81 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "PC9_DIR_DRV6_MCU"
 		(shape input)
 		(at 137.16 69.85 180)
@@ -1990,6 +1966,30 @@
 			)
 		)
 	)
+	(global_label "PB8_STEP_DRV6_DRV"
+		(shape input)
+		(at 218.44 22.86 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c7a8c12f-480a-4f45-8db2-eef339b983e8")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 241.1403 22.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
 	(global_label "PC6_STEP_DRV5_MCU"
 		(shape input)
 		(at 213.36 91.44 180)
@@ -2086,30 +2086,6 @@
 			)
 		)
 	)
-	(global_label "PB6_STEP_DRV4_DRV"
-		(shape input)
-		(at 218.44 22.86 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "e8d2d95c-a28d-4721-bc62-c082263fc804")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 241.1403 22.86 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "PA10_DIR_DRV4_MCU"
 		(shape input)
 		(at 137.16 91.44 180)
@@ -2147,6 +2123,30 @@
 		(uuid "fd3c4162-c9ab-4182-8a36-8501063a63af")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 241.1403 46.99 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "PB0_CS_DRV6_DRV"
+		(shape input)
+		(at 66.04 130.81 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "fd8b5c2a-799a-4d78-8686-1f5843b672e2")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 86.6237 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
