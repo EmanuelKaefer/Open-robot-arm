@@ -663,7 +663,7 @@
         "uuid": "914a9dfd-cc72-459d-a4b5-1249c31e6215"
       }
     ],
-    "used_designators": "C1-51,DRV1_BASE1,DRV6_WRISTTILT1,U1-5,DRV2_SHOULDER1,L1-3,DRV3_UPPERARM1,DRV4_FOREARM1,R1-18,#FLG1-5,DRV5_WRISTTURN1,#PWR1-76,FB1,J1-12,SW1-2,Y1",
+    "used_designators": "C1-51,DRV1_BASE1,DRV6_WRISTTILT1,U1-5,DRV2_SHOULDER1,L1-3,DRV3_UPPERARM1,DRV4_FOREARM1,R1-34,#FLG1-5,DRV5_WRISTTURN1,#PWR1-91,FB1,J1-12,SW1-2,Y1",
     "variants": []
   },
   "sheets": [
@@ -690,6 +690,10 @@
     [
       "0f2edaf0-864d-4f2a-a0d0-ce96f74fd0f2",
       "Gripper"
+    ],
+    [
+      "81c00157-d138-490e-bd18-4d0c4928a6a5",
+      "Pull resistors"
     ]
   ],
   "text_variables": {},

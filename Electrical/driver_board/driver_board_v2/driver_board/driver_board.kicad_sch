@@ -190,6 +190,52 @@
 		)
 	)
 	(sheet
+		(at 177.8 101.6)
+		(size 43.18 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "81c00157-d138-490e-bd18-4d0c4928a6a5")
+		(property "Sheetname" "Pull resistors"
+			(at 177.8 100.8884 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "pull-resistors.kicad_sch"
+			(at 177.8 122.5046 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "driver_board"
+				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215"
+					(page "7")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 119.38 68.58)
 		(size 43.18 20.32)
 		(exclude_from_sim no)
