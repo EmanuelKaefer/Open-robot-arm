@@ -3,3 +3,5 @@ launch rviz: ros2 launch robot_moveit_config demo.launch.py
 run the sender node: ros2 run arm_control uart_bridge
 source:  source install/setup.bash
 build: colcon build
+
+uart Syntax:  MOVE J1:123412 J2:12343 J3:123444 J4:134444 J5:134444 J6:134444
