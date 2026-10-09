@@ -66,13 +66,6 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
-
-
-//uart setup
-uint8_t rx_byte = 0;
-uint8_t rx_index = 0;
-uint8_t uart_result=0;
-
 //target steps array
 float target_steps[] ={0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
 /* USER CODE END PV */
@@ -91,14 +84,11 @@ static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
-// Deklaration der TMC Funktion, falls nicht über Header verfügbar
-//extern void TMC_WriteReg(uint8_t addr, uint32_t value);
-//extern uint32_t TMC_ReadReg(uint8_t addr);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 
 // Status-Variables
 uint8_t ax = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
@@ -123,7 +113,7 @@ typedef enum {
     STATE_ERROR
 } SystemState;
 
-SystemState currentState = STATE_INIT;	//TODO: change back
+SystemState currentState = STATE_HOMING;	//TODO: change back
 
 /* USER CODE END 0 */
 
@@ -167,11 +157,14 @@ int main(void)
   MX_TIM10_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  //uart empfang aktivieren
-  HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
-  HAL_UART_Receive_IT(&huart3, &rx_byte, 1);
+  //reset everything to safe values(clear fifo, fifo read/write pointers, clear dir, pos, main/int flags, f_cur, cfg_ok)
+  MC_Init();
+  // Set interrupt priorities(UART-->TIM5-->everything else)
+  HAL_NVIC_SetPriority(TIM5_IRQn, 1, 0);
   //start TIM5 in interrupt mode
   HAL_TIM_Base_Start_IT(&htim5);	//goofy ahh das ma des selber mochn muas lowk so 3tog debugen bis i do draufkemma bi
+  //start uart Communication
+  Proto_Start();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -181,30 +174,33 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    Proto_Poll();
+    Proto_Send();
+
     switch (currentState)
     {
       case STATE_INIT:
         HAL_Delay(500); //Boot-Delay
-        printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
+        //printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
         uint8_t all_ok = 1;
         for (uint8_t ax = 0; ax < axis; ax++) {
-			    printf("axis %d\r\n", ax );
+			    //printf("axis %d\r\n", ax );
         	TMC_WriteReg(ax, GSTAT, 0x00000007);
-        	printf("GSTAT of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
+        	//printf("GSTAT of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
 
         	TMC_WriteReg(ax, GCONF, 0x00000000);// disable stealthchop, enable spreadcycle
-        	printf("GCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GCONF));
+        	//printf("GCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GCONF));
 
         	TMC_WriteReg(ax, IHOLDIRUN, 0x0008100A);
 
         	TMC_WriteReg(ax,  CHOPCONF, 0x140100C3); //1/16 microsteps with intpol=1
-        	printf("CHOPCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, CHOPCONF));
+        	//printf("CHOPCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, CHOPCONF));
 
         	if (TMC_ReadReg(ax, GSTAT)==0x0) {
-        		printf("GSTAT of %d ok, going into ready\r\n",ax);
+        		//printf("GSTAT of %d ok, going into ready\r\n",ax);
 
         	}else {
-        		printf("GSTAT of %d not ok:((  : 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
+        		//printf("GSTAT of %d not ok:((  : 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
         		all_ok=0;
         	}
         }
@@ -214,53 +210,24 @@ int main(void)
         break;
 
       case STATE_HOMING:
-          printf("OK\n\r");
-
+        currentState=STATE_ERROR;
         break;
 
       case STATE_HOMING_OFFSET:
         
-          uint8_t all_finished = 1;
-          for(uint8_t i = 0; i < axis; i++) {
-            // Prüfen, ob noch eine Achse aktiv ist
-            if (axisRamp[i].active == 1) {
-              all_finished = 0;
-              break; 
-            }
-          }
-          
-          // Wenn alle Achsen fertig sind, wieder bereit für den nächsten Befehl machen
-          if (all_finished == 1) {
-            currentState = STATE_READY; 
-          }
+ 
         break;
 
       case STATE_READY:
-    	  process_uart_command(); // Collekt data in the Ringpuffer
-          
-        // If there are points and no motors are running-->go
-        if (wp_count > 0 && !MotorsActive()) {
-            // StartSyncedMove gets the most recent point
-            StartSyncedMove(wp_queue[wp_tail], 5000, 20000, axis);
-            wp_tail = (wp_tail + 1) % MAX_WP;
-            wp_count--;
-            currentState = STATE_MOVING;
-        }
+
       break;
 
       case STATE_MOVING:
-    	  process_uart_command(); //Add waypoints during a movement
-          
-          // Wenn alle Achsen zum Stehen gekommen sind 
-          //if all axis are not moving go back
-          if (!MotorsActive()) {
-              currentState = STATE_READY; 
-          }
+
 	  	break;
 
       case STATE_ERROR:
-    	  printf("BAD");
-    	  currentState=STATE_HOMING_OFFSET;
+    	  currentState=STATE_HOMING;
       break;
 
     }
@@ -912,39 +879,22 @@ static void MX_GPIO_Init(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   if (htim->Instance == TIM5) {
-  	UpdateAllRamps(0.001f, 50);
-  }
-}
+  	MC_Tick();                    
+  }}
 
 // EXTI15_10 callback for homing switches
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-
+  //Placeholder
 }
 
 
 int _write(int file, char *ptr, int len) {
-    HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
-    return len;
+  HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
+  return len;
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == USART2) {
-        if (rx_byte == '\n' || rx_byte == '\r') {
-            if (rx_index > 0) {
-                rx_buffer[rx_index] = '\0'; // String terminieren
-                cmd_ready = 1;              // Hauptschleife Bescheid geben
-                rx_index = 0;
-            }
-        } else {
-            if (rx_index < sizeof(rx_buffer) - 1) {
-                rx_buffer[rx_index++] = rx_byte;
-            }
-        }
-        // Interrupt für das nächste Byte direkt wieder scharfschalten
-        HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
-    }
-}
+
 
 /* USER CODE END 4 */
 

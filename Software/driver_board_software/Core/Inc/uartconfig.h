@@ -18,4 +18,6 @@
 #include "main.h"
 
 //prototypes
-uint8_t process_uart_command(void);
+void Proto_Start(void);
+void Proto_Poll(void);
+void Proto_Send(void);
