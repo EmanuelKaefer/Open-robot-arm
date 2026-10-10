@@ -32,6 +32,7 @@
 static volatile uint8_t state      = MC_DISABLED;
 static volatile uint8_t after_stop = MC_DISABLED;
 static uint8_t  cfg_ok;
+static uint8_t  drv_ok;                 /* alle TMC-Treiber initialisiert -> Enable erlaubt */
 static uint16_t n_ticks = 10;           /* Ticks pro Sollwert-Periode */
 static float    inv_T   = 100.0f;       /* 1 / Periode in s           */
 static float    vmax[N_AX], accel[N_AX], max_jump[N_AX];
@@ -77,7 +78,13 @@ void MC_Init(void)
     f_head = f_tail = 0;
     flag_isr = flag_main = 0;
     cfg_ok = 0;
+    drv_ok = 0;
     state = MC_DISABLED;
+}
+
+void MC_SetDriversOk(uint8_t ok)
+{
+    drv_ok = ok ? 1 : 0;
 }
 
 int MC_Config(uint16_t period_ms, const float v[N_AX], const float a[N_AX])
@@ -105,7 +112,7 @@ int MC_Config(uint16_t period_ms, const float v[N_AX], const float a[N_AX])
 
 int MC_Enable(void)
 {
-    if (!cfg_ok || state != MC_DISABLED) return -1;
+    if (!cfg_ok || !drv_ok || state != MC_DISABLED) return -1;
     /* ISR läuft im Zustand DISABLED nichts -> hier ohne Sperre sicher */
     f_head = f_tail = 0;
     for (uint8_t i = 0; i < N_AX; i++) {
@@ -183,7 +190,7 @@ int MC_Push(const int32_t p[N_AX])
 
 uint8_t MC_State(void) { return state; }
 uint8_t MC_Free(void)  { return (uint8_t)(FIFO_N - FIFO_COUNT()); }
-uint8_t MC_Flags(void) { return (uint8_t)(flag_isr | flag_main | (cfg_ok ? FL_CFG_OK : 0)); }
+uint8_t MC_Flags(void) { return (uint8_t)(flag_isr | flag_main | (cfg_ok ? FL_CFG_OK : 0) | (drv_ok ? FL_DRV_OK : 0)); }
 
 void MC_GetPos(int32_t out[N_AX])
 {

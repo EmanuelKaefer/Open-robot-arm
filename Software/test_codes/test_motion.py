@@ -72,6 +72,9 @@ link = Link(PORT)
 if not link.wait(lambda st: True, 3.0):
     raise SystemExit("Kein Zustandsframe empfangen - Firmware geflasht? Port richtig?")
 print("Start:", link.state)
+if not link.wait(lambda st: st.flags & FL_DRV_OK, 3.0):
+    raise SystemExit("Treiber nicht initialisiert (DRV_OK fehlt) - Enable ist gesperrt. "
+                     "Treiber gesteckt? Motorspannung an?")
 
 # ---------- 0) Definierter Ausgangszustand (falls ein früherer Lauf abgebrochen wurde) ----------
 link.enable(False)
@@ -183,7 +186,7 @@ ok = link.wait(lambda st: st.state == FAULT, 1.0)
 check("Sprung -> FAULT mit Flag JUMP", ok and link.state.flags & FL_JUMP, link.state)
 link.clear_fault()
 st = link.fresh_state()
-check("ClearFault -> DISABLED, Flags gelöscht", st.state == DISABLED and st.flags == FL_CFG_OK, st)
+check("ClearFault -> DISABLED, Flags gelöscht", st.state == DISABLED and st.flags == FL_CFG_OK | FL_DRV_OK, st)
 
 # ---------- Zusammenfassung Verbindung ----------
 time.sleep(0.2)

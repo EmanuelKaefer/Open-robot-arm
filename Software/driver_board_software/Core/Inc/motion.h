@@ -20,10 +20,11 @@
 #define FIFO_N  8U               /* Zweierpotenz! */
 
 enum { MC_DISABLED = 0, MC_IDLE = 1, MC_RUNNING = 2, MC_STOPPING = 3, MC_FAULT = 4 };
-enum { FL_UNDERRUN = 1, FL_OVERRUN = 2, FL_CFG_OK = 4, FL_JUMP = 8 };
+enum { FL_UNDERRUN = 1, FL_OVERRUN = 2, FL_CFG_OK = 4, FL_JUMP = 8, FL_DRV_OK = 16 };
 
 void    MC_Init(void);
 int     MC_Config(uint16_t period_ms, const float vmax[N_AX], const float accel[N_AX]);
+void    MC_SetDriversOk(uint8_t ok);   /* ohne ok lehnt MC_Enable ab    */
 int     MC_Enable(void);
 void    MC_Disable(void);          /* kontrolliert bremsen, dann DISABLED */
 void    MC_ClearFault(void);       /* FAULT -> DISABLED, Flags löschen   */
