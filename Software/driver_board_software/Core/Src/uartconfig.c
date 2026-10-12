@@ -108,7 +108,7 @@ static int dispatch(uint8_t type, const uint8_t *pl, uint8_t len)
         return MC_Push(p);
     }
     case T_CONFIG: {
-        if (len != 2 + 8 * N_AX) return BAD_FRAME;
+        if (len != 2 + 8 * N_AX) {return BAD_FRAME;}
         uint16_t period;
         float v[N_AX], a[N_AX];
         memcpy(&period, pl, 2);
@@ -117,8 +117,8 @@ static int dispatch(uint8_t type, const uint8_t *pl, uint8_t len)
         return MC_Config(period, v, a);
     }
     case T_ENABLE:
-        if (len != 1) return BAD_FRAME;
-        if (pl[0]) return MC_Enable();
+        if (len != 1) {return BAD_FRAME;}
+        if (pl[0]) {return MC_Enable();}
         MC_Disable();
         return 0;
     case T_CLEARFAULT:
@@ -136,7 +136,7 @@ static int dispatch(uint8_t type, const uint8_t *pl, uint8_t len)
 static void on_frame(uint8_t type, uint8_t seq, const uint8_t *pl, uint8_t len)
 {
     (void)seq;
-    cnt_ok++;
+    cnt_ok++;   //count every frame whith a ok crc
     int r = dispatch(type, pl, len);
     if (r == BAD_FRAME) cnt_bad++;
     else if (r < 0)     cnt_rej++;
@@ -155,7 +155,7 @@ void Proto_Poll(void)
 
         switch (ps) {
         case P_SOF:
-            if (b == SOF) ps = P_LEN;
+            if (b == SOF) {ps = P_LEN;}
             break;
 
         case P_LEN:

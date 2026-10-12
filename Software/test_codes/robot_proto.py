@@ -12,7 +12,7 @@ T_STATE, T_DIAG = 0x81, 0x82
 
 DISABLED, IDLE, RUNNING, STOPPING, FAULT = 0, 1, 2, 3, 4
 STATE_NAMES = {DISABLED: "DISABLED", IDLE: "IDLE", RUNNING: "RUNNING", STOPPING: "STOPPING", FAULT: "FAULT"}
-FL_UNDERRUN, FL_OVERRUN, FL_CFG_OK, FL_JUMP, FL_DRV_OK = 1, 2, 4, 8, 16
+FL_UNDERRUN, FL_OVERRUN, FL_CFG_OK, FL_JUMP, FL_DRV_OK, FL_STARVED = 1, 2, 4, 8, 16, 32
 DIAG_KEYS = ("ok", "crc", "len", "tout", "full", "uerr", "bad", "rej")
 FIFO_N = 8
 N_AX = 6
@@ -39,7 +39,7 @@ assert frame(3, b"\x01").hex() == "a50103000105bb"
 
 def flag_names(fl: int) -> str:
     names = [n for b, n in ((FL_UNDERRUN, "UNDERRUN"), (FL_OVERRUN, "OVERRUN"),
-                            (FL_CFG_OK, "CFG_OK"), (FL_JUMP, "JUMP"), (FL_DRV_OK, "DRV_OK")) if fl & b]
+                            (FL_CFG_OK, "CFG_OK"), (FL_JUMP, "JUMP"), (FL_DRV_OK, "DRV_OK"), (FL_STARVED, "STARVED")) if fl & b]
     return "|".join(names) or "-"
 
 

@@ -1,7 +1,8 @@
 """Test für motion.c (virtuelle Achsen) über das Binärprotokoll.
 
-Ablauf: Ablehnungen prüfen -> konfigurieren -> Fahrt mit Flusssteuerung ->
-Endposition + Gleichlauf prüfen -> Disable während der Fahrt -> Overrun -> Sprung/Fault.
+Ablauf: Ablehnungen -> konfigurieren -> Fahrt im starren Takt (Firmware regelt das Tempo selbst) ->
+Fahrt mit 70-ms-Aussetzer (Extrapolation) -> Disable während der Fahrt -> Stream-Abriss (STARVED) ->
+Overrun -> Sprung/Fault.
 """
 import math, statistics, time
 from robot_proto import *
@@ -12,8 +13,9 @@ PERIOD_MS = 10
 T = PERIOD_MS / 1000
 VMAX = [20000.0] * N_AX          # Schritte/s
 ACC = [50000.0] * N_AX           # Schritte/s²
-AMPS = [6000, -4000, 3000, -2000, 1000, 500]   # Zielpositionen Fahrt 1
+AMPS = [6000, -4000, 3000, -2000, 1000, 500]   # Zielpositionen
 MOVE_S, HOLD_S = 3.0, 0.5
+N_PTS = int(round((MOVE_S + HOLD_S) / T))
 
 results = []
 
@@ -25,36 +27,43 @@ def check(name, ok, info=""):
 def diff(a, b):
     return {k: b[k] - a[k] for k in a if b[k] != a[k]}
 
-def half_cos(A, t, D):
-    """Weiche Fahrt 0 -> A in D Sekunden (Geschwindigkeit startet und endet bei 0)."""
+def half_cos(t, D):
+    """Weiches Profil 0 -> 1 in D Sekunden (Geschwindigkeit startet und endet bei 0)."""
     t = min(max(t, 0.0), D)
-    return A * (1 - math.cos(math.pi * t / D)) / 2
+    return (1 - math.cos(math.pi * t / D)) / 2
 
-def stream(link, points):
-    """Sollwerte im Takt T senden, Füllstand des MCU-Puffers über 'free' regeln.
+def move(start, target):
+    """Sollwerte für eine weiche Fahrt start -> target, danach HOLD_S halten."""
+    return [[round(s + (e - s) * half_cos((k + 1) * T, MOVE_S)) for s, e in zip(start, target)]
+            for k in range(N_PTS)]
 
-    Der MCU verbraucht genau einen Punkt pro Periode nach SEINER Uhr. Weicht die
-    PC-Uhr ab (HSI ~1 %), läuft der Puffer ohne Regelung leer oder über.
+def stream(link, points, gap_at=None, gap_s=0.0):
+    """Sollwerte stur im Takt T senden - ohne Flusssteuerung, die Firmware passt ihr Tempo an.
+
+    gap_at/gap_s: an dieser Stelle nichts senden, bis der MCU-Puffer leergelaufen ist und
+    danach noch gap_s lang (diese Zeit muss die Firmware extrapolieren). Die Sendezeitpunkte
+    bleiben absolut, danach kommen die fehlenden Punkte also als Schwall (wie ein ruckelnder PC).
     """
     push_t = []
-    skipped = extra = 0
     min_free, max_free = FIFO_N, 0
     t_next = time.perf_counter()
-    i = 0
-    while i < len(points):
+    for i, p in enumerate(points):
+        if i == gap_at:
+            time.sleep((FIFO_N - link.state.free) * T + gap_s)
         sleep_until(t_next)
         t_next += T
         st = link.state
         min_free, max_free = min(min_free, st.free), max(max_free, st.free)
-        fill = FIFO_N - st.free
-        if fill >= 6:                                   # Puffer zu voll: Slot auslassen
-            skipped += 1
-            continue
-        link.setpoint(points[i]); push_t.append(time.perf_counter()); i += 1
-        if fill <= 1 and st.state == RUNNING and i < len(points):   # zu leer: einen extra
-            link.setpoint(points[i]); push_t.append(time.perf_counter()); i += 1
-            extra += 1
-    return push_t, skipped, extra, min_free, max_free
+        link.setpoint(p)
+        push_t.append(time.perf_counter())
+    return push_t, min_free, max_free
+
+def sync_error(log, start, target):
+    """Gleichlauf: Alle Achsen fahren dasselbe Profil, nur skaliert. Aus dem Fortschritt von
+    Achse 0 lässt sich für jede andere Achse die Position berechnen - Abweichung davon."""
+    d = [e - s for s, e in zip(start, target)]
+    return max((abs((st.pos[a] - start[a]) - (st.pos[0] - start[0]) * d[a] / d[0])
+                for st in log for a in range(1, N_AX)), default=float("inf"))
 
 def wait_still(link, n=20, timeout=3.0):
     """Wartet, bis sich die Position über n Zustandsframes nicht mehr ändert."""
@@ -66,6 +75,37 @@ def wait_still(link, n=20, timeout=3.0):
             return last[-1]
         time.sleep(0.02)
     return None
+
+def log_since(i):
+    with link.lock:
+        return link.states[i:]
+
+def log_mark():
+    with link.lock:
+        return len(link.states)
+
+# Gleichlauf-Toleranz in Schritten. Grundrauschen ~1.5: Sollwerte sind ganzzahlig, die langsamste
+# Achse bekommt nur 2-3 Schritte pro Segment. Wird extrapoliert oder gebremst, wirkt deren
+# Geschwindigkeits-Rundung (bis ±20 %) über mehrere Segmente -> bis ~4 Schritte (< 1/4 Vollschritt).
+SYNC_TOL = 2.0
+SYNC_TOL_EXTRAP = 4.0
+
+def drive(name, start, target, gap_at=None, gap_s=0.0, tol=SYNC_TOL):
+    """Ganze Fahrt mit Halten am Ende, prüft Endposition und Gleichlauf."""
+    points = move(start, target)
+    i0 = log_mark()
+    push_t, min_free, max_free = stream(link, points, gap_at, gap_s)
+    st_end = link.state                             # Flags direkt nach dem letzten Sollwert
+    st = wait_still(link)
+    log = log_since(i0)
+    print(f"     {name}: {len(points)} Sollwerte, free min/max = {min_free}/{max_free}, "
+          f"Flags {flag_names(st_end.flags)}")
+    dev = [p - q for p, q in zip(st.pos, points[-1])] if st else None
+    check(f"{name}: Endposition erreicht (+-1 Schritt)",
+          st and st.state == RUNNING and all(abs(x) <= 1 for x in dev), f"Abweichung {dev}, {st}")
+    err = sync_error([s for s in log if s.state == RUNNING], start, target)
+    check(f"{name}: Gleichlauf aller Achsen (max. {tol:g} Schritte)", err <= tol, f"max {err:.2f}")
+    return st, st_end, push_t, log
 
 
 link = Link(PORT)
@@ -106,60 +146,68 @@ d0 = link.fresh_diag()
 link.config(PERIOD_MS, VMAX, ACC)                   # Config nur im DISABLED erlaubt
 check("Config während Enable abgelehnt", diff(d0, link.fresh_diag()) == {"ok": 1, "rej": 1})
 
-# ---------- 4) Fahrt 1: weich auf AMPS, dann halten ----------
-n_pts = int(round((MOVE_S + HOLD_S) / T))
-points = [[round(half_cos(A, (k + 1) * T, MOVE_S)) for A in AMPS] for k in range(n_pts)]
-with link.lock: i_start = len(link.states)
-push_t, skipped, extra, min_free, max_free = stream(link, points)
-st_end = link.state                                 # Flags direkt nach dem letzten Sollwert
-with link.lock: log = link.states[i_start:]
-
-print(f"     Fahrt 1: {n_pts} Sollwerte, {skipped} Slots ausgelassen, {extra} extra, "
-      f"free min/max = {min_free}/{max_free}")
-check("Fahrt startet (RUNNING)", any(s.state == RUNNING for s in log))
-check("kein Under-/Overrun während der Fahrt",
-      not st_end.flags & (FL_UNDERRUN | FL_OVERRUN), flag_names(st_end.flags))
-
-st = wait_still(link)
-dev = [p - q for p, q in zip(st.pos, points[-1])] if st else None
-check("Endposition erreicht (±1 Schritt)", st and all(abs(d) <= 1 for d in dev), f"Abweichung {dev}")
-
-# Gleichlauf: Alle Achsen fahren dasselbe Profil, skaliert mit ihrer Amplitude.
-# Aus Achse 0 lässt sich also für jede andere Achse die Sollposition berechnen.
-run = [s for s in log if s.state == RUNNING]
-sync_err = max((abs(s.pos[a] - s.pos[0] * AMPS[a] / AMPS[0]) for s in run for a in range(1, N_AX)),
-               default=float("inf"))
-check("Gleichlauf aller Achsen (max. 2 Schritte)", sync_err <= 2.0, f"max {sync_err:.2f}")
+# ---------- 4) Fahrt 1: starrer Takt, keine Flusssteuerung am PC ----------
+zero = [0] * N_AX
+st, st_end, push_t, log = drive("Fahrt 1", zero, AMPS)
+# UNDERRUN ist nur ein Hinweis (PC hat kurz gestockt, Firmware hat extrapoliert)
+check("Fahrt 1: kein Overrun, kein Abbruch (Firmware regelt Füllstand)",
+      not st_end.flags & FL_OVERRUN and not any(s.state in (STOPPING, FAULT) for s in log),
+      flag_names(st_end.flags))
 
 # Verzögerung Sollwert -> Istposition: Achse 0 zurückrechnen auf den Sollwert-Index
 lags = []
-for s in run:
+for s in log:
     r = s.pos[0] / AMPS[0]
-    if 0.05 < r < 0.95:
+    if s.state == RUNNING and 0.05 < r < 0.95:
         k = MOVE_S / math.pi * math.acos(1 - 2 * r) / T - 1     # gebrochener Sollwert-Index
         i0 = int(k)
         if 0 <= i0 < len(push_t) - 1:
-            tp = push_t[i0] + (push_t[i0 + 1] - push_t[i0]) * (k - i0)
-            lags.append(s.t - tp)
+            lags.append(s.t - (push_t[i0] + (push_t[i0 + 1] - push_t[i0]) * (k - i0)))
 if lags:
     print(f"     Verzögerung Sollwert -> Ist: Median {statistics.median(lags)*1000:.0f} ms, "
           f"max {max(lags)*1000:.0f} ms (Puffer + Prefill + USB)")
 
-# ---------- 5) Fahrt 2 zurück, mittendrin Disable ----------
+# ---------- 5) Fahrt 2 zurück mit Aussetzer bei voller Geschwindigkeit ----------
+# Puffer läuft leer, dann 30 ms ohne Sollwerte -> Extrapolation überbrückt, der Schwall danach
+# ersetzt die Schätzung bzw. verwirft veraltete Punkte.
 start = list(st.pos)
-points = [[round(p0 - half_cos(p0, (k + 1) * T, MOVE_S)) for p0 in start] for k in range(n_pts)]
-with link.lock: i_start = len(link.states)
-stream(link, points[: n_pts // 3])
+st, st_end, _, log = drive("Fahrt 2 (Aussetzer)", start, zero, gap_at=int(MOVE_S / T / 2), gap_s=0.03,
+                          tol=SYNC_TOL_EXTRAP)
+check("Fahrt 2: Aussetzer überbrückt (UNDERRUN gemeldet, kein FAULT)",
+      st_end.flags & FL_UNDERRUN and not any(s.state in (STOPPING, FAULT) for s in log),
+      flag_names(st_end.flags))
+
+# ---------- 6) Fahrt 3, mittendrin Disable -> gleichlaufend bremsen ----------
+start = list(st.pos)
+i0 = log_mark()
+stream(link, move(start, AMPS)[: N_PTS // 3])
 link.enable(False)
 ok = link.wait(lambda st: st.state == DISABLED, 1.0)
-with link.lock: log = link.states[i_start:]
+log = log_since(i0)
 seen = [STATE_NAMES[s.state] for s in log]
 check("Disable während der Fahrt -> STOPPING -> DISABLED",
       ok and "STOPPING" in seen, f"{seen.count('STOPPING')} Frames STOPPING")
+err = sync_error(log, start, AMPS)
+check(f"Bremsen im Gleichlauf (max. {SYNC_TOL_EXTRAP:g} Schritte)", err <= SYNC_TOL_EXTRAP, f"max {err:.2f}")
 st = wait_still(link)
 check("steht nach Disable", st is not None and st.state == DISABLED, st)
 
-# ---------- 6) Overrun: 16 Sollwerte auf einmal ----------
+# ---------- 7) Fahrt 4, Stream reisst ab -> >50 ms extrapolieren, bremsen, FAULT ----------
+link.enable(True)
+link.wait(lambda st: st.state == IDLE, 0.5)
+start = list(link.state.pos)
+i0 = log_mark()
+stream(link, move(start, zero)[: N_PTS // 3])       # danach kommt einfach nichts mehr
+ok = link.wait(lambda st: st.state == FAULT, 1.0)
+log = log_since(i0)
+check("Stream-Abriss -> FAULT mit Flag STARVED", ok and link.state.flags & FL_STARVED, link.state)
+err = sync_error(log, start, zero)
+check(f"Abriss: Extrapolation + Bremsen im Gleichlauf (max. {SYNC_TOL_EXTRAP:g} Schritte)",
+      err <= SYNC_TOL_EXTRAP, f"max {err:.2f}")
+link.clear_fault()
+link.wait(lambda st: st.state == DISABLED, 0.5)
+
+# ---------- 8) Overrun: 16 Sollwerte auf einmal ----------
 link.enable(True)
 link.wait(lambda st: st.state == IDLE, 0.5)
 d0 = link.fresh_diag()
@@ -174,7 +222,7 @@ link.enable(False)
 link.wait(lambda st: st.state == DISABLED, 1.0)
 link.clear_fault()
 
-# ---------- 7) Sprung -> FAULT ----------
+# ---------- 9) Sprung -> FAULT ----------
 link.enable(True)
 link.wait(lambda st: st.state == IDLE, 0.5)
 hold = list(link.state.pos)

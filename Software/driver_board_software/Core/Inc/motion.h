@@ -16,11 +16,14 @@
 
 #include <stdint.h>
 
+
 #define N_AX    6
 #define FIFO_N  8U               /* Zweierpotenz! */
 
 enum { MC_DISABLED = 0, MC_IDLE = 1, MC_RUNNING = 2, MC_STOPPING = 3, MC_FAULT = 4 };
-enum { FL_UNDERRUN = 1, FL_OVERRUN = 2, FL_CFG_OK = 4, FL_JUMP = 8, FL_DRV_OK = 16 };
+/* UNDERRUN: FIFO war während der Fahrt leer, es wurde extrapoliert (Info)
+ * STARVED:  länger als 50 ms keine Sollwerte während der Fahrt -> gebremst, FAULT */
+enum { FL_UNDERRUN = 1, FL_OVERRUN = 2, FL_CFG_OK = 4, FL_JUMP = 8, FL_DRV_OK = 16, FL_STARVED = 32 };
 
 void    MC_Init(void);
 int     MC_Config(uint16_t period_ms, const float vmax[N_AX], const float accel[N_AX]);
