@@ -24,7 +24,8 @@
 #define KP         30.0f       /* 1/s: Positionsfehler wird in ~30 ms abgebaut */
 #define PREFILL    3U          /* so viele Sollwerte, bevor die Fahrt startet  */
 #define JUMP_FACT  2.5f        /* Sprung darf 2.5 x vmax*T sein                */
-#define F_MIN_HZ   1.0f        /* darunter: keine Pulse                        */
+#define F_MIN_HZ   1.0f        /* darunter: keine Pulse   */
+#define F_start_HZ  200.0f                     
 #define FILL_TARGET 4U         /* gewünschter FIFO-Füllstand                   */
 #define FILL_BAND   2U         /* erst ab Abweichung >= 2 wird das Tempo angepasst */
 #define EXTRAP_MAX  50U        /* Ticks (ms) Extrapolation, danach bremsen     */
@@ -116,20 +117,16 @@ static float Out_SetFreq(uint8_t ax, float f_abs)
         return 0.0f;
     }
 
-    /* 2. Prescaler wählen */
-    uint32_t psc;
-    float    clk;
-    if (f_abs >= F_SPLIT_HZ) { psc = PSC_FAST; clk = CLK_FAST; }
-    else                     { psc = PSC_SLOW; clk = CLK_SLOW; }
+    if (f_abs<F_start_HZ) {f_abs=F_start_HZ;}
 
     /* 3. Periode in Zähltakten, gerundet und begrenzt */
-    uint32_t n = (uint32_t)(clk / f_abs + 0.5f);
+    uint32_t n = (uint32_t)(CLK_FAST / f_abs + 0.5f);
     if (n < 3U)      n = 3U;
     if (n > 65536U)  n = 65536U;
     uint32_t arr = n - 1U;
 
     /* 4. + 5. Register schreiben (werden am Periodenende gemeinsam übernommen) */
-    t->PSC  = psc;
+    t->PSC  = PSC_FAST;
     t->ARR  = arr;
     t->CCR1 = n / 2U;                       /* Flanke in der Periodenmitte               */
 
@@ -139,7 +136,7 @@ static float Out_SetFreq(uint8_t ax, float f_abs)
     }
 
     /* 6. Tatsächlich erzeugte Frequenz */
-    return clk / (float)n;
+    return CLK_FAST / (float)n;
 }
 
 static void Dir_Set(uint8_t ax, int8_t d)
