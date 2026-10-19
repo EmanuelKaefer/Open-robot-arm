@@ -4,7 +4,7 @@ import time
 # --- EINSTELLUNGEN ---
 SERIAL_PORT = 'COM10'  # Hier deinen echten COM-Port eintragen
 BAUD_RATE = 115200
-STEPS1 = 20000.0      # Wie viele Schritte getestet werden sollen
+STEPS1 = 15000.0      # Wie viele Schritte getestet werden sollen
 STEPS2 =15000.0
 WAIT_TIME = 5.0       # Wartezeit in Sekunden (muss länger sein als die Fahrt dauert!)
 #15000/20000: 8.5s
