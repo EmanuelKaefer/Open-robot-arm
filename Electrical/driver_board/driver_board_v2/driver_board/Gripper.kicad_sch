@@ -550,7 +550,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "1a8df085-6acf-4614-aed9-a0496f4db808")
-		(property "Reference" "#PWR074"
+		(property "Reference" "#PWR076"
 			(at 113.03 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -610,7 +610,7 @@
 		(instances
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/0f2edaf0-864d-4f2a-a0d0-ce96f74fd0f2"
-					(reference "#PWR074")
+					(reference "#PWR076")
 					(unit 1)
 				)
 			)
@@ -713,7 +713,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a0b3e920-5437-4927-aad6-1aebed28d130")
-		(property "Reference" "#PWR073"
+		(property "Reference" "#PWR075"
 			(at 113.03 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -773,7 +773,7 @@
 		(instances
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/0f2edaf0-864d-4f2a-a0d0-ce96f74fd0f2"
-					(reference "#PWR073")
+					(reference "#PWR075")
 					(unit 1)
 				)
 			)

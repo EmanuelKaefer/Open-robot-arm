@@ -7729,7 +7729,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "433dd546-5080-44c2-b325-df715ccd1988")
-		(property "Reference" "#PWR076"
+		(property "Reference" "#PWR014"
 			(at 184.15 107.95 0)
 			(hide yes)
 			(show_name no)
@@ -7790,7 +7790,7 @@
 		(instances
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/465404f0-d3d7-43fb-a363-deca940ffc67"
-					(reference "#PWR076")
+					(reference "#PWR014")
 					(unit 1)
 				)
 			)
@@ -8230,7 +8230,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "60544f42-d65b-4915-9438-c007d71936c6")
-		(property "Reference" "#PWR013"
+		(property "Reference" "#PWR011"
 			(at 182.88 43.18 0)
 			(hide yes)
 			(show_name no)
@@ -8296,7 +8296,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/465404f0-d3d7-43fb-a363-deca940ffc67"
-					(reference "#PWR013")
+					(reference "#PWR011")
 					(unit 1)
 				)
 			)
@@ -8474,7 +8474,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7a2d83cb-0cdb-4907-a9b3-3bcd92ad52f5")
-		(property "Reference" "#PWR017"
+		(property "Reference" "#PWR013"
 			(at 184.15 95.25 0)
 			(hide yes)
 			(show_name no)
@@ -8535,7 +8535,7 @@
 		(instances
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/465404f0-d3d7-43fb-a363-deca940ffc67"
-					(reference "#PWR017")
+					(reference "#PWR013")
 					(unit 1)
 				)
 			)
@@ -9345,7 +9345,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "b00d1d0e-681b-419b-a20a-8340e5a41a9b")
-		(property "Reference" "#PWR014"
+		(property "Reference" "#PWR012"
 			(at 182.88 55.88 0)
 			(hide yes)
 			(show_name no)
@@ -9411,7 +9411,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/465404f0-d3d7-43fb-a363-deca940ffc67"
-					(reference "#PWR014")
+					(reference "#PWR012")
 					(unit 1)
 				)
 			)
@@ -9763,7 +9763,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "e4454e82-cc54-4295-a753-8dfeccc0ef56")
-		(property "Reference" "U5"
+		(property "Reference" "U2"
 			(at 253.492 101.854 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -9842,7 +9842,7 @@
 		(instances
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/465404f0-d3d7-43fb-a363-deca940ffc67"
-					(reference "U5")
+					(reference "U2")
 					(unit 1)
 				)
 			)

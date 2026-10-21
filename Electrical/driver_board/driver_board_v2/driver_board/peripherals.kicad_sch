@@ -2063,7 +2063,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "13ff34a9-78ed-4a5a-9ce1-3572711b6a0e")
-		(property "Reference" "R15"
+		(property "Reference" "R12"
 			(at 132.08 125.73 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2131,7 +2131,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "R15")
+					(reference "R12")
 					(unit 1)
 				)
 			)
@@ -2149,7 +2149,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3434e688-ecc0-4d0f-85c1-1a9c439ee1ca")
-		(property "Reference" "C48"
+		(property "Reference" "C43"
 			(at 142.24 91.4399 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2219,7 +2219,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C48")
+					(reference "C43")
 					(unit 1)
 				)
 			)
@@ -2237,7 +2237,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "35b87adc-70c5-4b9e-b358-8c309fb60264")
-		(property "Reference" "C50"
+		(property "Reference" "C45"
 			(at 142.24 137.1599 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2307,7 +2307,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C50")
+					(reference "C45")
 					(unit 1)
 				)
 			)
@@ -2324,7 +2324,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "610bf05d-455b-48cc-bb06-b618558278a6")
-		(property "Reference" "C45"
+		(property "Reference" "C40"
 			(at 66.04 35.56 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2394,7 +2394,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C45")
+					(reference "C40")
 					(unit 1)
 				)
 			)
@@ -2412,7 +2412,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "624871b4-5f3e-49e7-af55-f515012890b5")
-		(property "Reference" "#PWR065"
+		(property "Reference" "#PWR067"
 			(at 54.61 33.02 0)
 			(hide yes)
 			(show_name no)
@@ -2479,7 +2479,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR065")
+					(reference "#PWR067")
 					(unit 1)
 				)
 			)
@@ -2497,7 +2497,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "641c33a2-5733-4852-989e-f812b9e4ae9c")
-		(property "Reference" "R16"
+		(property "Reference" "R13"
 			(at 132.08 148.59 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2565,7 +2565,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "R16")
+					(reference "R13")
 					(unit 1)
 				)
 			)
@@ -2583,7 +2583,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "685e6101-14bb-4600-864d-36caf5088276")
-		(property "Reference" "R13"
+		(property "Reference" "R10"
 			(at 132.08 80.01 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2651,7 +2651,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "R13")
+					(reference "R10")
 					(unit 1)
 				)
 			)
@@ -2668,7 +2668,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "76ae8083-460a-4746-9b3e-07f91d580223")
-		(property "Reference" "C44"
+		(property "Reference" "C39"
 			(at 55.88 35.56 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2738,7 +2738,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C44")
+					(reference "C39")
 					(unit 1)
 				)
 			)
@@ -2756,7 +2756,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "80533766-aafb-4045-b85b-6fa3b73d12cf")
-		(property "Reference" "#PWR072"
+		(property "Reference" "#PWR074"
 			(at 138.43 173.99 0)
 			(hide yes)
 			(show_name no)
@@ -2822,7 +2822,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR072")
+					(reference "#PWR074")
 					(unit 1)
 				)
 			)
@@ -2840,7 +2840,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "80df28be-0720-4378-b2e8-0dda8a3ce5f9")
-		(property "Reference" "#PWR067"
+		(property "Reference" "#PWR069"
 			(at 138.43 59.69 0)
 			(hide yes)
 			(show_name no)
@@ -2906,7 +2906,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR067")
+					(reference "#PWR069")
 					(unit 1)
 				)
 			)
@@ -2924,7 +2924,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "91249f1b-3bf4-45b6-a64d-5be775e8b823")
-		(property "Reference" "R12"
+		(property "Reference" "R9"
 			(at 132.08 57.15 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -2992,7 +2992,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "R12")
+					(reference "R9")
 					(unit 1)
 				)
 			)
@@ -3010,7 +3010,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "985d7896-6f99-4f6f-8ed8-5025684ace70")
-		(property "Reference" "#PWR070"
+		(property "Reference" "#PWR072"
 			(at 138.43 128.27 0)
 			(hide yes)
 			(show_name no)
@@ -3076,7 +3076,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR070")
+					(reference "#PWR072")
 					(unit 1)
 				)
 			)
@@ -3094,7 +3094,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9cf92d07-f55a-43d5-840b-7ad5c2fae03c")
-		(property "Reference" "R11"
+		(property "Reference" "R8"
 			(at 132.08 34.29 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3162,7 +3162,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "R11")
+					(reference "R8")
 					(unit 1)
 				)
 			)
@@ -3180,7 +3180,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "9e15b78a-3bae-4f39-93ef-2f9dbe78ec5d")
-		(property "Reference" "#PWR069"
+		(property "Reference" "#PWR071"
 			(at 138.43 105.41 0)
 			(hide yes)
 			(show_name no)
@@ -3246,7 +3246,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR069")
+					(reference "#PWR071")
 					(unit 1)
 				)
 			)
@@ -3264,7 +3264,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a42e2acf-5e28-43ef-9065-6b442d614172")
-		(property "Reference" "#PWR071"
+		(property "Reference" "#PWR073"
 			(at 138.43 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -3330,7 +3330,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR071")
+					(reference "#PWR073")
 					(unit 1)
 				)
 			)
@@ -3348,7 +3348,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "a682e98c-2968-4e29-aab1-de581278bb3a")
-		(property "Reference" "C49"
+		(property "Reference" "C44"
 			(at 142.24 114.2999 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3418,7 +3418,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C49")
+					(reference "C44")
 					(unit 1)
 				)
 			)
@@ -3536,7 +3536,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "cf19cf6f-f1fe-45f5-85cb-0b49a0df1e31")
-		(property "Reference" "C51"
+		(property "Reference" "C46"
 			(at 142.24 160.0199 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3606,7 +3606,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C51")
+					(reference "C46")
 					(unit 1)
 				)
 			)
@@ -3624,7 +3624,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d78c5e6d-c758-477e-881f-0b2d3781f43d")
-		(property "Reference" "C47"
+		(property "Reference" "C42"
 			(at 142.24 68.5799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3694,7 +3694,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C47")
+					(reference "C42")
 					(unit 1)
 				)
 			)
@@ -3712,7 +3712,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "d93d13a6-2879-4456-bc3c-0e425fc7c9af")
-		(property "Reference" "C46"
+		(property "Reference" "C41"
 			(at 142.24 45.7199 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3782,7 +3782,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "C46")
+					(reference "C41")
 					(unit 1)
 				)
 			)
@@ -3888,7 +3888,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e2907549-a0e9-44aa-8594-a49ca1fac5e5")
-		(property "Reference" "#PWR066"
+		(property "Reference" "#PWR068"
 			(at 44.45 45.72 0)
 			(hide yes)
 			(show_name no)
@@ -3955,7 +3955,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR066")
+					(reference "#PWR068")
 					(unit 1)
 				)
 			)
@@ -3973,7 +3973,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "e8f2fe57-68e1-4388-873a-f76b1105bbbb")
-		(property "Reference" "#PWR068"
+		(property "Reference" "#PWR070"
 			(at 138.43 82.55 0)
 			(hide yes)
 			(show_name no)
@@ -4039,7 +4039,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "#PWR068")
+					(reference "#PWR070")
 					(unit 1)
 				)
 			)
@@ -4057,7 +4057,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "fd018efa-3328-4e4c-b16d-32815e02f861")
-		(property "Reference" "R14"
+		(property "Reference" "R11"
 			(at 132.08 102.87 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4125,7 +4125,7 @@
 			)
 			(project "driver_board"
 				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215/1d053789-bb06-47b5-b093-e7b74b4d3277"
-					(reference "R14")
+					(reference "R11")
 					(unit 1)
 				)
 			)
