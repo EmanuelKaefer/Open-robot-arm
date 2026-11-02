@@ -46,6 +46,7 @@ extern "C" {
 #include "SPIconfig.h"
 #include "uartconfig.h"
 #include "motion.h"
+#include "TMC_monitor.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>

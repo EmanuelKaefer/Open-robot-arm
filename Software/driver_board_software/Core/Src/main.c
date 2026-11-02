@@ -168,7 +168,13 @@ int main(void)
     //send uart data
     Proto_Send();
     //TMC-Treiber initialisieren (nicht blockierend, Retry alle 500 ms). Erst danach erlaubt motion.c Enable
-    MC_SetDriversOk(TMC_Service());
+    uint8_t drv_ok = TMC_Service();
+    MC_SetDriversOk(drv_ok);
+    //TMC-Treiber überwachen (erst wenn sie initialisiert sind)
+    if (drv_ok) {
+      monitoring_TMC();
+      stallguard();
+    }
   }
   /* USER CODE END 3 */
 }

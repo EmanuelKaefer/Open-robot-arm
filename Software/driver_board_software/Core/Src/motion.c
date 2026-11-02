@@ -225,7 +225,7 @@ void MC_Disable(void)
     __set_PRIMASK(pm);
 }
 
-static void fault_stop(void)
+void fault_stop(void)
 {
     uint32_t pm = __get_PRIMASK();
      __disable_irq();

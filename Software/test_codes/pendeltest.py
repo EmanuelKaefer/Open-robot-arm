@@ -10,11 +10,14 @@ Testarten (--mode):
           Nach N ganzen Umdrehungen muss die Markierung genau wie am Anfang stehen.
   kurz    Viele kurze Fahrten zufälliger Länge mit Stopp, danach zurück zum Start.
           Prüft die Schrittzählung bei vielen Start-/Stoppvorgängen.
+  go      Dreht --duration Sekunden lang mit konstant --speed Schritten/s in eine
+          Richtung (negativ = andere Richtung), mit weicher Rampe beim Anfahren/Bremsen.
 
 Beispiele:
   python pendeltest.py COM5
   python pendeltest.py COM5 --mode drift --cycles 50
   python pendeltest.py COM5 --mode kurz --cycles 300
+  python pendeltest.py COM5 --mode go --speed -1600 --duration 30
   python pendeltest.py COM5 --axes 0,1 --amp 6400 --vmax 6000 --accel 12000 --csv log.csv --plot
 
 Vorher: Nucleo resetten, Terminalprogramme schließen, Treiberversorgung (VM) an.
@@ -219,6 +222,28 @@ class Profile:
             self._push(o0 + d * (1 - math.cos(math.pi * i / n)) / 2)
         self.off = o0 + d
 
+    def run(self, v, sec):
+        # Konstante Geschwindigkeit v (Schritte/s, Vorzeichen = Richtung) für sec Sekunden.
+        # Anfahren und Bremsen mit Kosinusrampe der Geschwindigkeit über t_r:
+        #   a_max = pi*v/(2t_r)   Weg je Rampe = v*t_r/2
+        n_r = max(2, math.ceil(math.pi * abs(v) / (2 * self.a_lim) / T))
+        t_r = n_r * T
+        self.v_pk = max(self.v_pk, abs(v))
+        self.a_pk = max(self.a_pk, math.pi * abs(v) / (2 * t_r))
+        o0 = self.off
+        for i in range(1, n_r + 1):
+            t = i * T
+            self._push(o0 + v / 2 * (t - t_r / math.pi * math.sin(math.pi * t / t_r)))
+        o1 = o0 + v * t_r / 2
+        n_c = max(0, round(sec / T))
+        for i in range(1, n_c + 1):
+            self._push(o1 + v * i * T)
+        o2 = o1 + v * n_c * T
+        for i in range(1, n_r + 1):
+            t = i * T
+            self._push(o2 + v / 2 * (t + t_r / math.pi * math.sin(math.pi * t / t_r)))
+        self.off = int(round(o2 + v * t_r / 2))
+
     def dwell(self, sec, label=None):
         n = max(1, round(sec / T))
         for _ in range(n):
@@ -250,6 +275,8 @@ def build_profile(args, start):
             prof.dwell(0.1, f"Fahrt {c + 1}")
         prof.move(-prof.off)
         prof.dwell(args.dwell, "zurück am Start")
+    elif args.mode == "go":
+        prof.run(args.speed, args.duration)
     prof.dwell(0.5, "Ende")
     return prof
 
@@ -312,13 +339,17 @@ def check(name, ok, info=""):
 def main(argv=None):
     ap = argparse.ArgumentParser(description="Genauigkeitstest mit echtem Motor")
     ap.add_argument("port")
-    ap.add_argument("--mode", choices=["pendel", "drift", "kurz"], default="pendel")
+    ap.add_argument("--mode", choices=["pendel", "drift", "kurz", "go"], default="pendel")
     ap.add_argument("--axes", default="0", help="getestete Achsen, z. B. 0 oder 0,1")
     ap.add_argument("--amp", type=int, default=STEPS_PER_REV, help="Pendelweg bzw. Bereich (Schritte)")
     ap.add_argument("--step", type=int, default=STEPS_PER_REV, help="Fahrtlänge im Drift-Test")
     ap.add_argument("--short-max", type=int, default=400, help="längste kurze Fahrt (Schritte)")
     ap.add_argument("--cycles", type=int, default=10)
     ap.add_argument("--dwell", type=float, default=0.3, help="Haltezeit an den Enden (s)")
+    ap.add_argument("--speed", type=float, default=STEPS_PER_REV,
+                    help="Geschwindigkeit im Go-Modus (Schritte/s, negativ = andere Richtung)")
+    ap.add_argument("--duration", type=float, default=10.0,
+                    help="Dauer der konstanten Fahrt im Go-Modus (s, ohne Rampen)")
     ap.add_argument("--vmax", type=float, default=4000.0, help="Grenze im STM (Schritte/s)")
     ap.add_argument("--accel", type=float, default=8000.0, help="Grenze im STM (Schritte/s^2)")
     ap.add_argument("--margin", type=float, default=0.8, help="Profil nutzt diesen Anteil der Grenzen")
@@ -330,6 +361,12 @@ def main(argv=None):
     args.axes = [int(a) for a in args.axes.split(",")]
     if any(a < 0 or a > 5 for a in args.axes):
         sys.exit("Achsen müssen zwischen 0 und 5 liegen.")
+    if args.mode == "go":
+        if args.speed == 0:
+            sys.exit("--speed darf nicht 0 sein.")
+        if abs(args.speed) > args.vmax * args.margin:
+            sys.exit(f"--speed {abs(args.speed):.0f} ist größer als --vmax x --margin = "
+                     f"{args.vmax * args.margin:.0f} Schritte/s. --vmax erhöhen.")
 
     link = Link(args.port)
     try:
@@ -370,6 +407,10 @@ def main(argv=None):
         elif args.mode == "drift":
             print(f"  {args.cycles} x {args.step} Schritte = "
                   f"{args.cycles * args.step / STEPS_PER_REV:.2f} Motorumdrehungen in eine Richtung")
+        elif args.mode == "go":
+            print(f"  {args.speed:+.0f} Schritte/s ({args.speed / STEPS_PER_REV:+.2f} U/s) "
+                  f"für {args.duration:.1f} s, Gesamtweg {prof.off:+d} Schritte = "
+                  f"{prof.off / STEPS_PER_REV:+.2f} Motorumdrehungen")
         if not args.yes:
             input("\nWelle markieren (z. B. Klebestreifen als Zeiger), dann Enter zum Start ... ")
 
@@ -444,6 +485,10 @@ def main(argv=None):
         print("Ob der Motor alle umgesetzt hat, zeigt nur die Markierung:")
         if args.mode == "drift" and args.step % STEPS_PER_REV:
             print("  (Achtung: --step ist kein Vielfaches von 3200, die Markierung steht dann versetzt.)")
+        elif args.mode == "go" and prof.off % STEPS_PER_REV:
+            rest = abs(prof.off) % STEPS_PER_REV
+            print(f"  Sie muss jetzt um {rest * 360 / STEPS_PER_REV:.1f}° in Drehrichtung versetzt "
+                  f"stehen ({abs(prof.off) // STEPS_PER_REV} ganze Umdrehungen + {rest} Schritte).")
         else:
             print("  Sie muss jetzt genau wie am Anfang stehen.")
         print("  1 Mikroschritt = 0,1125°, 1 Vollschritt = 1,8°.")
