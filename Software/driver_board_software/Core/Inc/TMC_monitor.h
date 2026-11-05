@@ -21,6 +21,7 @@
 
 //includes
 #include "main.h"
+#include "motion.h"
 #include <stdint.h>
 
 //flags (1 = TMC hat diesen Fehler gemeldet)
@@ -37,6 +38,8 @@ typedef struct {
 extern volatile monitor tmc_flags[N_AX];   //eine Flag-Struct pro Achse
 extern volatile uint16_t sg_result[N_AX];   //SG_RESULT pro Achse zum Tunen
 extern volatile int8_t  sgt[N_AX];       //StallGuard-Schwelle pro Achse, manuell in TMC_monitor.c einstellen
+extern volatile float step_freq[N_AX];	//freq
+
 
 //prototypes
 void monitoring_TMC(void);   //DRV_STATUS prüfen, bei Fehler fault_stop()

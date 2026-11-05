@@ -101,6 +101,9 @@ static const uint16_t dir_pin[N_AX] = {
 /* Bit = 1: Drehrichtung dieser Achse umdrehen (Bit 0 = Achse 0 … Bit 5 = Achse 5) */
 #define DIR_INVERT_MASK  0x00U
 
+//Array for Stallguard min Speed
+volatile float step_freq[N_AX]; 
+
 static float Out_SetFreq(uint8_t ax, float f_abs)
 {
     TIM_TypeDef *t = step_tim[ax];
@@ -114,6 +117,7 @@ static float Out_SetFreq(uint8_t ax, float f_abs)
             t->EGR  = TIM_EGR_UG;           /* sofort übernehmen, Zähler auf 0           */
             running[ax] = 0;
         }
+        step_freq[ax] = 0.0f;
         return 0.0f;
     }
 
@@ -136,9 +140,10 @@ static float Out_SetFreq(uint8_t ax, float f_abs)
     }
 
     /* 6. Tatsächlich erzeugte Frequenz */
-    return CLK_FAST / (float)n;
+    float f_out = CLK_FAST / (float)n;
+    step_freq[ax] = f_out;
+    return f_out;
 }
-
 static void Dir_Set(uint8_t ax, int8_t d)
 {
     uint8_t level = (d > 0) ? 1U : 0U;              /* +1 → HIGH, −1 → LOW   */

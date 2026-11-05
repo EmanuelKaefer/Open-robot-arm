@@ -17,6 +17,8 @@
  */
 
 #include "TMC_monitor.h"
+#include "motion.h"
+#include <stdint.h>
 
 //registers for TMC
 #define TCOOLTHRS   0x14
@@ -30,6 +32,7 @@
 #define TCOOLTHRS_VAL   (TMC_FCLK / (SG_MIN_STEP_HZ * 16UL))   // 1/16 -> 1/256: Faktor 16, ergibt 750
 
 // Bits im DRV_STATUS
+#define STST       31
 #define S2VSA_BIT  12
 #define S2VSB_BIT  13
 #define STALL_BIT  24
@@ -40,7 +43,7 @@
 #define SG_RESULT_MASK 0x3FF   // Bits 9..0 im DRV_STATUS
 
 // SGT pro Achse, hier manuell anpassen (-64 ... +63, kleiner = empfindlicher)
-volatile int8_t sgt[N_AX] = {6, 0, 0, 0, 0, 0};
+volatile int8_t sgt[N_AX] = {4, 0, 0, 0, 0, 0};
 
 volatile monitor tmc_flags[N_AX];
 
@@ -61,7 +64,13 @@ void monitoring_TMC(void)
   }
 }
 
+
+volatile float min_freq_stall=2000.0f;
+
 // Aus dem Hauptloop aufrufen. SGT schreiben und Stall lesen, setzt nur die Flag
+
+static uint8_t stalldebounce[N_AX];
+
 void stallguard(void)
 {
   for (uint8_t ax = 0; ax < axis; ax++) {
@@ -69,7 +78,17 @@ void stallguard(void)
     TMC_WriteReg(ax, COOLCONF, ((uint32_t)(sgt[ax] & 0x7F)) << 16);      // sgt = Bits 22..16
 
     uint32_t drv = TMC_ReadReg(ax, DRV_STATUS);
-    sg_result[ax] = (uint16_t)(drv & SG_RESULT_MASK);                     // Lastwert, 0 = Stall
-    if (drv & (1UL << STALL_BIT)) tmc_flags[ax].stall = 1;                // StallGuard-Bit 24
+    sg_result[ax] = (uint16_t)(drv & SG_RESULT_MASK);                    // Lastwert, 0 = Stall
+
+    if ((drv & (1UL << STALL_BIT)) && (step_freq[ax] >= min_freq_stall)) {   // StallGuard-Bit 24
+      if (stalldebounce[ax] < 3) {
+        stalldebounce[ax]++;
+      }
+      if (stalldebounce[ax] >= 3) {
+        tmc_flags[ax].stall = 1;
+      }
+    } else {
+      stalldebounce[ax] = 0;                                             // kein Stall -> neu zählen
+    }
   }
 }
