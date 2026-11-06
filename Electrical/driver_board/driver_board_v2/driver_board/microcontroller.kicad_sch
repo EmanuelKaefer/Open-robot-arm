@@ -4754,8 +4754,8 @@
 		(uuid "62b5eb38-201d-4c60-9c25-965d2181f879")
 	)
 	(no_connect
-		(at 142.24 138.43)
-		(uuid "67276809-ca66-46e5-af63-6ba85da6b2a0")
+		(at 142.24 77.47)
+		(uuid "66af8532-0956-4034-8866-5dc02897d8d6")
 	)
 	(no_connect
 		(at 101.6 113.03)
@@ -4766,16 +4766,16 @@
 		(uuid "8688e74a-5d6b-413e-b38d-9a280253d5e3")
 	)
 	(no_connect
+		(at 142.24 118.11)
+		(uuid "a51d60dc-4918-4389-9fcb-95c99f961fe9")
+	)
+	(no_connect
 		(at 101.6 123.19)
 		(uuid "a708c499-8780-4368-9b48-e30c7c217817")
 	)
 	(no_connect
 		(at 142.24 74.93)
 		(uuid "a98a29fe-734d-4f2c-97a1-60953b2d8d71")
-	)
-	(no_connect
-		(at 142.24 140.97)
-		(uuid "b6239f1d-06fd-4e4b-8ae7-07d5dd9a3b1b")
 	)
 	(no_connect
 		(at 101.6 95.25)
@@ -6045,6 +6045,30 @@
 			)
 		)
 	)
+	(global_label "PB15_MOSI_SPI1"
+		(shape input)
+		(at 142.24 140.97 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "21db85c8-cab7-4b4f-9561-0dd2168a0a04")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 161.0094 140.97 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
 	(global_label "PA1_CS_DRV4_MCU"
 		(shape input)
 		(at 142.24 64.77 0)
@@ -6058,6 +6082,30 @@
 		(uuid "23d5e7c8-49dc-4409-acc5-4fe52b290fa7")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 163.0656 64.77 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
+	(global_label "PB14_MISO_SPI2"
+		(shape input)
+		(at 142.24 138.43 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2c4f315b-2ffe-4bc4-8d8e-649c793c263f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 161.0094 138.43 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6261,30 +6309,6 @@
 			)
 		)
 	)
-	(global_label "PA6_MISO_SPI1"
-		(shape input)
-		(at 142.24 77.47 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "90925ea4-33f4-4e4f-bac5-4e33d69f7571")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 159.6185 77.47 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
 	(global_label "PB2_DIR_DRV1_MCU"
 		(shape input)
 		(at 142.24 110.49 0)
@@ -6346,30 +6370,6 @@
 		(uuid "ac465eb5-2aba-4a0a-b3df-91330a53ef65")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 165.3636 125.73 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-	)
-	(global_label "PB5_MOSI_SPI1"
-		(shape input)
-		(at 142.24 118.11 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "c28a7d77-3c26-4e6d-b9d2-df5558c50d41")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 159.7999 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)

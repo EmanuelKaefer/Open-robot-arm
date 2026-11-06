@@ -1366,30 +1366,6 @@
 			)
 		)
 	)
-	(global_label "PC7_DIR_DRV2_DRV"
-		(shape input)
-		(at 137.16 22.86 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "1c8e0e40-df7e-4a17-b992-b8e76dd59877")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 115.911 22.86 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-	)
 	(global_label "PB8_STEP_DRV6_MCU"
 		(shape input)
 		(at 213.36 22.86 180)
@@ -1939,6 +1915,30 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+			)
+		)
+	)
+	(global_label "PC7_DIR_DRV2_MCU"
+		(shape input)
+		(at 137.16 22.86 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "aaa66e16-cb6e-4f2e-bdb7-ff44913049f5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 115.4877 22.86 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 			)
 		)
 	)
