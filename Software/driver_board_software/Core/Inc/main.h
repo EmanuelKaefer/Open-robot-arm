@@ -44,6 +44,9 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "SPIconfig.h"
+#include "uartconfig.h"
+#include "motion.h"
+#include "TMC_monitor.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -62,7 +65,13 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+#define axis 2
 
+
+extern volatile uint8_t cmd_ready;  //in uartconfig.c/main.c
+extern SPI_HandleTypeDef hspi2;     //in SPIconfig.c/main.c
+extern float target_steps[];        //in uartconfig.c/main.c
+//extern char rx_buffer[128];         //in uartconfig.c/main.c
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

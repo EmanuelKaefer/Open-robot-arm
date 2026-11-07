@@ -21,7 +21,10 @@ enable_language(C ASM)
 set(PROJECT_NAME driver_board_software)
 
 # Create an executable object type
-add_executable(${PROJECT_NAME})
+add_executable(${PROJECT_NAME}
+  Core/Src/uartconfig.c
+  Core/Src/motion.c
+  Core/Src/TMC_monitor.c)
 
 # Include additional CMake files for flags, components, and files
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/flags.cmake)

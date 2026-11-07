@@ -3,7 +3,6 @@
  *
  *  Created on: 27.04.2026
  *      Author: matteo gassler
- *      LICENCED under the GNU GENERAL PUBLIC LICENSE
  *
  */
 /*
@@ -27,6 +26,7 @@
 //prototypes
 void TMC_WriteReg(uint8_t ax, uint8_t addr, uint32_t value);
 uint32_t TMC_ReadReg(uint8_t ax, uint8_t addr);
+uint8_t TMC_Service(void);   // Hauptloop: Treiber-Init mit Retry, 1 = alle ok
 
 #endif /* INC_SPICONFIG_H_ */
 

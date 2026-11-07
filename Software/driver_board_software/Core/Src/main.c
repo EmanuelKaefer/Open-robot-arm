@@ -5,7 +5,7 @@
   * @brief          : Main program body
   ******************************************************************************
   * @attention
-  *
+  * 
   * Copyright (c) 2026 STMicroelectronics.
   * All rights reserved.
   *
@@ -66,17 +66,7 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
-
-#define axis 2
-
-
-//uart setup
-uint8_t rx_byte = 0;
-char rx_buffer[128];
-uint8_t rx_index = 0;
-volatile uint8_t cmd_ready = 0;
-uint8_t uart_result=0;
-
+//target steps array
 float target_steps[] ={0.0f, 0.0f, 0.0f,0.0f,0.0f,0.0f};
 /* USER CODE END PV */
 
@@ -94,256 +84,16 @@ static void MX_TIM8_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
-// Deklaration der TMC Funktion, falls nicht über Header verfügbar
-//extern void TMC_WriteReg(uint8_t addr, uint32_t value);
-//extern uint32_t TMC_ReadReg(uint8_t addr);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
-
-// Arrays für die Hardware-Timer
-TIM_HandleTypeDef* AXIS_TIMERS[6] = {&htim1, &htim2, &htim3, &htim4, &htim8, &htim10};
-uint32_t AXIS_CHANNELS[6] = {TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1, TIM_CHANNEL_1};
-
-// Homeangles from urdf base und 1 sind vertauscht wegen ding was nicht wolen lösen ich jetzt, müsste trotzdem funktionieren(auch in IQR ganz am ende sehen)
-//-0.3470f
-//float home_rad[6]={ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};//eig 0.0171f, 0.3500f, 0.3363f, -1.0126f, -0.0202f, 2.1291f aber stimmt nicht deshalb herausgemessen
-//Limitangles from solidworks
-//float limit_rad[6]={ 0.0171f, 1.3150f, 1.6177f, -1.0126f, 1.6481f, 2.1291f}; //0.0171f, 1.7615f, 1.6177f, -1.0126f, 1.6481f, 2.1291f
-
-//array for homing pins
-GPIO_TypeDef* DIR_PORTS[6] = {TMC1_DIR_GPIO_Port, TMC2_DIR_GPIO_Port,  TMC3_DIR_GPIO_Port, TMC4_DIR_GPIO_Port, TMC5_DIR_GPIO_Port, TMC6_DIR_GPIO_Port};
-uint16_t DIR_PINS[6]  = {TMC1_DIR_Pin, TMC2_DIR_Pin,  TMC3_DIR_Pin, TMC4_DIR_Pin, TMC5_DIR_Pin, TMC6_DIR_Pin};
-
 // Status-Variables
 uint8_t ax = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
 volatile uint32_t debug_counter = 0;
-
-volatile uint32_t move_start_time = 0;
-volatile uint32_t axis_finish_time[6] = {0};
-volatile uint8_t print_results_flag = 0;
-
-//registers for TMC
-#define GSTAT 0x01
-#define GCONF 0x00
-#define IOIN 0x04
-#define IHOLDIRUN 0x10	//write only, returns 0x0 when read
-#define CHOPCONF 0X6C
-
-// Constants for state machine
-typedef enum {
-    STATE_INIT,
-    STATE_HOMING,
-    STATE_HOMING_OFFSET,
-    STATE_READY,
-	STATE_MOVING,
-    STATE_ERROR
-} SystemState;
-
-SystemState currentState = STATE_INIT;	//TODO: change back
-
-//variables for ramp profile
-typedef struct {
-	float    current_freq;   // Hz, aktuelle Schrittfrequenz
-	float    vmax;           // Hz, Zielgeschwindigkeit dieser Achse für diesen Move
-	float    accel;          // Hz pro Sekunde
-    float    pos;             // Schritte, als float für Sub-Schritt-Genauigkeit in der Integration
-    float    target;          // Schritte, Ziel
-    uint8_t  direction;
-    uint8_t  active;
-} AxisRamp;
-
-AxisRamp axisRamp[6];
-
-
-//Stop/Start
-static void Step_Start(uint8_t ax)
-{
-
-    HAL_TIM_PWM_Start(AXIS_TIMERS[ax], AXIS_CHANNELS[ax]);
-
-    // MOE force enable only Advanced Timern
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    if (htim->Instance == TIM1 || htim->Instance == TIM8) {
-    	__HAL_TIM_MOE_ENABLE(htim);
-    }
-}
-
-static void Step_Stop(uint8_t ax)
-{
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    HAL_TIM_PWM_Stop(htim, AXIS_CHANNELS[ax]);
-    HAL_TIM_Base_Stop_IT(htim);
-
-    // MOE force disable only Advanced Timern
-    if (htim->Instance == TIM1 || htim->Instance == TIM8) {
-        __HAL_TIM_MOE_DISABLE_UNCONDITIONALLY(htim);
-    }
-}
-
-//set frequenzy
-static void Step_SetFreqHz(uint8_t ax, uint32_t freq_hz)
-{
-    TIM_HandleTypeDef* htim = AXIS_TIMERS[ax];
-    uint32_t channel = AXIS_CHANNELS[ax];
-
-    if (freq_hz == 0) {
-        __HAL_TIM_SET_COMPARE(htim, channel, 0); // keine Pulse
-        return;
-    }
-
-    const uint32_t timer_tick_hz = 1000000; // 1 MHz bei Prescaler=15 und 16MHz clock
-    uint32_t arr = (timer_tick_hz / freq_hz) - 1;
-
-    if (arr < 2) arr = 2;
-    if (arr > 0xFFFF) arr = 0xFFFF;
-
-    htim->Instance->CR1 |= TIM_CR1_ARPE;
-
-    __HAL_TIM_SET_AUTORELOAD(htim, arr);
-    __HAL_TIM_SET_COMPARE(htim, channel, (arr + 1) / 2); // 50% duty
-}
-
-//Ramps
-void UpdateAllRamps(float dt, uint8_t min_freq)
-{
-	//debug_counter ++;
-    for (uint8_t ax = 0; ax < axis; ax++) {
-        if (!axisRamp[ax].active) continue;
-
-        float remaining = axisRamp[ax].target - axisRamp[ax].pos;
-        float dir_sign = (remaining >= 0) ? 1.0f : -1.0f;
-        float remaining_abs = fabsf(remaining);
-
-        // calculate breaking distance
-        float decel_dist = (axisRamp[ax].current_freq * axisRamp[ax].current_freq)
-                            / (2.0f * axisRamp[ax].accel);
-
-        //calculating if decceleration or acceleration is needed
-        if (remaining_abs <= decel_dist) {
-            axisRamp[ax].current_freq -= axisRamp[ax].accel * dt;
-        } else if (axisRamp[ax].current_freq < axisRamp[ax].vmax) {
-            axisRamp[ax].current_freq += axisRamp[ax].accel * dt;
-        }
-
-        if (axisRamp[ax].current_freq < min_freq){
-        	axisRamp[ax].current_freq = min_freq;
-        }
-        if (axisRamp[ax].current_freq > axisRamp[ax].vmax){
-        	axisRamp[ax].current_freq = axisRamp[ax].vmax;
-        }
-
-        // Position update
-        axisRamp[ax].pos += dir_sign * axisRamp[ax].current_freq * dt;
-
-        //target reached
-        if (remaining_abs < 1.0f) {
-            Step_Stop(ax);
-            axisRamp[ax].active = 0;
-            axis_finish_time[ax] = HAL_GetTick() - move_start_time;
-
-            continue;
-        }
-        //set a new frequency everytime for every axis
-        Step_SetFreqHz(ax, (uint32_t)axisRamp[ax].current_freq);
-    }
-}
-
-void StartMove(uint8_t ax, float target_steps, float vmax, float accel)
-{
-
-	printf("IN STARTMOVE\r\n");
-    axisRamp[ax].pos = 0.0f;
-    axisRamp[ax].target = target_steps;
-    axisRamp[ax].vmax = vmax;
-    axisRamp[ax].accel = accel;
-    axisRamp[ax].current_freq = 50.0f;
-    axisRamp[ax].active = 1;
-
-    HAL_GPIO_WritePin(DIR_PORTS[ax], DIR_PINS[ax], target_steps>0 ? GPIO_PIN_SET : GPIO_PIN_RESET);
-
-    Step_Start(ax);
-
-}
-
-// Berechnet vmax für eine Achse, damit sie in genau t Sekunden fertig ist
-// bei fester Beschleunigung a und Distanz d
-float ComputeSyncedVmax(float d, float a, float t)
-{
-    float disc = (a*t)*(a*t) - 4.0f*a*d;
-    if (disc < 0.0f) disc = 0.0f;
-    return (a*t - sqrtf(disc)) / 2.0f;
-}
-
-void StartSyncedMove(float target_steps[6], float accel, float vmax_max, uint8_t axis_count)
-{
-    float t_sync = 0.0f;
-
-    // Calculating the time every axis would need for the distance if it would go to vmax.
-    for (uint8_t i = 0; i < axis_count; i++) {
-        float d = fabsf(target_steps[i]);
-        if (d == 0.0f) continue;
-        float t_i = (2.0f*vmax_max <= sqrtf(4*d*accel)) ? (d/vmax_max + vmax_max/accel) : (2.0f*sqrtf(d/accel)); //Trapez oder Dreieck ? Trapezformel : Dreiecksformel
-        if (t_i > t_sync){
-        	t_sync = t_i;	//es wird nach der längsten dauer gesucht und diese wird in t_synch gespeichert
-        }
-    }
-
-    //Messvariablen zurücksetzen
-        for(uint8_t i = 0; i < 6; i++) {
-            axis_finish_time[i] = 0;
-        }
-        print_results_flag = 0;
-
-        // 2. Startzeit merken (genau bevor die ersten Steps generiert werden)
-        move_start_time = HAL_GetTick();
-
-    //Für jede Achse vmax neu berechnen, damit alle bei t_sync fertig sind
-    for (uint8_t i = 0; i < axis_count; i++) {
-        float d = fabsf(target_steps[i]);
-        float v = ComputeSyncedVmax(d, accel, t_sync);
-        StartMove(i, target_steps[i], v, accel);
-    }
-}
-
-uint8_t process_uart_command(void) {
-    // Wenn kein neuer Befehl vorliegt, sofort abbrechen
-    if (!cmd_ready) {
-        return 0;
-    }
-    uint8_t result=0;
-    cmd_ready = 0; // Flag zurücksetzen
-
-    // Fall 1: Homing-Befehl
-    if (strncmp(rx_buffer, "HOME", 4) == 0) {
-        //printf("OK\n");
-        result = 1;
-    }
-    // Fall 2: Bewegungsbefehl ("MOVE J1:... J2:...")
-    else if (strncmp(rx_buffer, "MOVE", 4) == 0) {
-        int parsed = sscanf(rx_buffer, "MOVE J1:%f J2:%f J3:%f J4:%f J5:%f J6:%f",
-                            &target_steps[0], &target_steps[1], &target_steps[2],
-                            &target_steps[3], &target_steps[4], &target_steps[5]);
-
-        if (parsed == 6.0) {
-        	result = 2;//normale sachen abfahren
-        	//for (uint8_t i = 0; i<6; i++){
-			//	printf("target steps %d: %f", i, target_steps[i]);
-			} else {
-				result = -1;//error
-			}
-
-    }
-
-    // Puffer leeren für die nächste Nachricht
-    memset(rx_buffer, 0, sizeof(rx_buffer));
-
-    return result;
-}
 
 /* USER CODE END 0 */
 
@@ -387,11 +137,23 @@ int main(void)
   MX_TIM10_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  //uart empfang aktivieren
-  HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
-  HAL_UART_Receive_IT(&huart3, &rx_byte, 1);
+  //reset everything to safe values(clear fifo, fifo read/write pointers, clear dir, pos, main/int flags, f_cur, cfg_ok)
+  MC_Init();
+  // Set interrupt priorities(UART-->TIM5-->everything else)
+  HAL_NVIC_SetPriority(TIM5_IRQn, 1, 0);
   //start TIM5 in interrupt mode
   HAL_TIM_Base_Start_IT(&htim5);	//goofy ahh das ma des selber mochn muas lowk so 3tog debugen bis i do draufkemma bi
+  //start the PWM signal TIMs
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  __HAL_TIM_MOE_ENABLE(&htim1);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
+  __HAL_TIM_MOE_ENABLE(&htim8);
+  HAL_TIM_PWM_Start(&htim10, TIM_CHANNEL_1);
+  //start uart Communication
+  Proto_Start();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -401,92 +163,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    switch (currentState)
-    {
-      case STATE_INIT:
-        HAL_Delay(500); //Boot-Delay für die TMC Treiber!
-        printf("\r\n--- Starte TMC5160 Initialisierung ---\r\n");
-        uint8_t all_ok = 1;
-        for (uint8_t ax = 0; ax < axis; ax++) {
-			printf("axis %d\r\n", ax );
-        	TMC_WriteReg(ax, GSTAT, 0x00000007);
-        	printf("GSTAT of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
-
-        	TMC_WriteReg(ax, GCONF, 0x00000000);// disable stealthchop, enable spreadcycle
-        	printf("GCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, GCONF));
-
-        	TMC_WriteReg(ax, IHOLDIRUN, 0x0008100A);
-
-        	TMC_WriteReg(ax,  CHOPCONF, 0x140100C3); //1/16 microsteps with intpol=1
-        	printf("CHOPCONF of %d: 0x%08lx\r\n",ax, TMC_ReadReg(ax, CHOPCONF));
-
-        	if (TMC_ReadReg(ax, GSTAT)==0x0) {
-        		printf("GSTAT of %d ok, going into ready\r\n",ax);
-
-        	}else {
-        		printf("GSTAT of %d not ok:((  : 0x%08lx\r\n",ax, TMC_ReadReg(ax, GSTAT));
-        		all_ok=0;
-        	}
-        }
-
-        currentState = all_ok ? STATE_READY : STATE_ERROR;
-
-        break;
-
-      case STATE_HOMING:
-          printf("OK\n\r");
-
-          break;
-
-      case STATE_HOMING_OFFSET:
-        {
-          uint8_t all_finished = 1;
-          for(uint8_t i = 0; i < axis; i++) {
-            // Prüfen, ob noch eine Achse aktiv ist
-            if (axisRamp[i].active == 1) {
-              all_finished = 0;
-              break; 
-            }
-          }
-          
-        // Wenn alle Achsen fertig sind, wieder bereit für den nächsten Befehl machen
-        if (all_finished == 1) {
-            currentState = STATE_READY; 
-        }
-        break;
-      }
-//    	      }
-          break;
-
-      case STATE_READY:
-    	  //printf("MOVvvvvvvvvvvvvvING\r\n");
-    	  uart_result = process_uart_command();
-    	  if (uart_result==1){
-    		  currentState=STATE_HOMING;
-    	  }else if (uart_result==2) {
-    		  currentState=STATE_MOVING;
-		} else if (uart_result==-1) {
-			currentState=STATE_ERROR;
-		}
-
-
-    	  //currentState=STATE_MOVING;
-          break;
-
-      case STATE_MOVING:
-    	  printf("MOVING\r\n");
-    	  for (uint8_t i= 0; i < 5; i++) {
-			  printf("targetsteps %f", target_steps[i]);
-		  }
-    	  StartSyncedMove(target_steps, 5000, 20000, axis);
-    	  currentState=STATE_HOMING_OFFSET;
-	  	  break;
-
-      case STATE_ERROR:
-    	  printf("BAD");
-    	  currentState=STATE_HOMING_OFFSET;
-          break;
-
+    //Read incomming uarts data
+    Proto_Poll();
+    //send uart data
+    Proto_Send();
+    //TMC-Treiber initialisieren (nicht blockierend, Retry alle 500 ms). Erst danach erlaubt motion.c Enable
+    uint8_t drv_ok = TMC_Service();
+    MC_SetDriversOk(drv_ok);
+    //TMC-Treiber überwachen (erst wenn sie initialisiert sind)
+    if (drv_ok) {
+      monitoring_TMC();
+      stallguard();
     }
   }
   /* USER CODE END 3 */
@@ -509,10 +196,15 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 4;
+  RCC_OscInitStruct.PLL.PLLN = 64;
+  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  RCC_OscInitStruct.PLL.PLLQ = 2;
+  RCC_OscInitStruct.PLL.PLLR = 2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -522,8 +214,8 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
@@ -597,7 +289,7 @@ static void MX_TIM1_Init(void)
   htim1.Init.Period = 999;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
-  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -617,8 +309,8 @@ static void MX_TIM1_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 500;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -670,7 +362,7 @@ static void MX_TIM2_Init(void)
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
   {
     Error_Handler();
@@ -690,8 +382,8 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -729,7 +421,7 @@ static void MX_TIM3_Init(void)
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 999;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -749,8 +441,8 @@ static void MX_TIM3_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 500;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -788,7 +480,7 @@ static void MX_TIM4_Init(void)
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim4.Init.Period = 999;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
   {
     Error_Handler();
@@ -808,8 +500,8 @@ static void MX_TIM4_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 500;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -894,7 +586,7 @@ static void MX_TIM8_Init(void)
   htim8.Init.Period = 999;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
-  htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim8) != HAL_OK)
   {
     Error_Handler();
@@ -914,8 +606,8 @@ static void MX_TIM8_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 500;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
@@ -965,7 +657,7 @@ static void MX_TIM10_Init(void)
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim10.Init.Period = 999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
     Error_Handler();
@@ -974,8 +666,8 @@ static void MX_TIM10_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;
+  sConfigOC.Pulse = 65535;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim10, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -1068,6 +760,7 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -1132,43 +825,26 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
-// Callback für Timer Interrupts aller Achsen (zählt Schritte)
+// Callback fot TIM interrupts
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-        if (htim->Instance == TIM5) {
-        	UpdateAllRamps(0.001f, 50);
-    }
-}
+  if (htim->Instance == TIM5) {
+  	MC_Tick();                    
+  }}
 
 // EXTI15_10 callback for homing switches
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-
+  //Placeholder
 }
 
 
 int _write(int file, char *ptr, int len) {
-    HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
-    return len;
+  HAL_UART_Transmit(&huart2, (uint8_t*)ptr, len, HAL_MAX_DELAY);
+  return len;
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-    if (huart->Instance == USART2) {
-        if (rx_byte == '\n' || rx_byte == '\r') {
-            if (rx_index > 0) {
-                rx_buffer[rx_index] = '\0'; // String terminieren
-                cmd_ready = 1;              // Hauptschleife Bescheid geben
-                rx_index = 0;
-            }
-        } else {
-            if (rx_index < sizeof(rx_buffer) - 1) {
-                rx_buffer[rx_index++] = rx_byte;
-            }
-        }
-        // Interrupt für das nächste Byte direkt wieder scharfschalten
-        HAL_UART_Receive_IT(&huart2, &rx_byte, 1);
-    }
-}
+
 
 /* USER CODE END 4 */
 
