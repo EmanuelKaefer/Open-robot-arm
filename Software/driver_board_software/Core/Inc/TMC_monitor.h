@@ -39,6 +39,7 @@ extern volatile monitor tmc_flags[N_AX];   //eine Flag-Struct pro Achse
 extern volatile uint16_t sg_result[N_AX];   //SG_RESULT pro Achse zum Tunen
 extern volatile int8_t  sgt[N_AX];       //StallGuard-Schwelle pro Achse, manuell in TMC_monitor.c einstellen
 extern volatile float step_freq[N_AX];	//freq
+extern volatile int32_t home_offset[N_AX];   //Homing: Schritte von Nullposition bis Anschlag pro Achse
 
 
 //prototypes

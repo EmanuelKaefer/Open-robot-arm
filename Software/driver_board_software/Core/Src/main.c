@@ -91,9 +91,9 @@ static void MX_SPI2_Init(void);
 /* USER CODE BEGIN 0 */
 
 // Status-Variables
-uint8_t ax = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
+//uint8_t ax = 0; // 0 = Base, 1 = Achse 1, ..., 5 = Achse 5
 
-volatile uint32_t debug_counter = 0;
+//volatile uint32_t debug_counter = 0;
 
 /* USER CODE END 0 */
 

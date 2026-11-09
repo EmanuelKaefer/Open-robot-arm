@@ -65,7 +65,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-#define axis 2
+#define axis 1
 
 
 extern volatile uint8_t cmd_ready;  //in uartconfig.c/main.c

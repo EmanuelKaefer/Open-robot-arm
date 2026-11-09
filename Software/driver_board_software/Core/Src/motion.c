@@ -102,7 +102,7 @@ static const uint16_t dir_pin[N_AX] = {
 #define DIR_INVERT_MASK  0x00U
 
 //Array for Stallguard min Speed
-volatile float step_freq[N_AX]; 
+volatile float step_freq[N_AX];
 
 static float Out_SetFreq(uint8_t ax, float f_abs)
 {
