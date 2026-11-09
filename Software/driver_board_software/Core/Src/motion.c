@@ -241,6 +241,21 @@ void fault_stop(void)
     __set_PRIMASK(pm);
 }
 
+/* Sofort-Stopp ohne Bremsrampe (z.B. bei Stall): alle STEP-Ausgänge sofort aus, dann FAULT */
+void MC_faststop(void)
+{
+    uint32_t pm = __get_PRIMASK();
+    __disable_irq();
+    if (state == MC_IDLE || state == MC_RUNNING || state == MC_STOPPING) {
+        for (uint8_t a = 0; a < N_AX; a++) {
+            f_cur[a] = 0.0f;
+            Out_SetFreq(a, 0.0f);       /* Timer sofort aus, keine weiteren Pulse */
+        }
+        state = MC_FAULT;
+    }
+    __set_PRIMASK(pm);
+}
+
 void MC_ClearFault(void)
 {
     uint32_t pm = __get_PRIMASK();

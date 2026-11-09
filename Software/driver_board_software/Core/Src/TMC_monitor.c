@@ -67,7 +67,7 @@ void monitoring_TMC(void)
 
 volatile float min_freq_stall=2000.0f;
 
-// Aus dem Hauptloop aufrufen. SGT schreiben und Stall lesen, setzt nur die Flag
+// Aus dem Hauptloop aufrufen. SGT schreiben und Stall lesen, setzt Flag und stoppt sofort
 
 static uint8_t stalldebounce[N_AX];
 
@@ -86,6 +86,7 @@ void stallguard(void)
       }
       if (stalldebounce[ax] >= 3) {
         tmc_flags[ax].stall = 1;
+        MC_faststop();                                                   // Stall -> sofort stoppen
       }
     } else {
       stalldebounce[ax] = 0;                                             // kein Stall -> neu zählen

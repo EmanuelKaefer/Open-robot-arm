@@ -32,6 +32,7 @@ int     MC_Enable(void);
 void    MC_Disable(void);          /* kontrolliert bremsen, dann DISABLED */
 void    MC_ClearFault(void);       /* FAULT -> DISABLED, Flags löschen   */
 void    fault_stop(void);          /* kontrolliert bremsen, dann FAULT   */
+void    MC_faststop(void);         /* sofort stoppen ohne Rampe, dann FAULT */
 int     MC_SetZero(void);          /* nur im Zustand DISABLED            */
 int     MC_Push(const int32_t p[N_AX]);   /* Main-Kontext                */
 void    MC_Tick(void);                    /* 1 kHz, aus TIM5-ISR         */
