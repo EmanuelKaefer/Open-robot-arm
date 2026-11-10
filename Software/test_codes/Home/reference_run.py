@@ -4,7 +4,7 @@ reference_run.py - Referenzfahrt für das Homing
 
 Misst pro Achse den Offset = Schritte von der Nullpose bis zum mechanischen Anschlag.
 Der STM stoppt beim Stall sofort (MC_faststop) und schreibt den Wert in home_offset[ax].
-Das Skript liest denselben Wert aus dem Zustandsframe und speichert ihn in offsets.json.
+Das Skript liest denselben Wert aus dem Zustandsframe und speichert ihn in offsets.yaml.
 
 Ablauf:
   1. Arm in die Nullpose stellen
@@ -14,19 +14,20 @@ Ablauf:
   5. nächste Achse: enable, run <achse>
 
 Nach einem Mechanikwechsel: Arm in Nullpose, zero, enable, run <betroffene Achse>.
-In offsets.json wird nur diese Achse überschrieben.
+In offsets.yaml wird nur diese Achse überschrieben.
 
 Hinweise:
   - Die Achse muss im STM in "axis" (main.h) enthalten sein, sonst wird kein Stall erkannt.
   - Die TMC sind bestromt, sobald VM an ist. Arm von Hand bewegen nur mit VM aus.
   - Das UART-Protokoll wird nicht verändert (robot_proto.py aus uart_tests).
 
-Aufruf: python reference_run.py   (braucht pyserial)
+Aufruf: python reference_run.py   (braucht pyserial und PyYAML: pip install pyyaml)
 """
-import json
 import os
 import sys
 import time
+
+import yaml
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "uart_tests"))
@@ -38,13 +39,13 @@ PORT = "COM10"
 SPEED = 3000.0                          # Schritte/s in den Anschlag (>= MIN_FREQ_STALL)
 ACCEL = 6000.0                          # Schritte/s^2
 HOME_DIR = [+1, +1, +1, +1, +1, +1]     # Richtung zum Anschlag pro Achse (+1 oder -1)
-MAX_STEPS = 50000                       # weiter wird nicht gefahren -> Abbruch "kein Anschlag"
+MAX_STEPS = 100000                       # weiter wird nicht gefahren -> Abbruch "kein Anschlag"
 MIN_FREQ_STALL = 2000.0                 # wie min_freq_stall im STM (TMC_monitor.c)
 T_MS = 10                               # Sollwertperiode in ms
 MARGIN = 0.8                            # Fahrt nutzt 80 % der Grenzen im STM (Reserve für den Folgeregler)
 
 T = T_MS / 1000.0
-OFFSET_FILE = os.path.join(HERE, "offsets.json")
+OFFSET_FILE = os.path.join(HERE, "offsets.yaml")
 
 HELP = """Befehle:
   zero         Arm steht in der Nullpose -> Config senden + SetZero (alle Achsen)
@@ -58,13 +59,14 @@ HELP = """Befehle:
 def load_offsets():
     if not os.path.exists(OFFSET_FILE):
         return {}
-    with open(OFFSET_FILE) as f:
-        return {int(k): int(v) for k, v in json.load(f).items()}
+    with open(OFFSET_FILE, encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}                   # leere Datei -> keine Offsets
+    return {int(k): int(v) for k, v in data.items()}
 
 
 def save_offsets(offsets):
-    with open(OFFSET_FILE, "w") as f:
-        json.dump({str(k): v for k, v in sorted(offsets.items())}, f, indent=2)
+    with open(OFFSET_FILE, "w", encoding="utf-8") as f:
+        yaml.safe_dump(dict(sorted(offsets.items())), f, default_flow_style=False)
 
 
 def c_line(offsets):
