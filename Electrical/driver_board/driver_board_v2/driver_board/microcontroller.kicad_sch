@@ -4722,10 +4722,6 @@
 		(uuid "2714c37f-3753-42f0-977f-f61dece5522c")
 	)
 	(no_connect
-		(at 142.24 133.35)
-		(uuid "31aa743d-097a-4759-9390-613d3671704c")
-	)
-	(no_connect
 		(at 101.6 110.49)
 		(uuid "391ec721-11a0-4130-ab6b-44f0ef0f3501")
 	)
@@ -4736,10 +4732,6 @@
 	(no_connect
 		(at 142.24 62.23)
 		(uuid "52968290-8d87-42a7-ad58-cf0f99b0021d")
-	)
-	(no_connect
-		(at 142.24 135.89)
-		(uuid "52fcc2cc-1d8e-4a5e-b7e2-d2ff3ff2e6ac")
 	)
 	(no_connect
 		(at 142.24 80.01)
@@ -6309,6 +6301,30 @@
 			)
 		)
 	)
+	(global_label "PB12_CAN2_RX_CANBUS_Stepper"
+		(shape input)
+		(at 142.24 133.35 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "850fa63f-b0f2-45b2-8eb9-c8f6414f5662")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 176.1284 133.35 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
 	(global_label "PB2_DIR_DRV1_MCU"
 		(shape input)
 		(at 142.24 110.49 0)
@@ -6450,6 +6466,30 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+			)
+		)
+	)
+	(global_label "PB13_CAN2_TX_CANBUS_Stepper"
+		(shape input)
+		(at 142.24 135.89 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "ec2c7bf1-3a43-453c-bdd4-93a6ecc9f5c4")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 175.826 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 			)
 		)
 	)
