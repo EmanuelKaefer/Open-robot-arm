@@ -19,6 +19,7 @@
 
 #include "main.h"
 #include "motion.h"
+#include "homing.h"
 #include <stdint.h>
 #include <string.h>
 
@@ -33,7 +34,9 @@ extern UART_HandleTypeDef huart2;
 #define T_CONFIG     0x02      /* uint16 period_ms, 6 x float vmax, 6 x float accel   */
 #define T_ENABLE     0x03      /* uint8: 1 = Enable, 0 = Disable (kontrolliert bremsen) */
 #define T_CLEARFAULT 0x04      /* leer */
-#define T_SETZERO    0x05      /* leer */
+#define T_SETZERO    0x05      /* set all axes to 0 */
+#define T_HOMING     0x06      /* 6 x int32 Offsets [Schritte] -> Homing starten */
+
 /* MCU -> PC */
 #define T_STATE      0x81      /* alle 10 ms  */
 #define T_DIAG       0x82      /* alle 100 ms */
@@ -100,6 +103,11 @@ static uint32_t t_last;
 /* Mehrbyte-Werte per memcpy: PC und STM32 sind beide little-endian */
 static int dispatch(uint8_t type, const uint8_t *pl, uint8_t len)
 {
+    /* Während das Homing läuft, steuert nur das Homing den Motion Controller.
+     * Erlaubt: T_HOMING (Wiederholung) und Enable 0 (Abbruch). */
+    if (Home_Active() && type != T_HOMING && !(type == T_ENABLE && len == 1 && pl[0] == 0))
+        return -1;
+
     switch (type) {
     case T_SETPOINT: {
         if (len != 4 * N_AX) return BAD_FRAME;
@@ -119,6 +127,7 @@ static int dispatch(uint8_t type, const uint8_t *pl, uint8_t len)
     case T_ENABLE:
         if (len != 1) {return BAD_FRAME;}
         if (pl[0]) {return MC_Enable();}
+        Home_Abort();                           /* bricht auch ein laufendes Homing ab */
         MC_Disable();
         return 0;
     case T_CLEARFAULT:
@@ -128,6 +137,12 @@ static int dispatch(uint8_t type, const uint8_t *pl, uint8_t len)
     case T_SETZERO:
         if (len != 0) return BAD_FRAME;
         return MC_SetZero();
+    case T_HOMING: {
+        if (len != 4 * N_AX) return BAD_FRAME;
+        int32_t o[N_AX];
+        memcpy(o, pl, sizeof o);
+        return Home_Start(o);
+    }
     default:
         return BAD_FRAME;
     }
@@ -221,7 +236,7 @@ static uint16_t build_state(void)
     pl[0] = MC_State();
     pl[1] = MC_Free();
     pl[2] = MC_Flags();
-    pl[3] = 0;                                  /* Reserve */
+    pl[3] = Home_Status();                      /* Homing: Bit 0..5 gehomed, Bit 6 läuft, Bit 7 Fehler */
     for (uint8_t i = 0; i < N_AX; i++) put_u32(&pl[4 + 4 * i], (uint32_t)pos[i]);
     return finish_frame(T_STATE, STATE_PAYLOAD);
 }
