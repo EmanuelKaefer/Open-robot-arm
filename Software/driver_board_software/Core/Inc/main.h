@@ -47,6 +47,7 @@ extern "C" {
 #include "uartconfig.h"
 #include "motion.h"
 #include "TMC_monitor.h"
+#include "homing.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>

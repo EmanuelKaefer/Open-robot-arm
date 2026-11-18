@@ -175,6 +175,8 @@ int main(void)
       monitoring_TMC();
       stallguard();
     }
+    //Homing-Ablauf (läuft nur nach T_HOMING vom PC)
+    Home_Service();
   }
   /* USER CODE END 3 */
 }
