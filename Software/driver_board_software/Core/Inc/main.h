@@ -47,6 +47,7 @@ extern "C" {
 #include "uartconfig.h"
 #include "motion.h"
 #include "TMC_monitor.h"
+#include "homing.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -65,7 +66,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-#define axis 2
+#define axis 1
 
 
 extern volatile uint8_t cmd_ready;  //in uartconfig.c/main.c

@@ -24,7 +24,8 @@ set(PROJECT_NAME driver_board_software)
 add_executable(${PROJECT_NAME}
   Core/Src/uartconfig.c
   Core/Src/motion.c
-  Core/Src/TMC_monitor.c)
+  Core/Src/TMC_monitor.c
+  Core/Src/homing.c)
 
 # Include additional CMake files for flags, components, and files
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/flags.cmake)

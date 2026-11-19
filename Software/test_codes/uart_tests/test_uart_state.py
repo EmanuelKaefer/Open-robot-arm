@@ -1,6 +1,6 @@
 """Protokolltest beide Richtungen: Zustandsframes (Rate, Seq, CRC) + Empfangszähler im Diagnoseframe."""
 import os, time
-from robot_proto import *
+from Home.robot_proto import *
 
 PORT = "COM10"      # bei dir ggf. anders (Windows: COMx)
 

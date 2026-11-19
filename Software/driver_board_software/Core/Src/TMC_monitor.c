@@ -71,6 +71,8 @@ volatile float min_freq_stall=2000.0f;
 
 static uint8_t stalldebounce[N_AX];
 
+volatile int32_t home_offset[N_AX];   // Homing: Schritte von Nullposition bis Anschlag pro Achse
+
 void stallguard(void)
 {
   for (uint8_t ax = 0; ax < axis; ax++) {
@@ -81,12 +83,15 @@ void stallguard(void)
     sg_result[ax] = (uint16_t)(drv & SG_RESULT_MASK);                    // Lastwert, 0 = Stall
 
     if ((drv & (1UL << STALL_BIT)) && (step_freq[ax] >= min_freq_stall)) {   // StallGuard-Bit 24
-      if (stalldebounce[ax] < 3) {
+      if (stalldebounce[ax] < 2) {
         stalldebounce[ax]++;
       }
-      if (stalldebounce[ax] >= 3) {
+      if (stalldebounce[ax] >= 2) {
         tmc_flags[ax].stall = 1;
         MC_faststop();                                                   // Stall -> sofort stoppen
+        int32_t pos[N_AX];
+        MC_GetPos(pos);
+        home_offset[ax] = pos[ax];                                       // Homing: Position beim Stall = Offset
       }
     } else {
       stalldebounce[ax] = 0;                                             // kein Stall -> neu zählen

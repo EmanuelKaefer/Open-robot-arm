@@ -5,7 +5,7 @@ Fahrt mit 70-ms-Aussetzer (Extrapolation) -> Disable während der Fahrt -> Strea
 Overrun -> Sprung/Fault.
 """
 import math, statistics, time
-from robot_proto import *
+from Home.robot_proto import *
 
 PORT = "COM10"      # bei dir ggf. anders (Windows: COMx)
 

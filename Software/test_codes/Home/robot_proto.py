@@ -7,12 +7,15 @@ import serial, struct, threading, time
 
 # PC -> MCU
 T_SETPOINT, T_CONFIG, T_ENABLE, T_CLEARFAULT, T_SETZERO = 0x01, 0x02, 0x03, 0x04, 0x05
+T_HOMING = 0x06                  # 6 x int32 Offsets -> Homing starten
 # MCU -> PC
 T_STATE, T_DIAG = 0x81, 0x82
 
 DISABLED, IDLE, RUNNING, STOPPING, FAULT = 0, 1, 2, 3, 4
 STATE_NAMES = {DISABLED: "DISABLED", IDLE: "IDLE", RUNNING: "RUNNING", STOPPING: "STOPPING", FAULT: "FAULT"}
 FL_UNDERRUN, FL_OVERRUN, FL_CFG_OK, FL_JUMP, FL_DRV_OK, FL_STARVED = 1, 2, 4, 8, 16, 32
+# Homing-Status (Byte 3 im Zustandsframe, wie homing.h)
+HS_HOMED_MASK, HS_ACTIVE, HS_ERROR = 0x3F, 0x40, 0x80
 DIAG_KEYS = ("ok", "crc", "len", "tout", "full", "uerr", "bad", "rej")
 FIFO_N = 8
 N_AX = 6
@@ -43,15 +46,22 @@ def flag_names(fl: int) -> str:
     return "|".join(names) or "-"
 
 
-class State:
-    __slots__ = ("t", "state", "free", "flags", "pos")
+def home_names(h: int) -> str:
+    homed = [str(a) for a in range(N_AX) if h & (1 << a)]
+    names = (["LÄUFT"] if h & HS_ACTIVE else []) + (["FEHLER"] if h & HS_ERROR else [])
+    if homed: names.append("gehomed:" + ",".join(homed))
+    return "|".join(names) or "-"
 
-    def __init__(self, t, state, free, flags, pos):
-        self.t, self.state, self.free, self.flags, self.pos = t, state, free, flags, pos
+
+class State:
+    __slots__ = ("t", "state", "free", "flags", "pos", "home")
+
+    def __init__(self, t, state, free, flags, pos, home=0):
+        self.t, self.state, self.free, self.flags, self.pos, self.home = t, state, free, flags, pos, home
 
     def __repr__(self):
         return (f"{STATE_NAMES.get(self.state, self.state)} free={self.free} "
-                f"flags={flag_names(self.flags)} pos={list(self.pos)}")
+                f"flags={flag_names(self.flags)} home={home_names(self.home)} pos={list(self.pos)}")
 
 
 class Link:
@@ -106,7 +116,7 @@ class Link:
             self.last_seq = seq
             self.frames += 1
             if typ == T_STATE and len(pl) == 28:
-                self.states.append(State(t, pl[0], pl[1], pl[2], struct.unpack("<6i", pl[4:])))
+                self.states.append(State(t, pl[0], pl[1], pl[2], struct.unpack("<6i", pl[4:]), pl[3]))
             elif typ == T_DIAG and len(pl) == 32:
                 self.diag = (t, dict(zip(DIAG_KEYS, struct.unpack("<8I", pl))))
 
@@ -144,6 +154,13 @@ class Link:
             time.sleep(0.005)
         raise TimeoutError("kein Diagnoseframe")
 
+    def wait_homed(self, timeout=120.0) -> bool:
+        """Wartet, bis das Homing fertig ist (Bit 'läuft' weg). True = ohne Fehler fertig.
+        Erst aufrufen, wenn das Homing angenommen wurde (Bit 'läuft' gesetzt, siehe home.py)."""
+        if not self.wait(lambda st: not st.home & HS_ACTIVE, timeout):
+            raise TimeoutError("Homing nicht fertig geworden")
+        return not self.state.home & HS_ERROR
+
     # ---------- Senden ----------
     def send(self, typ, payload=b""):
         self.s.write(frame(typ, payload, self.tx_seq))
@@ -154,6 +171,7 @@ class Link:
     def enable(self, on=True):             self.send(T_ENABLE, bytes([1 if on else 0]))
     def clear_fault(self):                 self.send(T_CLEARFAULT)
     def set_zero(self):                    self.send(T_SETZERO)
+    def home(self, offsets):               self.send(T_HOMING, struct.pack("<6i", *offsets))
 
     def close(self):
         self._run = False
