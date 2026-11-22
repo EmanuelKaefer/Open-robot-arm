@@ -1,0 +1,18 @@
+<!--
+  SPDX-License-Identifier: GPL-3.0-or-later
+  Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
+  See LICENSE-SOFTWARE in the project root for details.
+
+  pluginlib description. The name "arm_hardware/ArmSystem" is what goes into
+  <hardware><plugin>...</plugin></hardware> of the ros2_control xacro.
+-->
+<library path="arm_hardware">
+  <class name="arm_hardware/ArmSystem"
+         type="arm_hardware::ArmSystem"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Robot arm hardware interface: streams joint position setpoints to the
+      STM32 driver board over UART and reads back the output step positions.
+    </description>
+  </class>
+</library>

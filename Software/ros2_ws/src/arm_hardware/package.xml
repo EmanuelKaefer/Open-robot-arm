@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>arm_hardware</name>
+  <version>0.0.0</version>
+  <description>
+    ros2_control hardware interface (SystemInterface) for the robot arm.
+    Talks to the STM32 driver board over UART using the binary protocol
+    described in doc/Software/UART-Protokoll.md.
+  </description>
+  <maintainer email="matteo207@gmx.at">matteo</maintainer>
+  <license>
+    * SPDX-License-Identifier: GPL-3.0-or-later
+    * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    * This program is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY.
+    * See LICENSE-SOFTWARE in the project root for details.
+  </license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- ros2_control base class for the plugin (SystemInterface) -->
+  <depend>hardware_interface</depend>
+  <!-- registers ArmSystem so the controller_manager can load it by name -->
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <!-- unit tests for the protocol layer (test/test_stm_protocol.cpp) -->
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

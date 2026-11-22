@@ -3,9 +3,18 @@
 <package format="3">
   <name>robot_description</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>A Package that includes all nesecary files for describing the Robot so robot_moving_config can work with it</description>
   <maintainer email="matteo207@gmx.at">matteo</maintainer>
-  <license>TODO: License declaration</license>
+  <license>
+    * SPDX-License-Identifier: GPL-3.0-or-later
+    * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    * This program is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY.
+    * See LICENSE-SOFTWARE in the project root for details.
+  </license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

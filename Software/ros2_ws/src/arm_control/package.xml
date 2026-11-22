@@ -3,13 +3,27 @@
 <package format="3">
   <name>arm_control</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>
+    High-level helper nodes for the robot arm (e.g. homing service).
+    The UART link to the STM itself is the ros2_control plugin in arm_hardware.
+  </description>
   <maintainer email="matteo207@gmx.at">matteo</maintainer>
-  <license>TODO: License declaration</license>
+  <license>
+    * SPDX-License-Identifier: GPL-3.0-or-later
+    * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    * This program is distributed WITHOUT ANY EXPRESS OR IMPLIED WARRANTY.
+    * See LICENSE-SOFTWARE in the project root for details.
+  </license>
 
   <depend>rclpy</depend>
-  <depend>std_msgs</depend>
-  <depend>sensor_msgs</depend>
+  <!-- LATER, for home_service.py:
+  <depend>std_srvs</depend>                  Trigger service /home_arm
+  <depend>controller_manager_msgs</depend>   SwitchController, SetHardwareComponentState
+  -->
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
