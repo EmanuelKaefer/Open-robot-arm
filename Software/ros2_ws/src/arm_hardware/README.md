@@ -25,16 +25,18 @@ STM  -> STATE every 10 ms -> ArmSystem::read() -> state "<joint>/position", "<jo
 | `include/arm_hardware/stm_protocol.hpp`, `src/stm_protocol.cpp` | Constants, frame encoding, CRC-16, stream parser, no ROS. A port of `robot_proto.py` |
 | `include/arm_hardware/arm_system.hpp`, `src/arm_system.cpp` | The ros2_control plugin: lifecycle, `read()`, `write()` |
 | `test/test_stm_protocol.cpp` | gtest cases for the protocol layer. They are skipped until you implement them |
+| `test/test_sim_link.cpp` | Integration tests for `SerialPort` and the protocol against the simulator (`/tmp/ttySTM`). They are skipped if the simulator is not running |
 | `arm_hardware.xml` | pluginlib registration as `arm_hardware/ArmSystem` |
 
 ## Suggested order (milestones)
 
 1. **Environment.** Attach the board to WSL and check it with `robot_proto.py` (see below).
 2. **`stm_protocol` and its tests.** Done when `colcon test --packages-select arm_hardware` passes.
-3. **`serial_port`, then `on_init`, `on_configure` and `read()`, with no sending.** Done when `/joint_states` shows the STM position.
-4. **`on_activate` and `write()`.** This step adds CONFIG, SETZERO, ENABLE 1 and streaming SETPOINTs.
-5. **Hook it into `robot_moveit_config`.** See the section below. Then drag the end effector in RViz and run Plan & Execute.
-6. **LATER: homing.** Write `start_homing()`, then add the service node in `arm_control` (`home_service.py`).
+3. **`serial_port` and `test_sim_link`.** Start `stm_sim.py`, then run `colcon test`. Done when all `SimLink` tests pass.
+4. **`on_init`, `on_configure` and `read()`, with no sending.** Done when `/joint_states` shows the STM position.
+5. **`on_activate` and `write()`.** This step adds CONFIG, SETZERO, ENABLE 1 and streaming SETPOINTs.
+6. **Hook it into `robot_moveit_config`.** See the section below. Then drag the end effector in RViz and run Plan & Execute.
+7. **LATER: homing.** Write `start_homing()`, then add the service node in `arm_control` (`home_service.py`).
 
 ## Environment (WSL2)
 
@@ -47,6 +49,19 @@ STM  -> STATE every 10 ms -> ArmSystem::read() -> state "<joint>/position", "<jo
    The board then shows up as `/dev/ttyACM0`.
 2. Run `sudo usermod -aG dialout $USER`, then log in again.
 3. Check the link without ROS: in `robot_proto.py`, `Link("/dev/ttyACM0")` must receive STATE frames.
+
+## Testing without hardware
+
+`Software/test_codes/stm_sim/stm_sim.py -v` simulates the driver board on the virtual port `/tmp/ttySTM`. Use `/tmp/ttySTM` as the `port` parameter instead of `/dev/ttyACM0`. See `Software/test_codes/stm_sim/README.md`.
+
+To run the integration tests in `test/test_sim_link.cpp`, start the simulator first in its own terminal. Then run:
+
+```
+colcon build --packages-select arm_hardware
+colcon test --packages-select arm_hardware && colcon test-result --verbose
+```
+
+The simulator keeps its state between test runs. Every test therefore starts by putting it back into DISABLED.
 
 ## Hooking it into robot_moveit_config (not done yet)
 

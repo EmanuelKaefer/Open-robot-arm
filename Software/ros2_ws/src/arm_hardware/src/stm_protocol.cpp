@@ -9,6 +9,11 @@
 
 #include "arm_hardware/stm_protocol.hpp"
 
+#include <cstring>    
+#include <stdexcept>  
+#include <algorithm>  
+#include <cstring> 
+
 // Implementation hints:
 // - Little-endian packing: x86 / ARM are little-endian, so std::memcpy of an
 //   int32_t / uint32_t / float / uint16_t into the byte vector gives the right layout
@@ -19,100 +24,216 @@ namespace arm_hardware::proto
 {
 
 // ---------------------------------------------------------------------------
+// Helper funktion (only lokal!!)
+// ---------------------------------------------------------------------------
+namespace
+{
+//write
+template<typename T>
+void append(std::vector<uint8_t> & out, T value)
+{
+  uint8_t bytes[sizeof(T)];
+  std::memcpy(bytes, &value, sizeof(T));
+  out.insert(out.end(), bytes, bytes + sizeof(T));
+}
+
+//read
+template<typename T>
+T read_le(const std::vector<uint8_t> & buf, std::size_t offset)
+{
+  T value;
+  std::memcpy(&value, buf.data() + offset, sizeof(T));
+  return value;
+}
+}  // namespace
+
+// ---------------------------------------------------------------------------
 // Encoding
 // ---------------------------------------------------------------------------
 
-uint16_t crc16(const uint8_t * /*data*/, std::size_t /*len*/)
+uint16_t crc16(const uint8_t * data, std::size_t len)
 {
-  // TODO: port crc16() from robot_proto.py
-  // c = 0xFFFF
-  // for each byte b:  c ^= b << 8
-  //   8 times:  c = (c & 0x8000) ? ((c << 1) ^ 0x1021) : (c << 1)   (keep 16 bit!)
-  return 0;  // placeholder
+  uint16_t c = 0xFFFF;                               // Startwert
+  for (std::size_t i = 0; i < len; ++i) {
+    c ^= static_cast<uint16_t>(data[i] << 8);        // Byte ins obere Halbwort
+    for (int k = 0; k < 8; ++k) {                    // 8 Bits nacheinander
+      if (c & 0x8000) {
+        c = static_cast<uint16_t>((c << 1) ^ 0x1021);  // oberstes Bit war 1 -> Polynom
+      } else {
+        c = static_cast<uint16_t>(c << 1);
+      }
+    }
+  }
+  return c;
 }
 
-std::vector<uint8_t> make_frame(
-  uint8_t /*type*/, const std::vector<uint8_t> & /*payload*/, uint8_t /*seq*/)
+std::vector<uint8_t> make_frame(uint8_t type, const std::vector<uint8_t> & payload, uint8_t seq)
 {
-  // TODO: port frame() from robot_proto.py
-  // 1. body = [len(payload), type, seq] + payload      (payload must be <= MAX_PAYLOAD)
-  // 2. frame = [START_BYTE] + body + crc16(body) as crc_lo, crc_hi
-  return {};  // placeholder
+  if (payload.size() > MAX_PAYLOAD) {
+    throw std::invalid_argument("payload too long");  
+  }
+
+  std::vector<uint8_t> frame;
+  frame.reserve(payload.size() + FRAME_OVERHEAD);
+
+  frame.push_back(START_BYTE);                              // A5
+  frame.push_back(static_cast<uint8_t>(payload.size()));    // len
+  frame.push_back(type);                                    // type
+  frame.push_back(seq);                                     // seq
+  frame.insert(frame.end(), payload.begin(), payload.end());  // payload
+
+  // CRC 
+  uint16_t crc = crc16(frame.data() + 1, frame.size() - 1);
+  frame.push_back(static_cast<uint8_t>(crc & 0xFF));  // crc_lo
+  frame.push_back(static_cast<uint8_t>(crc >> 8));    // crc_hi
+  return frame;
 }
 
-std::vector<uint8_t> payload_setpoint(const std::array<int32_t, N_AX> & /*steps*/)
+std::vector<uint8_t> payload_setpoint(const std::array<int32_t, N_AX> & steps)
 {
-  // TODO: 6 x int32 LE -> 24 bytes (LEN_SETPOINT)
-  return {};  // placeholder
+  std::vector<uint8_t> p;
+  p.reserve(LEN_SETPOINT);
+  for (int32_t s : steps) {
+    append(p, s);  // 6 x 4 Bytes = 24
+  }
+  return p;
 }
 
 std::vector<uint8_t> payload_config(
-  uint16_t /*period_ms*/, const std::array<float, N_AX> & /*vmax*/,
-  const std::array<float, N_AX> & /*accel*/)
+  uint16_t period_ms, const std::array<float, N_AX> & vmax,
+  const std::array<float, N_AX> & accel)
 {
-  // TODO: uint16 period_ms, 6 x float vmax [steps/s], 6 x float accel [steps/s^2]
-  //       -> 2 + 24 + 24 = 50 bytes (LEN_CONFIG), like struct.pack("<H6f6f", ...)
-  // STM accepts it only in DISABLED, with period_ms 2..100 and every vmax/accel > 0
-  // (also for unused axes).
-  return {};  // placeholder
+  std::vector<uint8_t> p;
+  p.reserve(LEN_CONFIG);
+  append(p, period_ms);  // 2 Bytes
+  for (float v : vmax) {
+    append(p, v);        // 6 x 4 Bytes
+  }
+  for (float a : accel) {
+    append(p, a);        // 6 x 4 Bytes  -> zusammen 50
+  }
+  return p;
 }
 
-std::vector<uint8_t> payload_enable(bool /*on*/)
+std::vector<uint8_t> payload_enable(bool on)
 {
-  // TODO: one byte, 1 = enable, 0 = disable
-  return {};  // placeholder
+  return {static_cast<uint8_t>(on ? 1 : 0)};
 }
 
-std::vector<uint8_t> payload_homing(const std::array<int32_t, N_AX> & /*offsets*/)
+std::vector<uint8_t> payload_homing(const std::array<int32_t, N_AX> & offsets)
 {
-  // TODO: 6 x int32 LE -> 24 bytes (LEN_HOMING), same layout as SETPOINT
-  return {};  // placeholder
+  return payload_setpoint(offsets);
 }
 
 // ---------------------------------------------------------------------------
 // Decoding
 // ---------------------------------------------------------------------------
 
-std::optional<StateFrame> decode_state(const Frame & /*frame*/)
+std::optional<StateFrame> decode_state(const Frame & frame)
 {
-  // TODO:
-  // - check type == T_STATE and payload.size() == LEN_STATE
-  // - byte 0 state, 1 free, 2 flags, 3 home, bytes 4..27 = 6 x int32 pos
-  //   (robot_proto.py: State(t, pl[0], pl[1], pl[2], unpack("<6i", pl[4:]), pl[3]))
-  return std::nullopt;  // placeholder
+  if (frame.type != T_STATE || frame.payload.size() != LEN_STATE) {
+    return std::nullopt;  // falscher Typ oder Länge -> nicht auswerten
+  }
+
+  const auto & pl = frame.payload;
+  StateFrame s;
+  s.state = static_cast<McState>(pl[0]);  // Byte 0
+  s.free = pl[1];                         // Byte 1
+  s.flags = pl[2];                        // Byte 2
+  s.home = pl[3];                         // Byte 3
+  for (std::size_t i = 0; i < N_AX; ++i) {
+    s.pos[i] = read_le<int32_t>(pl, 4 + 4 * i);  // Bytes 4..27
+  }
+  return s;
 }
 
-std::optional<DiagFrame> decode_diag(const Frame & /*frame*/)
+std::optional<DiagFrame> decode_diag(const Frame & frame)
 {
-  // TODO:
-  // - check type == T_DIAG and payload.size() == LEN_DIAG
-  // - 8 x uint32 LE in the order ok, crc, len, tout, full, uerr, bad, rej
-  return std::nullopt;  // placeholder
+  if (frame.type != T_DIAG || frame.payload.size() != LEN_DIAG) {
+    return std::nullopt;
+  }
+
+  const auto & pl = frame.payload;
+  DiagFrame d;
+  d.ok   = read_le<uint32_t>(pl, 0);
+  d.crc  = read_le<uint32_t>(pl, 4);
+  d.len  = read_le<uint32_t>(pl, 8);
+  d.tout = read_le<uint32_t>(pl, 12);
+  d.full = read_le<uint32_t>(pl, 16);
+  d.uerr = read_le<uint32_t>(pl, 20);
+  d.bad  = read_le<uint32_t>(pl, 24);
+  d.rej  = read_le<uint32_t>(pl, 28);
+  return d;
 }
 
 // ---------------------------------------------------------------------------
 // FrameParser
 // ---------------------------------------------------------------------------
 
-void FrameParser::feed(const uint8_t * /*data*/, std::size_t /*len*/)
+void FrameParser::feed(const uint8_t * data, std::size_t len)
 {
-  // TODO: append to buf_
+{
+  buf_.insert(buf_.end(), data, data + len);  // einfach hinten anhängen
+}
 }
 
 std::optional<Frame> FrameParser::next()
 {
-  // TODO: port Link._feed() / _on_frame() from robot_proto.py
-  // 1. find START_BYTE in buf_; none -> clear buf_, return nullopt
-  // 2. drop everything before it
-  // 3. fewer than 2 bytes -> return nullopt (wait for more)
-  // 4. n = buf_[1]; n > MAX_PAYLOAD -> drop 1 byte, goto 1
-  // 5. fewer than n + FRAME_OVERHEAD bytes -> return nullopt (wait for more)
-  // 6. body = buf_[1 .. n+3]; CRC = buf_[n+4] | buf_[n+5] << 8
-  //    wrong CRC -> if synced_: ++crc_errors_; drop ONLY the start byte, goto 1
-  //    (re-synchronise: the real start byte may be inside the bad "frame")
-  // 7. valid: synced_ = true; seq gap check against last_seq_ (++seq_gaps_);
-  //    remove n + FRAME_OVERHEAD bytes; return Frame{type, seq, payload}
-  return std::nullopt;  // placeholder
+  // Schleife statt "goto 1": continue = von vorne suchen
+  while (true) {
+    // 1. Startbyte suchen
+    auto it = std::find(buf_.begin(), buf_.end(), START_BYTE);
+    if (it == buf_.end()) {
+      buf_.clear();  // kein A5 drin -> alles Müll
+      return std::nullopt;
+    }
+
+    // 2. alles vor dem Startbyte wegwerfen -> buf_[0] ist jetzt A5
+    buf_.erase(buf_.begin(), it);
+
+    // 3. Längenbyte schon da?
+    if (buf_.size() < 2) {
+      return std::nullopt;  // auf mehr Bytes warten
+    }
+
+    // 4. Länge plausibel?
+    const std::size_t n = buf_[1];
+    if (n > MAX_PAYLOAD) {
+      buf_.erase(buf_.begin());  // war kein echter Frameanfang
+      continue;
+    }
+
+    // 5. ganzer Frame da?
+    if (buf_.size() < n + FRAME_OVERHEAD) {
+      return std::nullopt;  // auf mehr Bytes warten
+    }
+
+    // 6. CRC prüfen: über len, type, seq, payload = buf_[1] .. buf_[n+3]
+    const uint16_t crc_rx = static_cast<uint16_t>(buf_[n + 4] | (buf_[n + 5] << 8));
+    const uint16_t crc_calc = crc16(buf_.data() + 1, n + 3);
+    if (crc_rx != crc_calc) {
+      if (synced_) {
+        ++crc_errors_;  // Müll vor dem ersten gültigen Frame nicht zählen
+      }
+      buf_.erase(buf_.begin());  // NUR das A5 wegwerfen, echter Anfang kann drin liegen
+      continue;
+    }
+
+    // 7. gültiger Frame
+    Frame f;
+    f.type = buf_[2];
+    f.seq = buf_[3];
+    f.payload.assign(buf_.begin() + 4, buf_.begin() + 4 + static_cast<std::ptrdiff_t>(n));
+
+    synced_ = true;
+    if (last_seq_ && f.seq != static_cast<uint8_t>(*last_seq_ + 1)) {
+      ++seq_gaps_;  // STM-Frames verloren gegangen
+    }
+    last_seq_ = f.seq;
+
+    buf_.erase(buf_.begin(), buf_.begin() + static_cast<std::ptrdiff_t>(n + FRAME_OVERHEAD));
+    return f;
+  }
 }
 
 uint32_t FrameParser::crc_errors() const

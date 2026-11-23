@@ -68,6 +68,11 @@ if(BUILD_TESTING)
   find_package(ament_cmake_gtest REQUIRED)
   ament_add_gtest(test_stm_protocol test/test_stm_protocol.cpp)
   target_link_libraries(test_stm_protocol arm_hardware)
+
+  # Integration test against Software/test_codes/stm_sim/stm_sim.py (/tmp/ttySTM).
+  # Start the simulator first, otherwise the tests are skipped.
+  ament_add_gtest(test_sim_link test/test_sim_link.cpp TIMEOUT 60)
+  target_link_libraries(test_sim_link arm_hardware)
 endif()
 
 ament_export_targets(export_arm_hardware HAS_LIBRARY_TARGET)
