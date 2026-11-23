@@ -67,7 +67,7 @@
 			(color 0 0 0 0)
 		)
 		(uuid "147120b2-4873-41c0-b3ac-f217f740a2da")
-		(property "Sheetname" "Motordrivers"
+		(property "Sheetname" "Motorcontrol"
 			(at 60.96 100.8884 0)
 			(show_name no)
 			(do_not_autoplace no)

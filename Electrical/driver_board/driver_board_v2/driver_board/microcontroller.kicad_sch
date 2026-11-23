@@ -4722,10 +4722,6 @@
 		(uuid "2714c37f-3753-42f0-977f-f61dece5522c")
 	)
 	(no_connect
-		(at 142.24 133.35)
-		(uuid "31aa743d-097a-4759-9390-613d3671704c")
-	)
-	(no_connect
 		(at 101.6 110.49)
 		(uuid "391ec721-11a0-4130-ab6b-44f0ef0f3501")
 	)
@@ -4736,10 +4732,6 @@
 	(no_connect
 		(at 142.24 62.23)
 		(uuid "52968290-8d87-42a7-ad58-cf0f99b0021d")
-	)
-	(no_connect
-		(at 142.24 135.89)
-		(uuid "52fcc2cc-1d8e-4a5e-b7e2-d2ff3ff2e6ac")
 	)
 	(no_connect
 		(at 142.24 80.01)
@@ -6261,6 +6253,30 @@
 			)
 		)
 	)
+	(global_label "PB13_CAN_TX"
+		(shape input)
+		(at 142.24 135.89 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6a6afc05-fa7b-49ee-9764-d530cde302a5")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 157.9856 135.89 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+	)
 	(global_label "{USB}"
 		(shape bidirectional)
 		(at 270.51 77.47 90)
@@ -6306,6 +6322,30 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
+			)
+		)
+	)
+	(global_label "PB12_CAN_RX"
+		(shape input)
+		(at 142.24 133.35 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "98393513-eaee-488b-a8a6-c99c1173d935")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 158.288 133.35 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 			)
 		)
 	)
