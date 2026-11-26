@@ -26,7 +26,8 @@
 //prototypes
 void TMC_WriteReg(uint8_t ax, uint8_t addr, uint32_t value);
 uint32_t TMC_ReadReg(uint8_t ax, uint8_t addr);
-uint8_t TMC_Service(void);   // Hauptloop: Treiber-Init mit Retry, 1 = alle ok
+uint8_t TMC_Service(void);   // Hauptloop: Treiber-Init mit Retry, Haltestrom-Start, Neu-Init nach VM-Ausfall.
+                             // 1 = alle ok (DRV_OK), ~0,5 s nach erfolgreicher Init
 
 #endif /* INC_SPICONFIG_H_ */
 
