@@ -1,56 +1,46 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <xacro:macro name="robot_armV2SLDASM_ros2_control" params="name initial_positions_file">
-        <xacro:property name="initial_positions" value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
+
+    <!-- One joint: parameters for arm_hardware/ArmSystem (ignored by mock_components) -->
+    <xacro:macro name="arm_joint" params="joint axis initial_positions">
+        <joint name="${joint}">
+            <param name="axis">${axis}</param>               <!-- STM axis 0..5  -->
+            <param name="gear_ratio">20.0</param>           <!-- placeholder, measure per axis! -->
+            <param name="direction">1</param>
+            <param name="max_velocity">1.0</param>          <!-- rad/s, >= joint_limits.yaml -->
+            <param name="max_acceleration">2.0</param>      <!-- rad/s^2 -->
+            <command_interface name="position"/>
+            <state_interface name="position">
+                <param name="initial_value">${initial_positions[joint]}</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:macro name="robot_armV2SLDASM_ros2_control"
+                 params="name initial_positions_file use_mock_hardware port">
+        <xacro:property name="initial_positions"
+                        value="${xacro.load_yaml(initial_positions_file)['initial_positions']}"/>
 
         <ros2_control name="${name}" type="system">
             <hardware>
-                <!-- By default, set up controllers for simulation. This won't work on real hardware -->
-                <plugin>mock_components/GenericSystem</plugin>
+                <xacro:if value="${use_mock_hardware}">
+                    <plugin>mock_components/GenericSystem</plugin>
+                </xacro:if>
+                <xacro:unless value="${use_mock_hardware}">
+                    <plugin>arm_hardware/ArmSystem</plugin>
+                    <param name="port">${port}</param>
+                    <param name="baudrate">115200</param>
+                    <param name="period_ms">10</param>
+                    <param name="set_zero_on_activate">true</param>
+                </xacro:unless>
             </hardware>
-            <joint name="shoulder_joint1">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['shoulder_joint1']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="shoulder_joint2">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['shoulder_joint2']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="elbow_joint">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['elbow_joint']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="wrist_turn_joint">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['wrist_turn_joint']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="wrist_tilt_joint">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['wrist_tilt_joint']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-            <joint name="gripper_turn_joint">
-                <command_interface name="position"/>
-                <state_interface name="position">
-                  <param name="initial_value">${initial_positions['gripper_turn_joint']}</param>
-                </state_interface>
-                <state_interface name="velocity"/>
-            </joint>
-
+            <xacro:arm_joint joint="shoulder_joint1"    axis="0" initial_positions="${initial_positions}"/>
+            <xacro:arm_joint joint="shoulder_joint2"    axis="1" initial_positions="${initial_positions}"/>
+            <xacro:arm_joint joint="elbow_joint"        axis="2" initial_positions="${initial_positions}"/>
+            <xacro:arm_joint joint="wrist_turn_joint"   axis="3" initial_positions="${initial_positions}"/>
+            <xacro:arm_joint joint="wrist_tilt_joint"   axis="4" initial_positions="${initial_positions}"/>
+            <xacro:arm_joint joint="gripper_turn_joint" axis="5" initial_positions="${initial_positions}"/>
         </ros2_control>
     </xacro:macro>
 </robot>

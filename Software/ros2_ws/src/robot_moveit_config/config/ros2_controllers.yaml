@@ -24,5 +24,5 @@ arm_controller:
       - position
       - velocity
     allow_nonzero_velocity_at_trajectory_end: false
-    open_loop_control: true   # für Mock-Hardware
+    interpolate_from_desired_state: true
     allow_partial_joints_goal: true
