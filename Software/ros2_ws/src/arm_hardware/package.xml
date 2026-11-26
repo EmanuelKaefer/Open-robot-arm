@@ -8,7 +8,7 @@
     Talks to the STM32 driver board over UART using the binary protocol
     described in doc/Software/UART-Protokoll.md.
   </description>
-  <maintainer email="matteo.gassler@htl-saalfelden.at">matteo</maintainer>
+  <maintainer email="232087929+MatteoGassler@users.noreply.github.com">Matteo Gassler</maintainer>
   <license>
     * SPDX-License-Identifier: GPL-3.0-or-later
     * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors

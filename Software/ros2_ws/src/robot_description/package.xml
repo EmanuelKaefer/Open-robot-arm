@@ -4,7 +4,7 @@
   <name>robot_description</name>
   <version>0.0.0</version>
   <description>A Package that includes all nesecary files for describing the Robot so robot_moving_config can work with it</description>
-  <maintainer email="matteo207@gmx.at">matteo</maintainer>
+  <maintainer email="232087929+MatteoGassler@users.noreply.github.com">Matteo Gassler</maintainer>
   <license>
     * SPDX-License-Identifier: GPL-3.0-or-later
     * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors

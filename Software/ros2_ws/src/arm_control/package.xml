@@ -7,7 +7,7 @@
     High-level helper nodes for the robot arm (e.g. homing service).
     The UART link to the STM itself is the ros2_control plugin in arm_hardware.
   </description>
-  <maintainer email="matteo.gassler@htl-saalfelden.at">matteo</maintainer>
+  <maintainer email="232087929+MatteoGassler@users.noreply.github.com">Matteo Gassler</maintainer>
   <license>
     * SPDX-License-Identifier: GPL-3.0-or-later
     * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors

@@ -6,7 +6,7 @@
   <description>
      An automatically generated package with all the configuration and launch files for using the robot_armV2SLDASM with the MoveIt Motion Planning Framework
   </description>
-  <maintainer email="matteo.gassler@htl-saalfelden.at">Matteo Gassler</maintainer>
+  <maintainer email="232087929+MatteoGassler@users.noreply.github.com">Matteo Gassler</maintainer>
 
   <license>BSD-3-Clause</license>
 
@@ -14,7 +14,7 @@
   <url type="bugtracker">https://github.com/moveit/moveit2/issues</url>
   <url type="repository">https://github.com/moveit/moveit2</url>
 
-  <author email="matteo.gassler@htl-saalfelden.at">Matteo Gassler</author>
+  <author email="232087929+MatteoGassler@users.noreply.github.com">Matteo Gassler</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
