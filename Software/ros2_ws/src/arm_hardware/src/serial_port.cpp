@@ -15,7 +15,7 @@
 #include <termios.h>  //tcgetattr(), cfmakeraw(), cfsetispeed(), cfsetospeed(), tcsetattr(), tcflush()
 #include <unistd.h>   //::read(), ::write(), ::close()
 #include <cerrno>     //errno (EAGAIN / EWOULDBLOCK = "no data" in non-blocking mode, not an error)
-#include <cstring>    //std::strerror()
+#include <cstring>    
 
 namespace arm_hardware
 {

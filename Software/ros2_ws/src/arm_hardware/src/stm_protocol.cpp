@@ -12,7 +12,6 @@
 #include <cstring>    
 #include <stdexcept>  
 #include <algorithm>  
-#include <cstring> 
 
 // Implementation hints:
 // - Little-endian packing: x86 / ARM are little-endian, so std::memcpy of an
