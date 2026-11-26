@@ -120,11 +120,8 @@ bool SerialPort::is_open() const
 
 bool SerialPort::write(const std::vector<uint8_t> & bytes)
 {
-  // TODO:
-  // - ::write() the whole buffer. A frame is at most 70 bytes (6 + 64 payload)
-  //   the kernel tty buffer takes it in one call; still loop on short writes.
-  // - EAGAIN on a full output buffer -> return false (caller logs it)
-  // - Never block for long: write() runs inside the 100 Hz control loop.
+  // Writes the whole frame (at most 70 bytes), loops on short writes.
+  // EAGAIN (output buffer full) -> false, the caller logs it. Never blocks: runs at 100 Hz.
   if (fd_<0 ||  bytes.size() > MAX_FRAME_LEN)
   {
     return false;  

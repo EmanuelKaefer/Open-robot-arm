@@ -88,6 +88,9 @@ public:
   hardware_interface::return_type write(
     const rclcpp::Time & time, const rclcpp::Duration & period) override;
 
+  // Newest STATE frame from the STM (read-only, for tests and diagnostics)
+  std::optional<proto::StateFrame> stm_state() const {return last_state_;}
+
 private:
   using Clock = std::chrono::steady_clock;
   using StateCondition = std::function<bool (const proto::StateFrame &)>;
@@ -132,6 +135,13 @@ private:
     uint8_t type, const std::vector<uint8_t> & payload, const StateCondition & success,
     std::chrono::milliseconds timeout = std::chrono::milliseconds(200), int tries = 3);
 
+  // CONFIG needs its own check: CFG_OK stays set from an older CONFIG, so success =
+  // DIAG ok increased (frame arrived) AND rej did not increase (accepted), doc 8.3.
+  bool send_config();
+
+  // ENABLE 0 once without retries, wait up to timeout for DISABLED (best effort)
+  bool disable_best_effort(std::chrono::milliseconds timeout);
+
   // Unit conversion joint angle [rad] <-> STM position [steps]
   int32_t rad_to_steps(const JointCfg & joint, double rad) const;
   double steps_to_rad(const JointCfg & joint, int32_t steps) const;
@@ -146,6 +156,7 @@ private:
   int baudrate_ = 115200;             // "baudrate"
   uint16_t period_ms_ = 10;           // "period_ms", must match controller_manager update_rate
   bool set_zero_on_activate_ = true;  // "set_zero_on_activate": assume the arm is at zero pose
+  bool zeroed_ = false;  // SETZERO done since on_configure (not again after a FAULT!)
   std::array<int32_t, proto::N_AX> homing_offsets_{};  // LATER: "homing_offsets" (offsets.yaml)
 
   std::vector<JointCfg> joints_;  // in the order of info_.joints
@@ -169,6 +180,18 @@ private:
 
   // Last SETPOINT sent (used when the command is NaN, i.e. no controller active yet)
   std::array<int32_t, proto::N_AX> last_sent_steps_{};
+
+  // ---------------------------------------------------------------------------
+  // Change detection for logging in read() (log only when something changes)
+  // ---------------------------------------------------------------------------
+  // Log state / flag / counter changes of the newest STATE / DIAG frame
+  void log_changes();
+
+  std::optional<proto::McState> logged_state_;
+  uint8_t logged_flags_ = 0;
+  std::optional<proto::DiagFrame> logged_diag_;
+  uint32_t logged_crc_errors_ = 0;
+  uint32_t logged_seq_gaps_ = 0;
 };
 
 }  // namespace arm_hardware

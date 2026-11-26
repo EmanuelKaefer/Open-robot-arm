@@ -53,6 +53,11 @@ install(
   DIRECTORY include/
   DESTINATION include/${PROJECT_NAME}
 )
+# Test setup without MoveIt: ros2 launch arm_hardware hw_test.launch.py
+#                            ros2 run arm_hardware test_trajectory.py
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY test/bringup DESTINATION share/${PROJECT_NAME})
+install(PROGRAMS scripts/test_trajectory.py DESTINATION lib/${PROJECT_NAME})
 install(
   TARGETS arm_hardware
   EXPORT export_arm_hardware
@@ -73,6 +78,11 @@ if(BUILD_TESTING)
   # Start the simulator first, otherwise the tests are skipped.
   ament_add_gtest(test_sim_link test/test_sim_link.cpp TIMEOUT 60)
   target_link_libraries(test_sim_link arm_hardware)
+
+  # The ros2_control plugin itself, driven like the controller_manager does.
+  # Init tests always run, the rest is skipped without stm_sim.py.
+  ament_add_gtest(test_arm_system test/test_arm_system.cpp TIMEOUT 120)
+  target_link_libraries(test_arm_system arm_hardware)
 endif()
 
 ament_export_targets(export_arm_hardware HAS_LIBRARY_TARGET)

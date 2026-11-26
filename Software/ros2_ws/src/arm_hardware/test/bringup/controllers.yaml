@@ -1,0 +1,33 @@
+# Controller setup for launch/hw_test.launch.py (ArmSystem without MoveIt)
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz, must match the hardware parameter period_ms = 10 (checked in on_init)
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+# Same settings as robot_moveit_config/config/ros2_controllers.yaml (minus the deprecated
+# open_loop_control)
+arm_controller:
+  ros__parameters:
+    joints:
+      - shoulder_joint1
+      - shoulder_joint2
+      - elbow_joint
+      - wrist_turn_joint
+      - wrist_tilt_joint
+      - gripper_turn_joint
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    allow_nonzero_velocity_at_trajectory_end: false
+    # The STATE position lags the command by 3-4 periods (STM setpoint buffer), so the
+    # controller must interpolate from its own last command, not from the measured state.
+    # (Replaces the deprecated open_loop_control: true; position-only -> no PID gains.)
+    interpolate_from_desired_state: true
+    allow_partial_joints_goal: true

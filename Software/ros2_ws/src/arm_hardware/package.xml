@@ -8,7 +8,7 @@
     Talks to the STM32 driver board over UART using the binary protocol
     described in doc/Software/UART-Protokoll.md.
   </description>
-  <maintainer email="matteo207@gmx.at">matteo</maintainer>
+  <maintainer email="matteo.gassler@htl-saalfelden.at">matteo</maintainer>
   <license>
     * SPDX-License-Identifier: GPL-3.0-or-later
     * Copyright (c) 2026 Emanuel Käfer, Matteo Gassler, and Alexander Dick and contributors
@@ -28,6 +28,18 @@
   <depend>pluginlib</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_lifecycle</depend>
+
+  <!-- launch/hw_test.launch.py and scripts/test_trajectory.py (test setup without MoveIt) -->
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>joint_trajectory_controller</exec_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  <exec_depend>trajectory_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>ros2launch</exec_depend>
 
   <!-- unit tests for the protocol layer (test/test_stm_protocol.cpp) -->
   <test_depend>ament_cmake_gtest</test_depend>

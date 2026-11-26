@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+  Minimal robot for testing ArmSystem without MoveIt (launch/hw_test.launch.py).
+  Same joint names as the real arm (robot_moveit_config), but dummy links without meshes.
+  Joint parameters are PLACEHOLDERS (gear ratio not measured yet).
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arm_test">
+  <xacro:arg name="port" default="/tmp/ttySTM"/>
+
+  <xacro:macro name="dummy_joint" params="name parent child">
+    <link name="${child}"/>
+    <joint name="${name}" type="revolute">
+      <parent link="${parent}"/>
+      <child link="${child}"/>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-3.14" upper="3.14" effort="10" velocity="1.0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="arm_joint" params="name axis">
+    <joint name="${name}">
+      <param name="axis">${axis}</param>          <!-- STM axis 0..5 = TMC1..TMC6 -->
+      <param name="gear_ratio">20.0</param>      <!-- placeholder, measure per axis! -->
+      <param name="direction">1</param>
+      <param name="max_velocity">1.0</param>     <!-- rad/s -->
+      <param name="max_acceleration">2.0</param> <!-- rad/s^2 -->
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </xacro:macro>
+
+  <link name="base_link"/>
+  <xacro:dummy_joint name="shoulder_joint1"    parent="base_link" child="link1"/>
+  <xacro:dummy_joint name="shoulder_joint2"    parent="link1"     child="link2"/>
+  <xacro:dummy_joint name="elbow_joint"        parent="link2"     child="link3"/>
+  <xacro:dummy_joint name="wrist_turn_joint"   parent="link3"     child="link4"/>
+  <xacro:dummy_joint name="wrist_tilt_joint"   parent="link4"     child="link5"/>
+  <xacro:dummy_joint name="gripper_turn_joint" parent="link5"     child="link6"/>
+
+  <ros2_control name="ArmSystem" type="system">
+    <hardware>
+      <plugin>arm_hardware/ArmSystem</plugin>
+      <param name="port">$(arg port)</param>
+      <param name="baudrate">115200</param>
+      <param name="period_ms">10</param>
+      <param name="set_zero_on_activate">true</param>
+    </hardware>
+    <xacro:arm_joint name="shoulder_joint1"    axis="0"/>
+    <xacro:arm_joint name="shoulder_joint2"    axis="1"/>
+    <xacro:arm_joint name="elbow_joint"        axis="2"/>
+    <xacro:arm_joint name="wrist_turn_joint"   axis="3"/>
+    <xacro:arm_joint name="wrist_tilt_joint"   axis="4"/>
+    <xacro:arm_joint name="gripper_turn_joint" axis="5"/>
+  </ros2_control>
+</robot>
