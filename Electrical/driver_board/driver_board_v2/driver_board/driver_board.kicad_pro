@@ -472,6 +472,7 @@
       "pin_to_pin": "ignore",
       "power_pin_not_driven": "ignore",
       "same_local_global_label": "warning",
+      "same_local_global_power": "warning",
       "similar_label_and_power": "warning",
       "similar_labels": "warning",
       "similar_power": "warning",
@@ -519,8 +520,8 @@
     "meta": {
       "version": 5
     },
-    "net_colors": null,
-    "netclass_assignments": null,
+    "net_colors": {},
+    "netclass_assignments": {},
     "netclass_patterns": []
   },
   "pcbnew": {
@@ -663,7 +664,7 @@
         "uuid": "914a9dfd-cc72-459d-a4b5-1249c31e6215"
       }
     ],
-    "used_designators": "C1-52,DRV1_BASE1,DRV6_WRISTTILT1,U1-7,DRV2_SHOULDER1,L1-3,DRV3_UPPERARM1,DRV4_FOREARM1,R1-35,#FLG1-5,#FLG101,#FLG104,DRV5_WRISTTURN1,#PWR1-94,#PWR101,Lf_inpflt1,FB1,Cin1-5,J1-12,SW1-2,Y1,Cb_inpflt1-4,Cf_inpflt1,Cff1,Cldo1,Cout1-2,Rd_inpflt1,Rfbb1,Rfbt1,Rt1",
+    "used_designators": "#FLG1-5,#FLG101,#FLG104,#PWR1-96,#PWR101,C1-52,Cb_inpflt1-4,Cf_inpflt1,Cff1,Cin1-5,Cldo1,Cout1-2,DRV1_BASE1,DRV2_SHOULDER1,DRV3_UPPERARM1,DRV4_FOREARM1,DRV5_WRISTTURN1,DRV6_WRISTTILT1,FB1,J1-14,L1-3,Lf_inpflt1,R1-35,Rd_inpflt1,Rfbb1,Rfbt1,Rt1,SW1-2,U1-7,Y1",
     "variants": []
   },
   "sheets": [
@@ -681,7 +682,7 @@
     ],
     [
       "147120b2-4873-41c0-b3ac-f217f740a2da",
-      "Motordrivers"
+      "Motorcontrol"
     ],
     [
       "1d053789-bb06-47b5-b093-e7b74b4d3277",
@@ -694,6 +695,10 @@
     [
       "81c00157-d138-490e-bd18-4d0c4928a6a5",
       "Pull resistors"
+    ],
+    [
+      "5395aa1e-6d52-4343-95bd-772a6bfebf7f",
+      "CAN_Transceiver"
     ]
   ],
   "text_variables": {},
