@@ -1695,8 +1695,8 @@
 		)
 	)
 	(rectangle
-		(start 21.59 116.84)
-		(end 66.04 132.08)
+		(start 21.59 113.03)
+		(end 66.04 128.27)
 		(stroke
 			(width 0)
 			(type dash)
@@ -1730,7 +1730,7 @@
 	)
 	(text "CAN Drivers\n"
 		(exclude_from_sim no)
-		(at 28.448 130.556 0)
+		(at 28.448 126.746 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -3372,7 +3372,7 @@
 	)
 	(global_label "PB12_CAN_RX"
 		(shape input)
-		(at 40.64 124.46 180)
+		(at 40.64 120.65 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3382,7 +3382,7 @@
 		)
 		(uuid "5fdee09f-52b4-4edf-b306-4479eae9fa0b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 24.592 124.46 0)
+			(at 24.592 120.65 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3900,7 +3900,7 @@
 	)
 	(global_label "PB13_CAN_TX"
 		(shape input)
-		(at 40.64 121.92 180)
+		(at 40.64 118.11 180)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -3910,7 +3910,7 @@
 		)
 		(uuid "d94d927d-00fd-4836-8652-1034b53763c5")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 24.8944 121.92 0)
+			(at 24.8944 118.11 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8330,7 +8330,7 @@
 	)
 	(symbol
 		(lib_id "Connector:Conn_01x02_Pin")
-		(at 45.72 124.46 180)
+		(at 45.72 120.65 180)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -8341,7 +8341,7 @@
 		(fields_autoplaced yes)
 		(uuid "d1780450-f1c8-49db-8d5f-a304819af266")
 		(property "Reference" "J13"
-			(at 46.99 121.9199 0)
+			(at 46.99 118.1099 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8352,7 +8352,7 @@
 			)
 		)
 		(property "Value" "Conn_01x02_Pin"
-			(at 46.99 124.4599 0)
+			(at 46.99 120.6499 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -8363,7 +8363,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 45.72 124.46 0)
+			(at 45.72 120.65 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8374,7 +8374,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 45.72 124.46 0)
+			(at 45.72 120.65 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -8385,7 +8385,7 @@
 			)
 		)
 		(property "Description" "Generic connector, single row, 01x02, script generated"
-			(at 45.72 124.46 0)
+			(at 45.72 120.65 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
