@@ -190,6 +190,52 @@
 		)
 	)
 	(sheet
+		(at 60.96 135.89)
+		(size 43.18 20.32)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "5395aa1e-6d52-4343-95bd-772a6bfebf7f")
+		(property "Sheetname" "CAN_Transceiver"
+			(at 60.96 135.1784 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "can-transceiver.kicad_sch"
+			(at 60.96 156.7946 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "driver_board"
+				(path "/914a9dfd-cc72-459d-a4b5-1249c31e6215"
+					(page "8")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 177.8 101.6)
 		(size 43.18 20.32)
 		(exclude_from_sim no)

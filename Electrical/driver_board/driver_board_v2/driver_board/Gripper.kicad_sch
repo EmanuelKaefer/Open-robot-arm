@@ -514,7 +514,7 @@
 		)
 		(uuid "268e326e-ee5d-475e-925a-8142959b0e05")
 	)
-	(global_label "PB9_PWM_Servo"
+	(global_label "CAN"
 		(shape input)
 		(at 119.38 93.98 180)
 		(fields_autoplaced yes)
@@ -526,7 +526,7 @@
 		)
 		(uuid "9892d08a-02af-4e52-957b-c7f9a389534e")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 101.3364 93.98 0)
+			(at 112.7057 93.98 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
